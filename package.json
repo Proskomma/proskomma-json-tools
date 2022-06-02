@@ -1,0 +1,40 @@
+{
+  "name": "proskomma-json-tools",
+  "version": "0.0.1",
+  "description": "Tools for working with Proskomma-derived formats such as PERF and SOFRIA",
+  "main": "src/index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "bash -c \"babel-tape-runner test/code/*.cjs | node_modules/tap-summary/bin/cmd.js\"",
+    "rawTest": "babel-tape-runner test/code/*.cjs",
+    "oneTest": "babel-tape-runner test/code/$TESTSCRIPT.cjs",
+    "build": "babel src -d dist",
+    "prepublishOnly": "rm -fr dist && npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Proskomma/proskomma-json-tools.git"
+  },
+  "author": "Mark Howe",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Proskomma/proskomma-json-tools/issues"
+  },
+  "homepage": "https://github.com/Proskomma/proskomma-json-tools#readme",
+  "dependencies": {
+    "@babel/core": "^7.17.10",
+  },
+  "devDependencies": {
+    "fs-extra": "^10.1.0",
+    "path": "^0.12.7",
+    "tap-summary": "^4.0.0",
+    "tape": "^5.5.3",
+    "@babel/cli": "^7.17.10",
+    "@babel/preset-env": "^7.17.10",
+    "babel-eslint": "^10.1.0",
+    "babel-tape-runner": "^3.0.0",
+    "eslint": "^8.15.0"
+  }
+}
