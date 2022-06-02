@@ -9,12 +9,12 @@ test(
     `lsg JON (${testGroup})`,
     async function (t) {
         try {
-            const usfm = fse.readJsonSync(
+            const perf = fse.readJsonSync(
                 path.resolve(
                     path.join(__dirname, '..', 'test_data', 'fra_lsg_jon_doc.json')
                 )
             )
-            t.doesNotThrow(() => perf2usfm(usfm));
+            t.doesNotThrow(() => perf2usfm(perf));
         } catch (err) {
             console.log(err);
         }

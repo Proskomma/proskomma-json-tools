@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/Proskomma/proskomma-json-tools#readme",
   "dependencies": {
-    "@babel/core": "^7.17.10",
+    "@babel/core": "^7.17.10"
   },
   "devDependencies": {
     "fs-extra": "^10.1.0",
