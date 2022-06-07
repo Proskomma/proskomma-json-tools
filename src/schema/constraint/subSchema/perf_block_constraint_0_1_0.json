@@ -1,0 +1,37 @@
+{
+  "$id": "https://github.com/Proskomma/proskomma-json-tools/tree/main/src/schema/constraint/subSchema/perf_block_constraint_0_1_0.json",
+
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "content": {
+        "type": "array",
+        "items": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "./perf_contentElement_constraint_0_1_0.json"
+            }
+          ]
+        }
+      },
+      "metaContent": {
+        "type": "array",
+        "items": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "./perf_contentElement_constraint_0_1_0.json"
+            }
+          ]
+        }
+      }
+    }
+  }
+}
+

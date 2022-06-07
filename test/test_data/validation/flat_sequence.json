@@ -10,7 +10,7 @@
     },
     {
       "type": "paragraph",
-      "subType": "p",
+      "subType": "usfm:p",
       "content": [
         {
           "type": "mark",

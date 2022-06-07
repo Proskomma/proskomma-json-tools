@@ -3,6 +3,9 @@ import documentStructureSchema_0_1_0 from './schema/structure/document/document_
 import sequenceStructureSchema_0_1_0 from './schema/structure/sequence/sequence_structure_0_1_0.json';
 import blockStructureSchema_0_1_0 from './schema/structure/subSchema/block_structure_0_1_0.json';
 import contentElementStructureSchema_0_1_0 from './schema/structure/subSchema/contentElement_structure_0_1_0.json';
+import perfSequenceConstraintSchema_0_1_0 from './schema/constraint/sequence/perf_sequence_constraint_0_1_0.json';
+import perfBlockConstraintSchema_0_1_0 from './schema/constraint/subSchema/perf_block_constraint_0_1_0.json';
+import perfContentElementConstraintSchema_0_1_0 from './schema/constraint/subSchema/perf_contentElement_constraint_0_1_0.json';
 
 class Validator {
 
@@ -38,7 +41,23 @@ class Validator {
         ]) {
             this.schema.structure[key] = schemaOb;
         }
-        for (const [key, schemaOb] of []) {
+        for (const [key, schemaOb] of [
+            [
+                'perfSequence',
+                {
+                    "0.1.0": [
+                        new Ajv()
+                            .addSchema(contentElementStructureSchema_0_1_0)
+                            .addSchema(blockStructureSchema_0_1_0)
+                            .compile(sequenceStructureSchema_0_1_0),
+                        new Ajv()
+                            .addSchema(perfContentElementConstraintSchema_0_1_0)
+                            .addSchema(perfBlockConstraintSchema_0_1_0)
+                            .compile(perfSequenceConstraintSchema_0_1_0)
+                    ]
+                }
+            ]
+        ]) {
             this.schema.constraint[key] = schemaOb;
         }
     }
