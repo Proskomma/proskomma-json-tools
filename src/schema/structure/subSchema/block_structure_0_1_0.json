@@ -71,7 +71,14 @@
     "then": {
       "required": [
         "content"
-      ]
+      ],
+      "not": {
+        "required": [
+          "new",
+          "previewText",
+          "target"
+        ]
+      }
     },
     "else": {
       "if": {
@@ -85,13 +92,15 @@
         "not": {
           "required": [
             "target",
-            "previewText"
+            "previewText",
+            "content"
           ]
         }
       },
       "else": {
         "required": [
-          "target"
+          "target",
+          "content"
         ]
       }
     }
