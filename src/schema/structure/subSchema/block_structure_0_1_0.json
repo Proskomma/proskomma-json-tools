@@ -24,7 +24,20 @@
       "atts": {
         "type": "object",
         "additionalProperties": {
-          "type": "string"
+          "oneOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "boolean"
+            }
+          ]
         }
       },
       "content": {
