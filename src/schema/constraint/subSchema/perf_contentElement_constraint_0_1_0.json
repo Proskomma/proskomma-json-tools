@@ -51,6 +51,9 @@
             ]
           }
         },
+        "required": [
+          "atts"
+        ],
         "not": {
           "required": [
             "content",
@@ -96,6 +99,9 @@
           }
         },
         "else": {
+          "required": [
+            "atts"
+          ],
           "properties": {
             "atts": {
               "type": "object",
@@ -135,6 +141,26 @@
                 "pattern": "^x-\\S+$"
               }
             ]
+          }
+        },
+        "if": {
+          "properties": {
+            "subType": {
+              "enum": [
+                "chapter",
+                "verses"
+              ]
+            }
+          }
+        },
+        "then": {
+          "type": "object",
+          "required": ["atts"],
+          "properties": {
+            "atts": {
+              "type": "object",
+              "required": ["number"]
+            }
           }
         }
       }
