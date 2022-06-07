@@ -1,0 +1,87 @@
+{
+  "$id": "https://github.com/Proskomma/proskomma-json-tools/tree/main/src/schema/structure/subSchema/block_structure_0_1_0.json",
+
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "type": {
+        "type": "string",
+        "enum": [
+          "paragraph",
+          "graft"
+        ]
+      },
+      "subType": {
+        "type": "string"
+      },
+      "target": {
+        "type": "string"
+      },
+      "previewText": {
+        "type": "string"
+      },
+      "atts": {
+        "type": "object",
+        "additionalProperties": {
+          "type": "string"
+        }
+      },
+      "content": {
+        "type": "array",
+        "items": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "./contentElement_structure_0_1_0.json"
+            }
+          ]
+        }
+      }
+    },
+    "required": [
+      "type",
+      "subType"
+    ],
+    "additionalProperties": false,
+    "if": {
+      "properties": {
+        "type": {
+          "enum": [
+            "paragraph"
+          ]
+        }
+      }
+    },
+    "then": {
+      "required": [
+        "content"
+      ]
+    },
+    "else": {
+      "if": {
+        "properties": {
+          "new": {
+            "enum": [true]
+          }
+        }
+      },
+      "then": {
+        "not": {
+          "required": [
+            "target",
+            "previewText"
+          ]
+        }
+      },
+      "else": {
+        "required": [
+          "target"
+        ]
+      }
+    }
+  }
+}
+

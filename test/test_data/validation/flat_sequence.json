@@ -1,0 +1,94 @@
+{
+  "type": "main",
+  "blocks": [
+    {
+      "type": "graft",
+      "subType": "title",
+      "atts": {
+        "target": "M2JhMzg3NzQt"
+      }
+    },
+    {
+      "type": "paragraph",
+      "subType": "p",
+      "content": [
+        {
+          "type": "mark",
+          "subType": "chapter",
+          "atts": {
+            "number": "1"
+          }
+        },
+        {
+          "type": "mark",
+          "subType": "verses",
+          "atts": {
+            "number": "1"
+          }
+        },
+        "La parole de",
+        {
+          "type": "wrapper",
+          "subType": "usfm:nd",
+          "content": [
+            "l’Éternel"
+          ],
+          "metaContent": [
+            {
+              "type": "mark",
+              "subType": "warning:typesetChecks",
+              "content": [
+                "Expected all-caps or small-caps for name of deity"
+              ]
+            }
+          ]
+        },
+        " fut ",
+        {
+          "type": "wrapper",
+          "subType": "metaContent",
+          "metaContent": [
+            {
+              "type": "mark",
+              "subType": "warning:spellChecks",
+              "atts": {
+                "correctionProposals": [
+                  "adressée",
+                  "adressé"
+                ]
+              }
+            }
+          ],
+          "content": [
+            "adresssée"
+          ]
+        },
+        {
+          "type": "graft",
+          "subType": "xref",
+          "atts": {
+            "new": true
+          }
+        },
+        " à ",
+        {
+          "type": "startMilestone",
+          "subType": "x-proper-noun-phrase"
+        },
+        "Jonas, fils d’Amitthaï",
+        {
+          "type": "graft",
+          "subType": "footnote",
+          "atts": {
+            "target": "M2JhMzg3NzQt"
+          }
+        },
+        {
+          "type": "endMilestone",
+          "subType": "x-proper-noun-phrase"
+        },
+        ", en ces mots: "
+      ]
+    }
+  ]
+}

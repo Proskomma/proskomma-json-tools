@@ -1,0 +1,44 @@
+{
+  "$id": "https://github.com/Proskomma/proskomma-json-tools/tree/main/src/schema/structure/sequence/sequence_structure_0_1_0.json",
+
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": [
+        "main",
+        "introduction",
+        "introTitle",
+        "IntroEndTitle",
+        "title",
+        "endTitle",
+        "heading",
+        "remark",
+        "sidebar",
+        "table",
+        "tree",
+        "kv",
+        "footnote",
+        "noteCaller",
+        "xref",
+        "pubNumber",
+        "altNumber",
+        "esbCat",
+        "fig",
+        "temp"
+      ]
+    },
+    "previewText": {
+      "type": "string"
+    },
+    "blocks": {
+      "$ref": "../subSchema/block_structure_0_1_0.json"
+    }
+  },
+  "required": [
+    "type"
+  ],
+  "additionalProperties": false
+}
+
+

@@ -1,0 +1,74 @@
+{
+  "$id": "https://github.com/Proskomma/proskomma-json-tools/tree/main/src/schema/structure/subSchema/contentElement_structure_0_1_0.json",
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": [
+        "mark",
+        "wrapper",
+        "startMilestone",
+        "endMilestone",
+        "graft"
+      ]
+    },
+    "subType": {
+      "type": "string"
+    },
+    "atts": {
+      "type": "object",
+      "additionalProperties": {
+        "oneOf": [
+          {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          {
+            "type": "string"
+          },
+          {
+            "type": "boolean"
+          }
+        ]
+      }
+    },
+    "target": {
+      "type": "string"
+    },
+    "previewText": {
+      "type": "string"
+    },
+    "content": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "type": "string"
+          },
+          {
+            "$ref": "./contentElement_structure_0_1_0.json"
+          }
+        ]
+      }
+    },
+    "metaContent": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "type": "string"
+          },
+          {
+            "$ref": "./contentElement_structure_0_1_0.json"
+          }
+        ]
+      }
+    }
+  },
+  "required": [
+    "type"
+  ],
+  "additionalProperties": false
+}
