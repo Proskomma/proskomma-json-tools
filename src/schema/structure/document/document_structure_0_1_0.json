@@ -134,12 +134,22 @@
     "required": [
       "sequence"
     ],
-    "not": {
-      "required": [
-        "sequences",
-        "mainSequenceId"
-      ]
-    }
+    "allOf": [
+      {
+        "not": {
+          "required": [
+            "sequences"
+          ]
+        }
+      },
+      {
+        "not": {
+          "required": [
+            "mainSequenceId"
+          ]
+        }
+      }
+    ]
   }
 }
 
