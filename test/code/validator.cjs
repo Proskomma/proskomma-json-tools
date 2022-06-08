@@ -29,7 +29,7 @@ test(
             t.plan(2);
             const perf = fse.readJsonSync(
                 path.resolve(
-                    path.join(__dirname, '..', 'test_data', 'validation', 'flat_document.json')
+                    path.join(__dirname, '..', 'test_data', 'validation', 'valid_flat_document.json')
                 )
             )
             const validator = new Validator();
@@ -54,7 +54,7 @@ test(
             t.plan(2);
             const perf = fse.readJsonSync(
                 path.resolve(
-                    path.join(__dirname, '..', 'test_data', 'validation', 'flat_sequence.json')
+                    path.join(__dirname, '..', 'test_data', 'validation', 'valid_flat_sequence.json')
                 )
             )
             const validator = new Validator();
@@ -79,7 +79,7 @@ test(
             t.plan(2);
             const perf = fse.readJsonSync(
                 path.resolve(
-                    path.join(__dirname, '..', 'test_data', 'validation', 'flat_sequence.json')
+                    path.join(__dirname, '..', 'test_data', 'validation', 'valid_flat_sequence.json')
                 )
             )
             const validator = new Validator();
@@ -91,6 +91,69 @@ test(
             );
             t.ok(validation.isValid);
             t.equal(validation.errors, null);
+        } catch (err) {
+            console.log(err);
+        }
+    },
+);
+
+test(
+    `validate PERF document (${testGroup})`,
+    async function (t) {
+        try {
+            t.plan(2);
+            const perf = fse.readJsonSync(
+                path.resolve(
+                    path.join(__dirname, '..', 'test_data', 'validation', 'valid_flat_document.json')
+                )
+            )
+            const validator = new Validator();
+            const validation = validator.validate(
+                'constraint',
+                'perfDocument',
+                '0.1.0',
+                perf
+            );
+            t.ok(validation.isValid);
+            t.equal(validation.errors, null);
+        } catch (err) {
+            console.log(err);
+        }
+    },
+);
+
+test(
+    `Stop on first error (${testGroup})`,
+    async function (t) {
+        try {
+            t.plan(4);
+            const validator = new Validator();
+            let perf = fse.readJsonSync(
+                path.resolve(
+                    path.join(__dirname, '..', 'test_data', 'validation', 'structure_invalid_flat_sequence.json')
+                )
+            )
+            let validation = validator.validate(
+                'constraint',
+                'perfSequence',
+                '0.1.0',
+                perf
+            );
+            t.notOk(validation.isValid);
+            t.equal(validation.lastSchema, "Sequence Structure");
+            perf = fse.readJsonSync(
+                path.resolve(
+                    path.join(__dirname, '..', 'test_data', 'validation', 'perf_invalid_flat_sequence.json')
+                )
+            )
+            validation = validator.validate(
+                'constraint',
+                'perfSequence',
+                '0.1.0',
+                perf
+            );
+            t.notOk(validation.isValid);
+            t.equal(validation.lastSchema, "PERF Sequence");
         } catch (err) {
             console.log(err);
         }

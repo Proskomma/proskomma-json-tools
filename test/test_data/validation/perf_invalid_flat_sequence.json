@@ -1,0 +1,10 @@
+{
+  "type": "main",
+  "blocks": [
+    {
+      "type": "graft",
+      "subType": "randomSubType",
+      "new": true
+    }
+  ]
+}

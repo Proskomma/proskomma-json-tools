@@ -89,14 +89,18 @@
       },
       {
         "not": {
-          "required": ["target"]
+          "required": [
+            "target"
+          ]
         }
       }
     ]
   },
   "else": {
     "if": {
-      "required": ["new"],
+      "required": [
+        "new"
+      ],
       "properties": {
         "new": {
           "enum": [
@@ -106,16 +110,34 @@
       }
     },
     "then": {
-      "not": {
-        "required": [
-          "target",
-          "previewText",
-          "content"
-        ]
-      }
+      "allOf": [
+        {
+          "not": {
+            "required": [
+              "target"
+            ]
+          }
+        },
+        {
+          "not": {
+            "required": [
+              "previewText"
+            ]
+          }
+        },
+        {
+          "not": {
+            "required": [
+              "content"
+            ]
+          }
+        }
+      ]
     },
     "else": {
-      "required": ["target"]
+      "required": [
+        "target"
+      ]
     }
   }
 }
