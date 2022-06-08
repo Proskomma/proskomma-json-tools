@@ -99,6 +99,20 @@ class Validator {
         }
     }
 
+    schemaInfo() {
+        const ret = {};
+        for (const [schemaType, schemas] of Object.entries(this.schema)) {
+            ret[schemaType] = {};
+            for (const [schemaLabel, schemaVersions] of Object.entries(schemas)) {
+                ret[schemaType][schemaLabel] = {};
+                for (const [version, versionSteps] of Object.entries(schemaVersions)) {
+                    ret[schemaType][schemaLabel][version] = versionSteps.map(vs =>vs.name);
+                }
+            }
+        }
+        return ret;
+    }
+
     validate(schemaType, schemaKey, schemaVersion, data) {
         if (!(data)) {
             throw new Error(`Usage: validate(schemaType, schemaKey, schemaVersion, data)`);
@@ -135,7 +149,6 @@ class Validator {
             errors: result.errors,
         };
     }
-
 
 }
 

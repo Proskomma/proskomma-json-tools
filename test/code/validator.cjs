@@ -6,6 +6,25 @@ const {Validator} = require('../../src/index.js');
 const testGroup = 'Validator';
 
 test(
+    `schemaInfo (${testGroup})`,
+    async function (t) {
+        try {
+            t.plan(7);
+            const validatorInfo = new Validator().schemaInfo();
+            t.ok('structure' in validatorInfo);
+            t.ok('constraint' in validatorInfo);
+            t.ok('perfSequence' in validatorInfo.constraint);
+            t.ok('0.1.0' in validatorInfo.constraint.perfSequence);
+            t.equal(validatorInfo.constraint.perfSequence["0.1.0"].length, 2);
+            t.equal(validatorInfo.constraint.perfSequence["0.1.0"][0], 'Sequence Structure');
+            t.equal(validatorInfo.constraint.perfSequence["0.1.0"][1], 'PERF Sequence');
+         } catch (err) {
+            console.log(err);
+        }
+    },
+);
+
+test(
     `Fail on bad args (${testGroup})`,
     async function (t) {
         try {
