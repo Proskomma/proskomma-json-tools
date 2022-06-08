@@ -29,7 +29,10 @@
       ]
     },
     "blocks": {
-      "$ref": "../subSchema/perf_block_constraint_0_1_0.json"
+      "type": "array",
+      "items": {
+        "$ref": "../subSchema/perf_block_constraint_0_1_0.json"
+      }
     }
   }
 

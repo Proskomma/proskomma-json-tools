@@ -1,37 +1,75 @@
 {
   "$id": "https://github.com/Proskomma/proskomma-json-tools/tree/main/src/schema/constraint/subSchema/perf_block_constraint_0_1_0.json",
-
-  "type": "array",
-  "items": {
-    "type": "object",
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": [
+        "paragraph",
+        "graft"
+      ]
+    },
+    "content": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "type": "string"
+          },
+          {
+            "$ref": "./perf_contentElement_constraint_0_1_0.json"
+          }
+        ]
+      }
+    },
+    "metaContent": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "type": "string"
+          },
+          {
+            "$ref": "./perf_contentElement_constraint_0_1_0.json"
+          }
+        ]
+      }
+    }
+  },
+  "if": {
     "properties": {
-      "content": {
-        "type": "array",
-        "items": {
-          "oneOf": [
-            {
-              "type": "string"
-            },
-            {
-              "$ref": "./perf_contentElement_constraint_0_1_0.json"
-            }
-          ]
-        }
-      },
-      "metaContent": {
-        "type": "array",
-        "items": {
-          "oneOf": [
-            {
-              "type": "string"
-            },
-            {
-              "$ref": "./perf_contentElement_constraint_0_1_0.json"
-            }
-          ]
-        }
+      "type": {
+        "enum": ["graft"]
+      }
+    }
+  },
+  "then": {
+    "properties": {
+      "subType": {
+        "enum": [
+          "introduction",
+          "introTitle",
+          "IntroEndTitle",
+          "title",
+          "endTitle",
+          "heading",
+          "remark",
+          "sidebar",
+          "table",
+          "tree",
+          "kv"
+        ]
+      }
+    }
+  },
+  "else": {
+    "properties": {
+      "subType": {
+        "type": "string",
+        "pattern": "^usfm:"
       }
     }
   }
 }
+
 

@@ -10,7 +10,10 @@
       "type": "string"
     },
     "blocks": {
-      "$ref": "../subSchema/block_structure_0_1_0.json"
+      "type": "array",
+      "items": {
+        "$ref": "../subSchema/block_structure_0_1_0.json"
+      }
     }
   },
   "required": [

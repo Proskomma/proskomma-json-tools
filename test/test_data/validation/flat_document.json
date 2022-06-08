@@ -27,13 +27,16 @@
         {
           "type": "graft",
           "subType": "title",
-          "atts": {
-            "target": "M2JhMzg3NzQt"
-          }
+          "target": "M2JhMzg3NzQt"
+        },
+        {
+          "type": "graft",
+          "subType": "introduction",
+          "new": true
         },
         {
           "type": "paragraph",
-          "subType": "p",
+          "subType": "usfm:p",
           "content": [
             {
               "type": "mark",
@@ -89,9 +92,7 @@
             {
               "type": "graft",
               "subType": "xref",
-              "atts": {
-                "new": true
-              }
+              "new": true
             },
             " à ",
             {
@@ -102,9 +103,7 @@
             {
               "type": "graft",
               "subType": "footnote",
-              "atts": {
-                "target": "M2JhMzg3NzQt"
-              }
+              "target": "M2JhMzg3NzQt"
             },
             {
               "type": "endMilestone",

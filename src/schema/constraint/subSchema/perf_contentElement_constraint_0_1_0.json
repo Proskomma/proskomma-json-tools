@@ -51,65 +51,54 @@
             ]
           }
         },
-        "required": [
-          "atts"
-        ],
-        "not": {
-          "required": [
-            "content",
-            "metaContent"
-          ]
-        },
-        "if": {
-          "properties": {
-            "atts": {
-              "type": "object",
+        "allOf": [
+          {
+            "not": {
               "required": [
-                "new"
-              ],
-              "properties": {
-                "new": {
-                  "enum": [
-                    true
-                  ]
-                }
-              }
+                "content"
+              ]
+            }
+          },
+          {
+            "not": {
+              "required": [
+                "metaContent"
+              ]
+            }
+          }
+        ],
+        "if": {
+          "required": [
+            "new"
+          ],
+          "properties": {
+            "new": {
+              "enum": [
+                true
+              ]
             }
           }
         },
         "then": {
-          "properties": {
-            "atts": {
-              "type": "object",
-              "not": {
-                "anyOf": [
-                  {
-                    "required": [
-                      "target"
-                    ]
-                  },
-                  {
-                    "required": [
-                      "previewText"
-                    ]
-                  }
+          "not": {
+            "anyOf": [
+              {
+                "required": [
+                  "target"
+                ]
+              },
+              {
+                "required": [
+                  "previewText"
                 ]
               }
-            }
+            ]
           }
         },
         "else": {
           "required": [
-            "atts"
-          ],
-          "properties": {
-            "atts": {
-              "type": "object",
-              "required": [
-                "target"
-              ]
-            }
-          }
+            "target"
+          ]
         }
       }
     },
@@ -155,11 +144,16 @@
         },
         "then": {
           "type": "object",
-          "required": ["atts"],
+          "required": [
+            "atts"
+          ],
           "properties": {
             "atts": {
               "type": "object",
-              "required": ["number"]
+              "required": [
+                "number"
+              ],
+              "maxProperties": 1
             }
           }
         }
@@ -192,6 +186,18 @@
                 "pattern": "^x-\\S+$"
               }
             ]
+          }
+        },
+        "if": {
+          "properties": {
+            "subType": {
+              "enum": ["metaContent"]
+            }
+          }
+        },
+        "then": {
+          "not": {
+            "required": ["atts"]
           }
         }
       }

@@ -40,6 +40,9 @@
     "previewText": {
       "type": "string"
     },
+    "new": {
+      "type": "boolean"
+    },
     "content": {
       "type": "array",
       "items": {
