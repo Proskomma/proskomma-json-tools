@@ -57,11 +57,18 @@
               "items": {
                 "type": "string"
               }
+            },
+            "selectors": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
             }
           },
           "additionalProperties": {
             "type": "string"
-          }
+          },
+          "required": ["id"]
         },
         "document": {
           "type": "object",
