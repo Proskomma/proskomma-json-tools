@@ -1,7 +1,7 @@
-const test = require('tape');
-const path = require('path');
-const fse = require('fs-extra');
-const {Validator} = require('../../src/index.js');
+import test from 'tape';
+import path from 'path';
+import fse from 'fs-extra';
+import {Validator} from '../../src/index.js';
 
 const testGroup = 'Validator';
 

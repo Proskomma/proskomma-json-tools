@@ -1,7 +1,7 @@
-const test = require('tape');
-const path = require('path');
-const fse = require('fs-extra');
-const {perf2usfm} = require('../../src/index.js');
+import test from 'tape';
+import path from 'path';
+import fse from 'fs-extra';
+import {perf2usfm} from '../../src/index.js';
 
 const testGroup = 'perf2usfm';
 
