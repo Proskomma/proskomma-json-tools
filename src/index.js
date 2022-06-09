@@ -1,5 +1,5 @@
-import perf2usfm from './perf2usfm';
-import Validator from "./validator";
+const perf2usfm = require('./perf2usfm').default;
+const Validator = require("./validator").default;
 
 module.exports = {
     perf2usfm,
