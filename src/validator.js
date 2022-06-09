@@ -1,13 +1,12 @@
-import Ajv from 'ajv';
-import documentStructureSchema_0_1_0 from './schema/structure/document/document_structure_0_1_0.json';
-import sequenceStructureSchema_0_1_0 from './schema/structure/sequence/sequence_structure_0_1_0.json';
-import blockStructureSchema_0_1_0 from './schema/structure/subSchema/block_structure_0_1_0.json';
-import contentElementStructureSchema_0_1_0 from './schema/structure/subSchema/contentElement_structure_0_1_0.json';
-import perfDocumentConstraintSchema_0_1_0 from './schema/constraint/document/perf_document_constraint_0_1_0.json';
-import perfSequenceConstraintSchema_0_1_0 from './schema/constraint/sequence/perf_sequence_constraint_0_1_0.json';
-import perfBlockConstraintSchema_0_1_0 from './schema/constraint/subSchema/perf_block_constraint_0_1_0.json';
-import perfContentElementConstraintSchema_0_1_0
-    from './schema/constraint/subSchema/perf_contentElement_constraint_0_1_0.json';
+const Ajv = require('ajv');
+const documentStructureSchema_0_1_0 = require('./schema/structure/document/document_structure_0_1_0.json');
+const sequenceStructureSchema_0_1_0 = require('./schema/structure/sequence/sequence_structure_0_1_0.json');
+const blockStructureSchema_0_1_0 = require('./schema/structure/subSchema/block_structure_0_1_0.json');
+const contentElementStructureSchema_0_1_0 = require('./schema/structure/subSchema/contentElement_structure_0_1_0.json');
+const perfDocumentConstraintSchema_0_1_0 = require('./schema/constraint/document/perf_document_constraint_0_1_0.json');
+const perfSequenceConstraintSchema_0_1_0 = require('./schema/constraint/sequence/perf_sequence_constraint_0_1_0.json');
+const perfBlockConstraintSchema_0_1_0 = require('./schema/constraint/subSchema/perf_block_constraint_0_1_0.json');
+const perfContentElementConstraintSchema_0_1_0 = require('./schema/constraint/subSchema/perf_contentElement_constraint_0_1_0.json');
 
 class Validator {
 
@@ -152,4 +151,4 @@ class Validator {
 
 }
 
-export default Validator;
+module.exports = Validator;

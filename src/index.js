@@ -1,5 +1,5 @@
-const perf2usfm = require('./perf2usfm').default;
-const Validator = require("./validator").default;
+const perf2usfm = require('./perf2usfm');
+const Validator = require("./validator");
 
 module.exports = {
     perf2usfm,

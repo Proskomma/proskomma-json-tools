@@ -61,4 +61,4 @@ const perf2usfm = perf => {
     return ret.join('').replace(/\n+/g, '\n');
 };
 
-export default perf2usfm;
+module.exports = perf2usfm;
