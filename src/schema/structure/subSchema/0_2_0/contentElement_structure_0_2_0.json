@@ -1,5 +1,5 @@
 {
-  "$id": "https://github.com/Proskomma/proskomma-json-tools/tree/main/src/schema/structure/subSchema/contentElement_structure_0_1_0.json",
+  "$id": "https://github.com/Proskomma/proskomma-json-tools/tree/main/src/schema/structure/subSchema/contentElement_structure_0_2_0.json",
   "type": "object",
   "properties": {
     "type": {
@@ -51,7 +51,7 @@
             "type": "string"
           },
           {
-            "$ref": "./contentElement_structure_0_1_0.json"
+            "$ref": "./contentElement_structure_0_2_0.json"
           }
         ]
       }
@@ -64,7 +64,7 @@
             "type": "string"
           },
           {
-            "$ref": "./contentElement_structure_0_1_0.json"
+            "$ref": "./contentElement_structure_0_2_0.json"
           }
         ]
       }

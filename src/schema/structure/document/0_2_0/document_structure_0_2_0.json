@@ -1,6 +1,6 @@
 {
   "$comment": "version 0.1.0",
-  "$id": "https://github.com/Proskomma/proskomma-json-tools/tree/main/src/schema/structure/document/document_structure_0_1_0.json",
+  "$id": "https://github.com/Proskomma/proskomma-json-tools/tree/main/src/schema/structure/document/document_structure_0_2_0.json",
   "type": "object",
   "properties": {
     "schema": {
@@ -97,7 +97,7 @@
         "pattern": "^\\S+$"
       },
       "additionalProperties": {
-        "$ref": "../sequence/sequence_structure_0_1_0.json"
+        "$ref": "../sequence/sequence_structure_0_2_0.json"
       }
     },
     "mainSequence": {

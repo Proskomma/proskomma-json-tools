@@ -1,5 +1,5 @@
 {
-  "$id": "https://github.com/Proskomma/proskomma-json-tools/tree/main/src/schema/structure/sequence/sequence_structure_0_1_0.json",
+  "$id": "https://github.com/Proskomma/proskomma-json-tools/tree/main/src/schema/structure/sequence/sequence_structure_0_2_0.json",
 
   "type": "object",
   "properties": {
@@ -12,7 +12,7 @@
     "blocks": {
       "type": "array",
       "items": {
-        "$ref": "../subSchema/block_structure_0_1_0.json"
+        "$ref": "../subSchema/block_structure_0_2_0.json"
       }
     }
   },
