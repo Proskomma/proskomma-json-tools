@@ -3,7 +3,7 @@
   "blocks": [
     {
       "type": "graftx",
-      "subType": "title",
+      "sub_type": "title",
       "target": "M2JhMzg3NzQt"
     }
   ]

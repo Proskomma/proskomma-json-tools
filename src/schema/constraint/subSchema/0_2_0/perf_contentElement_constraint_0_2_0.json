@@ -17,7 +17,7 @@
             ]
           }
         },
-        "metaContent": {
+        "meta_content": {
           "type": "array",
           "items": {
             "oneOf": [
@@ -44,7 +44,7 @@
       },
       "then": {
         "properties": {
-          "subType": {
+          "sub_type": {
             "enum": [
               "footnote",
               "xref"
@@ -62,7 +62,7 @@
           {
             "not": {
               "required": [
-                "metaContent"
+                "meta_content"
               ]
             }
           }
@@ -89,7 +89,7 @@
               },
               {
                 "required": [
-                  "previewText"
+                  "preview_text"
                 ]
               }
             ]
@@ -114,7 +114,7 @@
       },
       "then": {
         "properties": {
-          "subType": {
+          "sub_type": {
             "type": "string",
             "oneOf": [
               {
@@ -134,7 +134,7 @@
         },
         "if": {
           "properties": {
-            "subType": {
+            "sub_type": {
               "enum": [
                 "chapter",
                 "verses"
@@ -171,12 +171,12 @@
       },
       "then": {
         "properties": {
-          "subType": {
+          "sub_type": {
             "type": "string",
             "oneOf": [
               {
                 "enum": [
-                  "metaContent"
+                  "meta_content"
                 ]
               },
               {
@@ -190,8 +190,8 @@
         },
         "if": {
           "properties": {
-            "subType": {
-              "enum": ["metaContent"]
+            "sub_type": {
+              "enum": ["meta_content"]
             }
           }
         },
@@ -207,14 +207,14 @@
         "properties": {
           "type": {
             "enum": [
-              "startMilestone"
+              "start_milestone"
             ]
           }
         }
       },
       "then": {
         "properties": {
-          "subType": {
+          "sub_type": {
             "type": "string",
             "oneOf": [
               {
@@ -233,14 +233,14 @@
         "properties": {
           "type": {
             "enum": [
-              "endMilestone"
+              "end_milestone"
             ]
           }
         }
       },
       "then": {
         "properties": {
-          "subType": {
+          "sub_type": {
             "type": "string",
             "oneOf": [
               {

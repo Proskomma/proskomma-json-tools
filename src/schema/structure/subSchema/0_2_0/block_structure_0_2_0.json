@@ -9,13 +9,13 @@
         "graft"
       ]
     },
-    "subType": {
+    "sub_type": {
       "type": "string"
     },
     "target": {
       "type": "string"
     },
-    "previewText": {
+    "preview_text": {
       "type": "string"
     },
     "new": {
@@ -56,7 +56,7 @@
   },
   "required": [
     "type",
-    "subType"
+    "sub_type"
   ],
   "additionalProperties": false,
   "if": {
@@ -83,7 +83,7 @@
       {
         "not": {
           "required": [
-            "previewText"
+            "preview_text"
           ]
         }
       },
@@ -121,7 +121,7 @@
         {
           "not": {
             "required": [
-              "previewText"
+              "preview_text"
             ]
           }
         },

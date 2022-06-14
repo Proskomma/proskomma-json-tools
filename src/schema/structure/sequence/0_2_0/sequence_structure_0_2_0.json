@@ -6,7 +6,7 @@
     "type": {
       "type": "string"
     },
-    "previewText": {
+    "preview_text": {
       "type": "string"
     },
     "blocks": {

@@ -13,7 +13,7 @@
             "nested"
           ]
         },
-        "structureVersion": {
+        "structure_version": {
           "type": "string"
         },
         "constraints": {
@@ -41,7 +41,7 @@
       },
       "required": [
         "structure",
-        "structureVersion",
+        "structure_version",
         "constraints"
       ],
       "additionalProperties": false
@@ -100,10 +100,10 @@
         "$ref": "../sequence/sequence_structure_0_2_0.json"
       }
     },
-    "mainSequence": {
+    "main_sequence": {
       "type": "object"
     },
-    "mainSequenceId": {
+    "main_sequence_id": {
       "type": "string"
     }
   },
@@ -129,11 +129,11 @@
   "then": {
     "required": [
       "sequences",
-      "mainSequenceId"
+      "main_sequence_id"
     ],
     "not": {
       "required": [
-        "mainSequence"
+        "main_sequence"
       ]
     }
   },
@@ -152,7 +152,7 @@
       {
         "not": {
           "required": [
-            "mainSequenceId"
+            "main_sequence_id"
           ]
         }
       }

@@ -7,12 +7,12 @@
       "enum": [
         "mark",
         "wrapper",
-        "startMilestone",
-        "endMilestone",
+        "start_milestone",
+        "end_milestone",
         "graft"
       ]
     },
-    "subType": {
+    "sub_type": {
       "type": "string"
     },
     "atts": {
@@ -37,7 +37,7 @@
     "target": {
       "type": "string"
     },
-    "previewText": {
+    "preview_text": {
       "type": "string"
     },
     "new": {
@@ -56,7 +56,7 @@
         ]
       }
     },
-    "metaContent": {
+    "meta_content": {
       "type": "array",
       "items": {
         "oneOf": [

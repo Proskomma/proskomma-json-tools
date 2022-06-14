@@ -22,7 +22,7 @@
         ]
       }
     },
-    "metaContent": {
+    "meta_content": {
       "type": "array",
       "items": {
         "oneOf": [
@@ -45,13 +45,13 @@
   },
   "then": {
     "properties": {
-      "subType": {
+      "sub_type": {
         "enum": [
           "introduction",
-          "introTitle",
-          "IntroEndTitle",
+          "intro_title",
+          "Intro_end_title",
           "title",
-          "endTitle",
+          "end_title",
           "heading",
           "remark",
           "sidebar",
@@ -64,7 +64,7 @@
   },
   "else": {
     "properties": {
-      "subType": {
+      "sub_type": {
         "type": "string",
         "pattern": "^usfm:"
       }
