@@ -47,7 +47,8 @@
           "sub_type": {
             "enum": [
               "footnote",
-              "xref"
+              "xref",
+              "note_caller"
             ]
           }
         },
