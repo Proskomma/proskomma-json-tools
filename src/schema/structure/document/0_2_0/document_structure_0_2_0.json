@@ -58,6 +58,12 @@
                 "type": "string"
               }
             },
+            "properties": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
             "selectors": {
               "type": "object",
               "additionalProperties": {
