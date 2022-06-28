@@ -119,6 +119,12 @@
             "type": "string",
             "oneOf": [
               {
+                "enum": [
+                  "chapter_label",
+                  "verses_label"
+                ]
+              },
+              {
                 "pattern": "^[A-Za-z][A-Za-z0-9]*:\\S+$"
               },
               {
