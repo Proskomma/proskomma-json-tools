@@ -11,7 +11,7 @@ test(
         try {
             const perf = fse.readJsonSync(
                 path.resolve(
-                    path.join(__dirname, '..', 'test_data', 'fra_lsg_jon_doc.json')
+                    path.join(__dirname, '..', 'test_data', 'fra_lsg_jon_perf_doc.json')
                 )
             )
             t.doesNotThrow(() => perf2usfm(perf));
