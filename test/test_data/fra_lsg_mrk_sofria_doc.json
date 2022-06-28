@@ -1,6 +1,6 @@
 {
   "schema": {
-    "structure": "nested",
+    "structure": "flat",
     "structure_version": "0.2.0",
     "constraints": [
       {

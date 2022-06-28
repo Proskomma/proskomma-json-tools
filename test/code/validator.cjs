@@ -178,3 +178,53 @@ test(
         }
     },
 );
+
+test(
+    `validate structure of SOFRIA document (${testGroup})`,
+    async function (t) {
+        try {
+            t.plan(2);
+            const sofria = fse.readJsonSync(
+                path.resolve(
+                    path.join(__dirname, '..', 'test_data', 'fra_lsg_mrk_sofria_doc.json')
+                )
+            )
+            const validator = new Validator();
+            const validation = validator.validate(
+                'structure',
+                'document',
+                '0.2.0',
+                sofria
+            );
+            t.ok(validation.isValid);
+            t.equal(validation.errors, null);
+        } catch (err) {
+            console.log(err);
+        }
+    },
+);
+
+test(
+    `validate constraints of SOFRIA document (${testGroup})`,
+    async function (t) {
+        try {
+            t.plan(2);
+            const sofria = fse.readJsonSync(
+                path.resolve(
+                    path.join(__dirname, '..', 'test_data', 'fra_lsg_mrk_sofria_doc.json')
+                )
+            )
+            const validator = new Validator();
+            const validation = validator.validate(
+                'constraint',
+                'sofriaDocument',
+                '0.2.0',
+                sofria
+            );
+            t.ok(validation.isValid);
+            t.equal(validation.errors, null);
+        } catch (err) {
+            console.log(err);
+        }
+    },
+);

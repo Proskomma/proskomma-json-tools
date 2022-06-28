@@ -7,6 +7,10 @@ const perfDocumentConstraintSchema_0_2_0 = require('./schema/constraint/document
 const perfSequenceConstraintSchema_0_2_0 = require('./schema/constraint/sequence/0_2_0/perf_sequence_constraint_0_2_0.json');
 const perfBlockConstraintSchema_0_2_0 = require('./schema/constraint/subSchema/0_2_0/perf_block_constraint_0_2_0.json');
 const perfContentElementConstraintSchema_0_2_0 = require('./schema/constraint/subSchema/0_2_0/perf_contentElement_constraint_0_2_0.json');
+const sofriaDocumentConstraintSchema_0_2_0 = require('./schema/constraint/document/0_2_0/sofria_document_constraint_0_2_0.json');
+const sofriaSequenceConstraintSchema_0_2_0 = require('./schema/constraint/sequence/0_2_0/sofria_sequence_constraint_0_2_0.json');
+const sofriaBlockConstraintSchema_0_2_0 = require('./schema/constraint/subSchema/0_2_0/sofria_block_constraint_0_2_0.json');
+const sofriaContentElementConstraintSchema_0_2_0 = require('./schema/constraint/subSchema/0_2_0/sofria_contentElement_constraint_0_2_0.json');
 
 class Validator {
 
@@ -89,6 +93,50 @@ class Validator {
                                 .addSchema(perfContentElementConstraintSchema_0_2_0)
                                 .addSchema(perfBlockConstraintSchema_0_2_0)
                                 .compile(perfSequenceConstraintSchema_0_2_0)
+                        }
+                    ]
+                }
+            ],
+                [
+                'sofriaDocument',
+                    {
+                        "0.2.0": [
+                            {
+                                "name": "Document Structure",
+                                "validator": new Ajv()
+                                    .addSchema(contentElementStructureSchema_0_2_0)
+                                    .addSchema(blockStructureSchema_0_2_0)
+                                    .addSchema(sequenceStructureSchema_0_2_0)
+                                    .compile(documentStructureSchema_0_2_0)
+                            },
+                            {
+                                "name": "SOFRIA Document",
+                                "validator": new Ajv()
+                                    .addSchema(sofriaContentElementConstraintSchema_0_2_0)
+                                    .addSchema(sofriaBlockConstraintSchema_0_2_0)
+                                    .addSchema(sofriaSequenceConstraintSchema_0_2_0)
+                                    .compile(sofriaDocumentConstraintSchema_0_2_0)
+                            }
+                        ]
+                    }
+                ],
+            [
+                'sofriaSequence',
+                {
+                    "0.2.0": [
+                        {
+                            "name": "Sequence Structure",
+                            "validator": new Ajv()
+                                .addSchema(contentElementStructureSchema_0_2_0)
+                                .addSchema(blockStructureSchema_0_2_0)
+                                .compile(sequenceStructureSchema_0_2_0)
+                        },
+                        {
+                            "name": "SOFRIA Sequence",
+                            "validator": new Ajv()
+                                .addSchema(sofriaContentElementConstraintSchema_0_2_0)
+                                .addSchema(sofriaBlockConstraintSchema_0_2_0)
+                                .compile(sofriaSequenceConstraintSchema_0_2_0)
                         }
                     ]
                 }

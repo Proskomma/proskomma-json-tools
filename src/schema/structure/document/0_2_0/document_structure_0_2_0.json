@@ -24,7 +24,8 @@
               "name": {
                 "type": "string",
                 "enum": [
-                  "perf"
+                  "perf",
+                  "sofria"
                 ]
               },
               "version": {

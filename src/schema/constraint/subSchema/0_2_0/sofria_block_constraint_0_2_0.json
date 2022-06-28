@@ -1,0 +1,75 @@
+{
+  "$id": "https://github.com/Proskomma/proskomma-json-tools/tree/main/src/schema/constraint/subSchema/sofria_block_constraint_0_2_0.json",
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": [
+        "paragraph",
+        "graft"
+      ]
+    },
+    "content": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "type": "string"
+          },
+          {
+            "$ref": "./sofria_contentElement_constraint_0_2_0.json"
+          }
+        ]
+      }
+    },
+    "meta_content": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "type": "string"
+          },
+          {
+            "$ref": "./sofria_contentElement_constraint_0_2_0.json"
+          }
+        ]
+      }
+    }
+  },
+  "if": {
+    "properties": {
+      "type": {
+        "enum": ["graft"]
+      }
+    }
+  },
+  "then": {
+    "properties": {
+      "sub_type": {
+        "enum": [
+          "introduction",
+          "intro_title",
+          "Intro_end_title",
+          "title",
+          "end_title",
+          "heading",
+          "remark",
+          "sidebar",
+          "table",
+          "tree",
+          "kv"
+        ]
+      }
+    }
+  },
+  "else": {
+    "properties": {
+      "sub_type": {
+        "type": "string",
+        "pattern": "^usfm:"
+      }
+    }
+  }
+}
+
+
