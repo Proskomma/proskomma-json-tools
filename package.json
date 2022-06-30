@@ -25,6 +25,7 @@
   "homepage": "https://github.com/Proskomma/proskomma-json-tools#readme",
   "dependencies": {
     "@babel/core": "^7.17.10",
+    "@babel/plugin-proposal-throw-expressions": "^7.18.6",
     "ajv": "^8.11.0"
   },
   "devDependencies": {

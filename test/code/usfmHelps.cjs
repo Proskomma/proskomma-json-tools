@@ -1,6 +1,4 @@
 import test from 'tape';
-import path from 'path';
-import fse from 'fs-extra';
 import usfmHelps from '../../src/usfmHelps.js';
 
 const testGroup = 'usfmHelps';
