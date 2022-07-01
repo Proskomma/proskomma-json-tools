@@ -1,4 +1,4 @@
-class ProskommaJsonRenderAction {
+class ProskommaRenderAction {
 
     constructor(ob) {
         if (!ob) {
@@ -11,4 +11,4 @@ class ProskommaJsonRenderAction {
     }
 }
 
-module.exports = ProskommaJsonRenderAction;
+module.exports = ProskommaRenderAction;

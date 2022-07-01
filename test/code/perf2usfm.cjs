@@ -9,9 +9,10 @@ test(
     `LSG JON (${testGroup})`,
     async function (t) {
         try {
+            t.plan(1);
             const perf = fse.readJsonSync(
                 path.resolve(
-                    path.join(__dirname, '..', 'test_data', 'fra_lsg_jon_perf_doc.json')
+                    path.join(__dirname, '..', 'test_data', 'validation', 'valid_flat_document.json')
                 )
             )
             t.doesNotThrow(() => perf2usfm(perf));

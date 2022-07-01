@@ -1,28 +1,24 @@
-const ProskommaJsonRenderAction = require('../src/ProskommaJsonRenderAction');
+const ProskommaRenderAction = require('../src/ProskommaRenderAction');
 
-class ProskommaJsonRender {
+class ProskommaRender {
 
     constructor() {
-        if(this.constructor === ProskommaJsonRender){
-            throw new Error("Abstract class ProskommaJsonRender cannot be instantiated - make as subclass!");
+        if(this.constructor === ProskommaRender){
+            throw new Error("Abstract class ProskommaRender cannot be instantiated - make as subclass!");
         }
+        this.debugLevel = 0;
         this.jsonRenderActions = {};
         for (const action of [
             "startDocument",
             "endDocument",
             "startSequence",
             "endSequence",
-            "startBlockGraft",
-            "endBlockGraft",
+            "blockGraft",
             "startParagraph",
             "endParagraph",
-            "startContent",
-            "endContent",
-            "startMetaContent",
-            "endMetaContent",
+            "metaContent",
             "mark",
-            "startInlineGraft",
-            "endInlineGraft",
+            "inlineGraft",
             "startWrapper",
             "endWrapper",
             "startMilestone",
@@ -34,14 +30,14 @@ class ProskommaJsonRender {
     }
 
     addRenderAction(event, actionSpec) {
-        if (!event in this.jsonRenderActions) {
+        if (!this.jsonRenderActions[event]) {
             throw new Error(`Unknown event '${event}`);
         }
-        this.jsonRenderActions[event].push(new ProskommaJsonRenderAction(actionSpec));
+        this.jsonRenderActions[event].push(new ProskommaRenderAction(actionSpec));
     }
 
     describeRenderActions(event) {
-        if (!event in this.jsonRenderActions) {
+        if (!this.jsonRenderActions[event]) {
             throw new Error(`Unknown event '${event}`);
         }
         const ret = [`**Actions for ${event}**\n`];
@@ -72,19 +68,31 @@ class ProskommaJsonRender {
 
     // renderEnvironment => {config, context, workspace, output}
     renderEvent(event, renderEnvironment) {
-        if (!event in this.jsonRenderActions) {
+        const context = renderEnvironment.context;
+        if (this.debugLevel > 1) {
+            console.log(`${"    ".repeat(context.sequences.length)}EVENT ${event}`);
+        }
+        if (!this.jsonRenderActions[event]) {
             throw new Error(`Unknown event '${event}`);
         }
+        let found = false;
         for (const actionOb of this.jsonRenderActions[event]) {
             if (actionOb.test(renderEnvironment)) {
+                found = true;
+                if (this.debugLevel > 0) {
+                    console.log(`${"    ".repeat(context.sequences.length)}    ${event} action: ${actionOb.description}`);
+                }
                 actionOb.action(renderEnvironment);
                 if (actionOb.stopOnMatch) {
                     break;
                 }
             }
         }
+        if (!found && this.debugLevel > 1) {
+            console.log(`${"    ".repeat(context.sequences.length)}    No matching action`);
+        }
     };
 
 }
 
-module.exports = ProskommaJsonRender;
+module.exports = ProskommaRender;
