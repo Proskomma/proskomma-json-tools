@@ -3,6 +3,7 @@ import test from 'tape';
 const fse = require('fs-extra');
 import path from 'path';
 import ProskommaRenderFromJson from '../../src/ProskommaRenderFromJson';
+import identityActions from '../../src/identityActions';
 
 const testGroup = 'Render from JSON';
 
@@ -24,7 +25,7 @@ test(
         try {
             t.plan(1);
             const perf = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'validation', 'valid_flat_document.json')));
-            const cl = new ProskommaRenderFromJson(perf);
+            const cl = new ProskommaRenderFromJson({srcJson: perf});
             t.doesNotThrow(() => cl.renderDocument({docId: "", config: {}, output: {}}));
         } catch (err) {
             console.log(err);
@@ -38,7 +39,7 @@ test(
         try {
             t.plan(1);
             const perf = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'fra_lsg_mrk_perf_doc.json')));
-            const cl = new ProskommaRenderFromJson(perf);
+            const cl = new ProskommaRenderFromJson({srcJson: perf});
             cl.debugLevel = 0;
             cl.addRenderAction(
                 'blockGraft',
@@ -79,7 +80,7 @@ test(
         try {
             t.plan(1);
             const perf = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'validation', 'valid_flat_document.json')));
-            const cl = new ProskommaRenderFromJson(perf);
+            const cl = new ProskommaRenderFromJson({srcJson: perf});
             cl.debugLevel = 0;
             cl.addRenderAction(
                 'metaContent',
@@ -93,6 +94,22 @@ test(
                 }
             );
             t.doesNotThrow(() => cl.renderDocument({docId: "", config: {}, output: {}}));
+        } catch (err) {
+            console.log(err);
+        }
+    },
+);
+
+test(
+    `Render PERF with identity actions (${testGroup})`,
+    async function (t) {
+        try {
+            t.plan(1);
+            const perf = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'validation', 'valid_flat_document.json')));
+            const cl = new ProskommaRenderFromJson({srcJson: perf, actions: identityActions});
+            const output = {};
+            t.doesNotThrow(() => cl.renderDocument({docId: "", config: {}, output}));
+            console.log(output);
         } catch (err) {
             console.log(err);
         }

@@ -2,13 +2,15 @@ const ProskommaRenderAction = require('../src/ProskommaRenderAction');
 
 class ProskommaRender {
 
-    constructor() {
+    constructor({debugLevel, actions}) {
         if(this.constructor === ProskommaRender){
             throw new Error("Abstract class ProskommaRender cannot be instantiated - make as subclass!");
         }
-        this.debugLevel = 0;
+        actions = actions || {};
+        debugLevel = debugLevel || 0;
+        this.debugLevel = debugLevel;
         this.jsonRenderActions = {};
-        for (const action of [
+        for (const event of [
             "startDocument",
             "endDocument",
             "startSequence",
@@ -25,15 +27,23 @@ class ProskommaRender {
             "endMilestone",
             "text"
         ]) {
-            this.jsonRenderActions[action] = [];
+            if (actions[event]) {
+                this.jsonRenderActions[event] = actions[event];
+            } else {
+                this.jsonRenderActions[event] = [];
+            }
         }
     }
 
-    addRenderAction(event, actionSpec) {
+    addRenderActionObject(event, actionOb) {
         if (!this.jsonRenderActions[event]) {
             throw new Error(`Unknown event '${event}`);
         }
-        this.jsonRenderActions[event].push(new ProskommaRenderAction(actionSpec));
+        this.jsonRenderActions[event].push(actionOb);
+    }
+
+    addRenderAction(event, actionSpec) {
+        this.addRenderActionObject(event, new ProskommaRenderAction(actionSpec));
     }
 
     describeRenderActions(event) {

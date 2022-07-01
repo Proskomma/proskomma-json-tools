@@ -8,7 +8,7 @@ test(
     async function (t) {
         try {
             t.plan(1);
-            t.throws(() => new ProskommaRender(), /cannot be instantiated/);
+            t.throws(() => new ProskommaRender({}), /cannot be instantiated/);
         } catch (err) {
             console.log(err);
         }
@@ -22,7 +22,7 @@ test(
             t.plan(1);
 
             class MySubclass extends ProskommaRender {}
-            t.doesNotThrow(() => new MySubclass());
+            t.doesNotThrow(() => new MySubclass({}));
         } catch (err) {
             console.log(err);
         }
@@ -36,7 +36,7 @@ test(
             t.plan(2);
 
             class MySubclass extends ProskommaRender {}
-            const cl = new MySubclass();
+            const cl = new MySubclass({});
             t.throws(
                 () => cl.addRenderAction(
                     'banana',
@@ -63,7 +63,7 @@ test(
             t.plan(8);
 
             class MySubclass extends ProskommaRender {}
-            const cl = new MySubclass();
+            const cl = new MySubclass({});
             t.doesNotThrow(() => cl.addRenderAction('startDocument', {description: "Test Action", test: () => false}));
             let desc = cl.describeRenderActions('startDocument');
             t.ok(desc.includes("DO Test Action"));
