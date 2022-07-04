@@ -13,7 +13,7 @@ test(
     async function (t) {
         try {
             t.plan(1);
-            t.doesNotThrow(() => new ProskommaRenderFromJson({}));
+            t.doesNotThrow(() => new ProskommaRenderFromJson({srcJson:{}}));
         } catch (err) {
             console.log(err);
         }

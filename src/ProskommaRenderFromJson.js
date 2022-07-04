@@ -3,7 +3,10 @@ const ProskommaRender = require('./ProskommaRender');
 class ProskommaRenderFromJson extends ProskommaRender {
 
     constructor(spec) {
-        super({debugLevel: spec.debugLevel, actions: spec.actions});
+        super(spec);
+        if (!spec.srcJson) {
+            throw new Error(`Must provide srcJson`);
+        }
         this.srcJson = spec.srcJson;
     }
 
