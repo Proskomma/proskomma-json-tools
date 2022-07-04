@@ -26,7 +26,8 @@
   "dependencies": {
     "@babel/core": "^7.17.10",
     "@babel/plugin-proposal-throw-expressions": "^7.18.6",
-    "ajv": "^8.11.0"
+    "ajv": "^8.11.0",
+    "deep-equal": "^2.0.5"
   },
   "devDependencies": {
     "fs-extra": "^10.1.0",

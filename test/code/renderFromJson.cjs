@@ -4,6 +4,7 @@ const fse = require('fs-extra');
 import path from 'path';
 import ProskommaRenderFromJson from '../../src/ProskommaRenderFromJson';
 import identityActions from '../../src/identityActions';
+import equal from 'deep-equal';
 
 const testGroup = 'Render from JSON';
 
@@ -104,12 +105,12 @@ test(
     `Render PERF with identity actions (${testGroup})`,
     async function (t) {
         try {
-            t.plan(1);
+            t.plan(2);
             const perf = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'validation', 'valid_flat_document.json')));
             const cl = new ProskommaRenderFromJson({srcJson: perf, actions: identityActions});
             const output = {};
             t.doesNotThrow(() => cl.renderDocument({docId: "", config: {}, output}));
-            console.log(output);
+            t.ok(equal(perf, output));
         } catch (err) {
             console.log(err);
         }

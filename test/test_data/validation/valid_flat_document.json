@@ -63,7 +63,7 @@
               ],
               "meta_content": [
                 {
-                  "type": "mark",
+                  "type": "wrapper",
                   "sub_type": "warning:typesetChecks",
                   "content": [
                     "Expected all-caps or small-caps for name of deity"
