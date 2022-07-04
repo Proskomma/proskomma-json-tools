@@ -10,5 +10,6 @@ module.exports = {
     Validator,
     usfmHelps,
     ProskommaRender,
-    ProskommaRenderFromJson
+    ProskommaRenderFromJson,
+    identityActions
 };
