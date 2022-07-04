@@ -1,8 +1,6 @@
-const ProskommaRenderAction = require('../src/ProskommaRenderAction');
-
 const identityActions = {
     startDocument: [
-        new ProskommaRenderAction({
+        {
             description: "identity",
             test: () => true,
             action: ({config, context, workspace, output}) => {
@@ -10,17 +8,18 @@ const identityActions = {
                 output.metadata = context.document.metadata;
                 output.sequences = {};
             }
-        }),
+        },
     ],
     endDocument: [
-        new ProskommaRenderAction({
+        {
             description: "identity",
             test: () => true,
-            action: ({config, context, workspace, output}) => {}
-        }),
+            action: ({config, context, workspace, output}) => {
+            }
+        },
     ],
     startSequence: [
-        new ProskommaRenderAction({
+        {
             description: "identity",
             test: () => true,
             action: ({config, context, workspace, output}) => {
@@ -34,17 +33,18 @@ const identityActions = {
                     output.main_sequence_id = workspace.currentSequence.id;
                 }
             }
-        }),
+        },
     ],
     endSequence: [
-        new ProskommaRenderAction({
+        {
             description: "identity",
             test: () => true,
-            action: ({config, context, workspace, output}) => {}
-        }),
+            action: ({config, context, workspace, output}) => {
+            }
+        },
     ],
     blockGraft: [
-        new ProskommaRenderAction({
+        {
             description: "identity",
             test: () => true,
             action: ({config, context, workspace, output}) => {
@@ -61,10 +61,10 @@ const identityActions = {
                 }
                 workspace.outputSequence.blocks.push(graftRecord);
             }
-        }),
+        },
     ],
     startParagraph: [
-        new ProskommaRenderAction({
+        {
             description: "identity",
             test: () => true,
             action: ({config, context, workspace, output}) => {
@@ -79,17 +79,18 @@ const identityActions = {
                 workspace.outputBlock = workspace.outputSequence.blocks[workspace.outputSequence.blocks.length - 1];
                 workspace.outputContentStack = [workspace.outputBlock.content];
             }
-        }),
+        },
     ],
     endParagraph: [
-        new ProskommaRenderAction({
+        {
             description: "identity",
             test: () => true,
-            action: ({config, context, workspace, output}) => {}
-        }),
+            action: ({config, context, workspace, output}) => {
+            }
+        },
     ],
     metaContent: [
-        new ProskommaRenderAction({
+        {
             description: "identity",
             test: () => true,
             action: (environment) => {
@@ -102,10 +103,10 @@ const identityActions = {
                 context.renderer.renderContent(workspace.currentContent, environment);
                 workspace.outputContentStack.shift();
             }
-        }),
+        },
     ],
     mark: [
-        new ProskommaRenderAction({
+        {
             description: "identity",
             test: () => true,
             action: ({config, context, workspace, output}) => {
@@ -119,10 +120,10 @@ const identityActions = {
                 }
                 workspace.outputContentStack[0].push(markRecord);
             }
-        }),
+        },
     ],
     inlineGraft: [
-        new ProskommaRenderAction({
+        {
             description: "identity",
             test: () => true,
             action: ({config, context, workspace, output}) => {
@@ -139,10 +140,10 @@ const identityActions = {
                 }
                 workspace.outputContentStack[0].push(graftRecord);
             }
-        }),
+        },
     ],
     startWrapper: [
-        new ProskommaRenderAction({
+        {
             description: "identity",
             test: () => true,
             action: ({config, context, workspace, output}) => {
@@ -155,19 +156,19 @@ const identityActions = {
                 workspace.outputContentStack[0].push(wrapperRecord);
                 workspace.outputContentStack.unshift(wrapperRecord.content);
             }
-        }),
+        },
     ],
     endWrapper: [
-        new ProskommaRenderAction({
+        {
             description: "identity",
             test: () => true,
             action: ({config, context, workspace, output}) => {
                 workspace.outputContentStack.shift();
             }
-        }),
+        },
     ],
     startMilestone: [
-        new ProskommaRenderAction({
+        {
             description: "identity",
             test: () => true,
             action: ({config, context, workspace, output}) => {
@@ -181,10 +182,10 @@ const identityActions = {
                 }
                 workspace.outputContentStack[0].push(milestoneRecord);
             }
-        }),
+        },
     ],
     endMilestone: [
-        new ProskommaRenderAction({
+        {
             description: "identity",
             test: () => true,
             action: ({config, context, workspace, output}) => {
@@ -195,17 +196,17 @@ const identityActions = {
                 };
                 workspace.outputContentStack[0].push(milestoneRecord);
             }
-        }),
+        },
     ],
     text: [
-        new ProskommaRenderAction({
+        {
             description: "identity",
             test: () => true,
             action: ({config, context, workspace, output}) => {
                 const element = context.sequences[0].element;
                 workspace.outputContentStack[0].push(element.text);
             }
-        }),
+        },
     ]
 };
 

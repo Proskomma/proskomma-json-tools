@@ -28,7 +28,7 @@ class ProskommaRender {
             "text"
         ]) {
             if (actions[event]) {
-                this.jsonRenderActions[event] = actions[event];
+                this.jsonRenderActions[event] = actions[event].map(a => new ProskommaRenderAction(a));
             } else {
                 this.jsonRenderActions[event] = [];
             }
