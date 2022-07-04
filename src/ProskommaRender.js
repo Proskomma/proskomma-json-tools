@@ -8,7 +8,7 @@ class ProskommaRender {
         }
         actions = actions || {};
         debugLevel = debugLevel || 0;
-        this.debugLevel = debugLevel;
+        this.jsonRenderDebugLevel = debugLevel;
         this.jsonRenderActions = {};
         for (const event of [
             "startDocument",
@@ -78,7 +78,7 @@ class ProskommaRender {
     // renderEnvironment => {config, context, workspace, output}
     renderEvent(event, renderEnvironment) {
         const context = renderEnvironment.context;
-        if (this.debugLevel > 1) {
+        if (this.jsonRenderDebugLevel > 1) {
             console.log(`${"    ".repeat(context.sequences.length)}EVENT ${event}`);
         }
         if (!this.jsonRenderActions[event]) {
@@ -88,7 +88,7 @@ class ProskommaRender {
         for (const actionOb of this.jsonRenderActions[event]) {
             if (actionOb.test(renderEnvironment)) {
                 found = true;
-                if (this.debugLevel > 0) {
+                if (this.jsonRenderDebugLevel > 0) {
                     console.log(`${"    ".repeat(context.sequences.length)}    ${event} action: ${actionOb.description}`);
                 }
                 const actionResult = actionOb.action(renderEnvironment);
@@ -97,7 +97,7 @@ class ProskommaRender {
                 }
             }
         }
-        if (!found && this.debugLevel > 1) {
+        if (!found && this.jsonRenderDebugLevel > 1) {
             console.log(`${"    ".repeat(context.sequences.length)}    No matching action`);
         }
     };

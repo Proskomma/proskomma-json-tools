@@ -41,7 +41,7 @@ test(
             t.plan(1);
             const perf = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'fra_lsg_mrk_perf_doc.json')));
             const cl = new ProskommaRenderFromJson({srcJson: perf});
-            cl.debugLevel = 0;
+            cl.jsonRenderDebugLevel = 0;
             cl.addRenderAction(
                 'blockGraft',
                 {
@@ -82,7 +82,7 @@ test(
             t.plan(1);
             const perf = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'validation', 'valid_flat_document.json')));
             const cl = new ProskommaRenderFromJson({srcJson: perf});
-            cl.debugLevel = 0;
+            cl.jsonRenderDebugLevel = 0;
             cl.addRenderAction(
                 'metaContent',
                 {
