@@ -1,4 +1,4 @@
-const ProskommaRenderAction = require('../src/ProskommaRenderAction');
+const ProskommaRenderAction = require('./ProskommaRenderAction');
 
 class ProskommaRender {
 

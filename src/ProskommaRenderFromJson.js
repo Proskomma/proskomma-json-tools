@@ -1,4 +1,4 @@
-const ProskommaRender = require('../src/ProskommaRender');
+const ProskommaRender = require('./ProskommaRender');
 
 class ProskommaRenderFromJson extends ProskommaRender {
 
