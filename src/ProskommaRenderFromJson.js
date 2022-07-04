@@ -2,9 +2,9 @@ const ProskommaRender = require('./ProskommaRender');
 
 class ProskommaRenderFromJson extends ProskommaRender {
 
-    constructor({srcJson, debugLevel, actions}) {
-        super({debugLevel, actions});
-        this.srcJson = srcJson;
+    constructor(spec) {
+        super({debugLevel: spec.debugLevel, actions: spec.actions});
+        this.srcJson = spec.srcJson;
     }
 
     renderDocument1({docId, config, context, workspace, output}) {
