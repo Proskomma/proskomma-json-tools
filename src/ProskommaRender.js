@@ -54,7 +54,6 @@ class ProskommaRender {
         for (const actionOb of this.jsonRenderActions[event]) {
             ret.push(`IF ${actionOb.test.toString()}:`);
             ret.push(`    DO ${actionOb.description}`);
-            ret.push(`    AND ${actionOb.stopOnMatch ? "STOP" : "CONTINUE"}\n`);
         }
         return ret.join('\n');
     }
@@ -92,8 +91,8 @@ class ProskommaRender {
                 if (this.debugLevel > 0) {
                     console.log(`${"    ".repeat(context.sequences.length)}    ${event} action: ${actionOb.description}`);
                 }
-                actionOb.action(renderEnvironment);
-                if (actionOb.stopOnMatch) {
+                const actionResult = actionOb.action(renderEnvironment);
+                if (!actionResult) {
                     break;
                 }
             }
