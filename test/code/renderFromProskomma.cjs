@@ -32,7 +32,7 @@ test(
             await thaw(pk, nt_ebible_4book);
             const cl = new ProskommaRenderFromProskomma({proskomma: pk, actions: identityActions});
             const output = {};
-            t.doesNotThrow(() => cl.renderDocument({docId: "NTgwMjU2NDEt", config: {}, output}));
+            t.doesNotThrow(() => cl.renderDocument({docId: "YTM4ZjhlNGUt", config: {}, output}));
             console.log(JSON.stringify(output, null, 2));
         } catch (err) {
             console.log(err);
