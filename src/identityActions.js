@@ -153,6 +153,9 @@ const identityActions = {
                     sub_type: element.subType,
                     content: [],
                 };
+                if ('atts' in element) {
+                    wrapperRecord.atts = element.atts;
+                }
                 workspace.outputContentStack[0].push(wrapperRecord);
                 workspace.outputContentStack.unshift(wrapperRecord.content);
             }

@@ -76,7 +76,6 @@ class ProskommaRenderFromProskomma extends ProskommaRender {
     }
 
     renderSequenceId(environment, sequenceId) {
-        console.log(sequenceId);
         const context = environment.context;
         const documentResult = this.pk.gqlQuerySync(`{document(id: "${context.document.id}") {sequence(id:"${sequenceId}") {id type nBlocks } } }`);
         const sequence = documentResult.data.document.sequence;
@@ -86,7 +85,7 @@ class ProskommaRenderFromProskomma extends ProskommaRender {
         context.sequences.unshift(this.sequenceContext(sequence, sequenceId));
         this.renderEvent('startSequence', environment);
         let outputBlockN = 0;
-        for (let inputBlockN = 0; inputBlockN < (sequence.nBlocks); inputBlockN++) {
+        for (let inputBlockN = 0; inputBlockN < sequence.nBlocks; inputBlockN++) {
             const blocksResult = this.pk.gqlQuerySync(
                 `{
                document(id: "${context.document.id}") {
@@ -138,51 +137,85 @@ class ProskommaRenderFromProskomma extends ProskommaRender {
     }
 
     renderItem(item, environment) {
-        if (item.type === 'token') {
-            this._tokens.push(item.payload.replace(/\s+/g, " "));
+        if (item.type === 'scope' && item.subType === "start" && item.payload.startsWith('attribute') && item.payload.includes('spanWithAtts')) {
+            if (!this._container) {
+                throw new Error(`Attribute when no container set`);
+            }
+            const scopeBits = item.payload.split('/');
+            if (scopeBits[3] in this._container.atts) {
+                this._container.atts[scopeBits[3]].push(scopeBits[5]);
+            } else {
+                this._container.atts[scopeBits[3]] = [scopeBits[5]];
+            }
         } else {
-            if (item.type === "graft") {
-                this.maybeRenderText(environment);
-                const graft = {
-                    type: "graft",
-                    subType: item.subType,
-                    target: item.payload,
-                    isNew: false,
-                };
-                environment.context.sequences[0].element = graft;
-                this.renderEvent('inlineGraft', environment);
-                delete environment.context.sequences[0].element;
-            } else { // scope
-                this.maybeRenderText(environment);
-                const scopeBits = item.payload.split('/');
-                if (["chapter", "verses"].includes(scopeBits[0])) {
-                    if (item.subType === 'start') {
-                        const mark = {
-                            type: "mark",
+            if (this._container) {
+                this.renderContainer(environment);
+            }
+            if (item.type === 'token') {
+                this._tokens.push(item.payload.replace(/\s+/g, " "));
+            } else {
+                if (item.type === "graft") {
+                    this.maybeRenderText(environment);
+                    const graft = {
+                        type: "graft",
+                        subType: item.subType,
+                        target: item.payload,
+                        isNew: false,
+                    };
+                    environment.context.sequences[0].element = graft;
+                    this.renderEvent('inlineGraft', environment);
+                    delete environment.context.sequences[0].element;
+                } else { // scope
+                    this.maybeRenderText(environment);
+                    const scopeBits = item.payload.split('/');
+                    if (["chapter", "verses"].includes(scopeBits[0])) {
+                        if (item.subType === 'start') {
+                            const mark = {
+                                type: "mark",
+                                subType: scopeBits[0],
+                                atts: {
+                                    number: scopeBits[1]
+                                }
+                            };
+                            environment.context.sequences[0].element = mark;
+                            this.renderEvent('mark', environment);
+                            delete environment.context.sequences[0].element;
+                        }
+                    } else if (scopeBits[0] === 'span') {
+                        const wrapper = {
+                            type: "wrapper",
                             subType: scopeBits[0],
-                            atts: {
-                                number: scopeBits[1]
-                            }
+                            content: [],
                         };
-                        environment.context.sequences[0].element = mark;
-                        this.renderEvent('mark', environment);
+                        environment.context.sequences[0].element = wrapper;
+                        if (item.subType === 'start') {
+                            environment.context.sequences[0].block.wrappers.unshift(wrapper.subType);
+                            this.renderEvent('startWrapper', environment);
+                        } else {
+                            this.renderEvent('endWrapper', environment);
+                            environment.context.sequences[0].block.wrappers.shift();
+                        }
+                        delete environment.context.sequences[0].element;
+                    } else if (scopeBits[0] === 'spanWithAtts') {
+                        if (item.subType === 'start') {
+                            this._container = {
+                                type: "wrapper",
+                                subType: scopeBits[0],
+                                content: [],
+                                atts: {}
+                            };
+                        } else {
+                            environment.context.sequences[0].element = {
+                                type: "wrapper",
+                                subType: scopeBits[0],
+                                content: [],
+                                atts: {}
+                            };
+                            this.renderEvent('endWrapper', environment);
+                            environment.context.sequences[0].block.wrappers.shift();
+                        }
                         delete environment.context.sequences[0].element;
                     }
-                } else if (scopeBits[0] === 'span') {
-                    const wrapper = {
-                        type: "wrapper",
-                        subType: scopeBits[0],
-                        content: [],
-                    };
-                    environment.context.sequences[0].element = wrapper;
-                    if (item.subType === 'start') {
-                        environment.context.sequences[0].block.wrappers.unshift(wrapper.subType);
-                        this.renderEvent('startWrapper', environment);
-                    } else {
-                        this.renderEvent('endWrapper', environment);
-                        environment.context.sequences[0].block.wrappers.shift();
-                    }
-                    delete environment.context.sequences[0].element;
                 }
             }
         }
@@ -200,6 +233,14 @@ class ProskommaRenderFromProskomma extends ProskommaRender {
         this._tokens = [];
         this.renderEvent('text', environment);
         delete environment.context.sequences[0].element;
+    }
+
+    renderContainer(environment) {
+        if (this._container.type === "wrapper") {
+            environment.context.sequences[0].element = this._container;
+            this.renderEvent('startWrapper', environment);
+        }
+        this._container = null;
     }
 
 }
