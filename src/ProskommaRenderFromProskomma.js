@@ -8,6 +8,7 @@ class ProskommaRenderFromProskomma extends ProskommaRender {
             throw new Error(`No Proskomma`)
         }
         this.pk = spec.proskomma;
+        this._tokens = [];
     }
 
     renderDocument1({docId, config, context, workspace, output}) {
@@ -113,9 +114,9 @@ class ProskommaRenderFromProskomma extends ProskommaRender {
                 wrappers: []
             }
             this.renderEvent('startParagraph', environment);
-            environment.workspace.tokens = [];
+            this._tokens = [];
             this.renderContent(blockResult.items, environment);
-            delete environment.workspace.tokens;
+            this._tokens = [];
             this.renderEvent('endParagraph', environment);
             delete context.sequences[0].block;
             outputBlockN++;
@@ -133,7 +134,7 @@ class ProskommaRenderFromProskomma extends ProskommaRender {
 
     renderItem(item, environment) {
         if (item.type === 'token') {
-            environment.workspace.tokens.push(item.payload.replace(/\s+/g, " "));
+            this._tokens.push(item.payload.replace(/\s+/g, " "));
         } else {
             if (item.type === "graft") {
                 this.maybeRenderText(environment);
@@ -168,15 +169,15 @@ class ProskommaRenderFromProskomma extends ProskommaRender {
     }
 
     maybeRenderText(environment) {
-        if (!environment.workspace.tokens || environment.workspace.tokens.length === 0) {
+        if (this._tokens.length === 0) {
             return;
         }
         const elementContext = {
             type: 'text',
-            text: environment.workspace.tokens.join(''),
+            text: this._tokens.join(''),
         };
         environment.context.sequences[0].element = elementContext;
-        environment.workspace.tokens = [];
+        this._tokens = [];
         this.renderEvent('text', environment);
         delete environment.context.sequences[0].element;
     }
