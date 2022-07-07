@@ -22,7 +22,9 @@ class ProskommaRenderFromJson extends ProskommaRender {
         };
         context.sequences = [];
         this.renderEvent('startDocument', environment);
-        this.renderSequenceId(environment, this.srcJson.main_sequence_id);
+        for (const sequenceId of Object.keys(this.srcJson.sequences)) {
+            this.renderSequenceId(environment, sequenceId);
+        }
         this.renderEvent('endDocument', environment);
     }
 

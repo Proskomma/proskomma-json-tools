@@ -9,15 +9,17 @@ class ProskommaRenderFromProskomma extends ProskommaRender {
         }
         this.pk = spec.proskomma;
         this._tokens = [];
+        this._container = null;
     }
 
     renderDocument1({docId, config, context, workspace, output}) {
         const environment = {config, context, workspace, output};
         context.renderer = this;
-        const documentResult = this.pk.gqlQuerySync(`{document(id: "${docId}") {docSetId mainSequence { id } nSequences headers { key value } } }`);
+        const documentResult = this.pk.gqlQuerySync(`{document(id: "${docId}") {docSetId mainSequence { id } nSequences sequences {id} headers { key value } } }`);
         const docSetId = documentResult.data.document.docSetId;
         const mainId = documentResult.data.document.mainSequence.id;
         const nSequences = documentResult.data.document.nSequences;
+        const sequenceIds = documentResult.data.document.sequences.map(s => s.id);
         const headers = {};
         for (const header of documentResult.data.document.headers) {
             headers[header.key] = header.value;
@@ -58,7 +60,9 @@ class ProskommaRenderFromProskomma extends ProskommaRender {
         };
         context.sequences = [];
         this.renderEvent('startDocument', environment);
-        this.renderSequenceId(environment, mainId);
+        for (const sequenceId of sequenceIds) {
+            this.renderSequenceId(environment, sequenceId);
+        }
         this.renderEvent('endDocument', environment);
     }
 
@@ -72,6 +76,7 @@ class ProskommaRenderFromProskomma extends ProskommaRender {
     }
 
     renderSequenceId(environment, sequenceId) {
+        console.log(sequenceId);
         const context = environment.context;
         const documentResult = this.pk.gqlQuerySync(`{document(id: "${context.document.id}") {sequence(id:"${sequenceId}") {id type nBlocks } } }`);
         const sequence = documentResult.data.document.sequence;
@@ -81,7 +86,7 @@ class ProskommaRenderFromProskomma extends ProskommaRender {
         context.sequences.unshift(this.sequenceContext(sequence, sequenceId));
         this.renderEvent('startSequence', environment);
         let outputBlockN = 0;
-        for (let inputBlockN = 0; inputBlockN < (sequence.nBlocks - 1); inputBlockN++) {
+        for (let inputBlockN = 0; inputBlockN < (sequence.nBlocks); inputBlockN++) {
             const blocksResult = this.pk.gqlQuerySync(
                 `{
                document(id: "${context.document.id}") {
@@ -163,6 +168,21 @@ class ProskommaRenderFromProskomma extends ProskommaRender {
                         this.renderEvent('mark', environment);
                         delete environment.context.sequences[0].element;
                     }
+                } else if (scopeBits[0] === 'span') {
+                    const wrapper = {
+                        type: "wrapper",
+                        subType: scopeBits[0],
+                        content: [],
+                    };
+                    environment.context.sequences[0].element = wrapper;
+                    if (item.subType === 'start') {
+                        environment.context.sequences[0].block.wrappers.unshift(wrapper.subType);
+                        this.renderEvent('startWrapper', environment);
+                    } else {
+                        this.renderEvent('endWrapper', environment);
+                        environment.context.sequences[0].block.wrappers.shift();
+                    }
+                    delete environment.context.sequences[0].element;
                 }
             }
         }
