@@ -137,18 +137,36 @@ class ProskommaRenderFromProskomma extends ProskommaRender {
     }
 
     renderItem(item, environment) {
-        if (item.type === 'scope' && item.subType === "start" && item.payload.startsWith('attribute') && item.payload.includes('spanWithAtts')) {
-            if (!this._container) {
-                throw new Error(`Attribute when no container set`);
-            }
-            const scopeBits = item.payload.split('/');
-            if (scopeBits[3] in this._container.atts) {
-                this._container.atts[scopeBits[3]].push(scopeBits[5]);
+        if (item.type === 'scope' && item.payload.startsWith('attribute')) {
+            if (item.subType === "start") {
+                if (!this._container) {
+                    throw new Error(`Start attribute when no container set`);
+                }
+                const scopeBits = item.payload.split('/');
+                if (scopeBits[3] in this._container.atts) {
+                    this._container.atts[scopeBits[3]].push(scopeBits[5]);
+                } else {
+                    this._container.atts[scopeBits[3]] = [scopeBits[5]];
+                }
             } else {
-                this._container.atts[scopeBits[3]] = [scopeBits[5]];
+                const scopeBits = item.payload.split('/');
+                if (!this._container) {
+                    this._container = {
+                        direction: "end",
+                        type: scopeBits[1] === 'milestone' ? "endMilestone" : "wrapper",
+                        subType: scopeBits[2],
+                        atts: {}
+                    };
+                }
+                if (scopeBits[3] in this._container.atts) {
+                    this._container.atts[scopeBits[3]].push(scopeBits[5]);
+                } else {
+                    this._container.atts[scopeBits[3]] = [scopeBits[5]];
+                }
             }
         } else {
             if (this._container) {
+                this.maybeRenderText(environment);
                 this.renderContainer(environment);
             }
             if (item.type === 'token') {
@@ -185,7 +203,6 @@ class ProskommaRenderFromProskomma extends ProskommaRender {
                         const wrapper = {
                             type: "wrapper",
                             subType: scopeBits[0],
-                            content: [],
                         };
                         environment.context.sequences[0].element = wrapper;
                         if (item.subType === 'start') {
@@ -199,22 +216,18 @@ class ProskommaRenderFromProskomma extends ProskommaRender {
                     } else if (scopeBits[0] === 'spanWithAtts') {
                         if (item.subType === 'start') {
                             this._container = {
+                                direction: "start",
                                 type: "wrapper",
-                                subType: scopeBits[0],
-                                content: [],
+                                subType: scopeBits[1],
                                 atts: {}
                             };
-                        } else {
-                            environment.context.sequences[0].element = {
-                                type: "wrapper",
-                                subType: scopeBits[0],
-                                content: [],
-                                atts: {}
-                            };
-                            this.renderEvent('endWrapper', environment);
-                            environment.context.sequences[0].block.wrappers.shift();
                         }
-                        delete environment.context.sequences[0].element;
+                    } else if (scopeBits[0] === 'milestone' && item.subType === "start") {
+                        this._container = {
+                            type: "startMilestone",
+                            subType: scopeBits[1],
+                            atts: {}
+                        };
                     }
                 }
             }
@@ -237,8 +250,27 @@ class ProskommaRenderFromProskomma extends ProskommaRender {
 
     renderContainer(environment) {
         if (this._container.type === "wrapper") {
+            const direction = this._container.direction;
+            delete this._container.direction;
+            if (direction === 'start') {
+                environment.context.sequences[0].element = this._container;
+                environment.context.sequences[0].block.wrappers.unshift(this._container.subType);
+                this.renderEvent('startWrapper', environment);
+                delete environment.context.sequences[0].element;
+            } else {
+                environment.context.sequences[0].element = this._container;
+                this.renderEvent('endWrapper', environment);
+                environment.context.sequences[0].block.wrappers.shift();
+                delete environment.context.sequences[0].element;
+            }
+        } else if (this._container.type === "startMilestone") {
             environment.context.sequences[0].element = this._container;
-            this.renderEvent('startWrapper', environment);
+            this.renderEvent('startMilestone', environment);
+            delete environment.context.sequences[0].element;
+        } else if (this._container.type === "endMilestone") {
+            environment.context.sequences[0].element = this._container;
+            this.renderEvent('endMilestone', environment);
+            delete environment.context.sequences[0].element;
         }
         this._container = null;
     }
