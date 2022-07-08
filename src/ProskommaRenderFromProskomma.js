@@ -1,5 +1,17 @@
 const ProskommaRender = require('./ProskommaRender');
 
+const camelCase2snakeCase = s => {
+    const ret = [];
+    for (const c of s.split("")) {
+        if (c.toUpperCase() === c && c.toLowerCase() !== c) {
+            ret.push(`_${c.toLowerCase()}`);
+        } else {
+            ret.push(c);
+        }
+    }
+    return ret.join("");
+}
+
 class ProskommaRenderFromProskomma extends ProskommaRender {
 
     constructor(spec) {
@@ -103,7 +115,7 @@ class ProskommaRenderFromProskomma extends ProskommaRender {
             for (const blockGraft of blockResult.bg) {
                 context.sequences[0].block = {
                     type: "graft",
-                    subType: blockGraft.subType,
+                    subType: camelCase2snakeCase(blockGraft.subType),
                     blockN: outputBlockN,
                 }
                 context.sequences[0].block.target = blockGraft.payload;
@@ -153,8 +165,8 @@ class ProskommaRenderFromProskomma extends ProskommaRender {
                 if (!this._container) {
                     this._container = {
                         direction: "end",
-                        type: scopeBits[1] === 'milestone' ? "endMilestone" : "wrapper",
-                        subType: scopeBits[2],
+                        type: scopeBits[1] === 'milestone' ? "end_milestone" : "wrapper",
+                        subType: camelCase2snakeCase(scopeBits[2]),
                         atts: {}
                     };
                 }
@@ -176,7 +188,7 @@ class ProskommaRenderFromProskomma extends ProskommaRender {
                     this.maybeRenderText(environment);
                     const graft = {
                         type: "graft",
-                        subType: item.subType,
+                        subType: camelCase2snakeCase(item.subType),
                         target: item.payload,
                         isNew: false,
                     };
@@ -190,7 +202,7 @@ class ProskommaRenderFromProskomma extends ProskommaRender {
                         if (item.subType === 'start') {
                             const mark = {
                                 type: "mark",
-                                subType: scopeBits[0],
+                                subType: camelCase2snakeCase(scopeBits[0]),
                                 atts: {
                                     number: scopeBits[1]
                                 }
@@ -224,8 +236,8 @@ class ProskommaRenderFromProskomma extends ProskommaRender {
                         }
                     } else if (scopeBits[0] === 'milestone' && item.subType === "start") {
                         this._container = {
-                            type: "startMilestone",
-                            subType: scopeBits[1],
+                            type: "start_milestone",
+                            subType: camelCase2snakeCase(scopeBits[1]),
                             atts: {}
                         };
                     }
@@ -263,11 +275,11 @@ class ProskommaRenderFromProskomma extends ProskommaRender {
                 environment.context.sequences[0].block.wrappers.shift();
                 delete environment.context.sequences[0].element;
             }
-        } else if (this._container.type === "startMilestone") {
+        } else if (this._container.type === "start_milestone") {
             environment.context.sequences[0].element = this._container;
             this.renderEvent('startMilestone', environment);
             delete environment.context.sequences[0].element;
-        } else if (this._container.type === "endMilestone") {
+        } else if (this._container.type === "end_milestone") {
             environment.context.sequences[0].element = this._container;
             this.renderEvent('endMilestone', environment);
             delete environment.context.sequences[0].element;

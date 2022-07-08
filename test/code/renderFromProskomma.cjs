@@ -51,7 +51,7 @@ test(
             const cl = new ProskommaRenderFromProskomma({proskomma: pk, actions: identityActions});
             const output = {};
             t.doesNotThrow(() => cl.renderDocument({docId: "MWY3OWMwMTUt", config: {}, output}));
-            console.log(JSON.stringify(output, null, 2));
+            // console.log(JSON.stringify(output, null, 2));
         } catch (err) {
             console.log(err);
         }
