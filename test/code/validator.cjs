@@ -1,7 +1,7 @@
 import test from 'tape';
 import path from 'path';
 import fse from 'fs-extra';
-import {Validator} from '../../src/index.js';
+import {Validator} from '../../src';
 
 const testGroup = 'Validator';
 

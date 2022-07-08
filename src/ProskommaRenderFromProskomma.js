@@ -81,7 +81,7 @@ class ProskommaRenderFromProskomma extends ProskommaRender {
     sequenceContext(sequence, sequenceId) {
         return {
             id: sequenceId,
-            type: sequence.type,
+            type: camelCase2snakeCase(sequence.type),
             nBlocks: sequence.nBlocks,
             milestones: new Set([]),
         }
@@ -166,7 +166,7 @@ class ProskommaRenderFromProskomma extends ProskommaRender {
                     this._container = {
                         direction: "end",
                         type: scopeBits[1] === 'milestone' ? "end_milestone" : "wrapper",
-                        subType: camelCase2snakeCase(scopeBits[2]),
+                        subType: `usfm:${camelCase2snakeCase(scopeBits[2])}`,
                         atts: {}
                     };
                 }
@@ -214,7 +214,7 @@ class ProskommaRenderFromProskomma extends ProskommaRender {
                     } else if (scopeBits[0] === 'span') {
                         const wrapper = {
                             type: "wrapper",
-                            subType: scopeBits[0],
+                            subType: `usfm:${scopeBits[0]}`,
                         };
                         environment.context.sequences[0].element = wrapper;
                         if (item.subType === 'start') {
@@ -230,14 +230,14 @@ class ProskommaRenderFromProskomma extends ProskommaRender {
                             this._container = {
                                 direction: "start",
                                 type: "wrapper",
-                                subType: scopeBits[1],
+                                subType: `usfm:${scopeBits[1]}`,
                                 atts: {}
                             };
                         }
                     } else if (scopeBits[0] === 'milestone' && item.subType === "start") {
                         this._container = {
                             type: "start_milestone",
-                            subType: camelCase2snakeCase(scopeBits[1]),
+                            subType: `usfm:${camelCase2snakeCase(scopeBits[1])}`,
                             atts: {}
                         };
                     }
