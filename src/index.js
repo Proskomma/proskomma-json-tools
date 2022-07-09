@@ -3,6 +3,7 @@ const Validator = require("./validator");
 const usfmHelps = require("./usfmHelps");
 const ProskommaRender = require("./ProskommaRender");
 const ProskommaRenderFromJson = require("./ProskommaRenderFromJson");
+const ProskommaRenderFromProskomma = require("./ProskommaRenderFromProskomma");
 const identityActions = require("./identityActions");
 
 module.exports = {
@@ -11,5 +12,6 @@ module.exports = {
     usfmHelps,
     ProskommaRender,
     ProskommaRenderFromJson,
+    ProskommaRenderFromProskomma,
     identityActions
 };
