@@ -1,5 +1,5 @@
 {
-  "$id": "https://github.com/Proskomma/proskomma-json-tools/tree/main/src/schema/constraint/subSchema/perf_contentElement_constraint_0_2_0.json",
+  "$id": "https://github.com/Proskomma/proskomma-json-tools/tree/main/src/schema/constraint/subSchema/0_2_0/perf_contentElement_constraint_0_2_0.json",
   "type": "object",
   "allOf": [
     {
