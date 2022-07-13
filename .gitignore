@@ -1,5 +1,6 @@
 .idea/
 schema_doc/
+*/*.zip
 
 # Logs
 logs
