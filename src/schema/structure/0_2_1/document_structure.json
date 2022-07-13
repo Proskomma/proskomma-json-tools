@@ -1,6 +1,6 @@
 {
   "$comment": "version 0.1.0",
-  "$id": "https://github.com/Proskomma/proskomma-json-tools/tree/main/src/schema/structure/document/0_2_0/document_structure_0_2_0.json",
+  "$id": "https://github.com/Proskomma/proskomma-json-tools/tree/main/src/schema/structure/0_2_1/document_structure.json",
   "title": "Document (Structure)",
   "description": "A document, typically corresponding to a single USFM or USX book",
   "type": "object",
@@ -123,11 +123,11 @@
         "pattern": "^\\S+$"
       },
       "additionalProperties": {
-        "$ref": "../../sequence/0_2_0/sequence_structure_0_2_0.json"
+        "$ref": "./sequence_structure.json"
       }
     },
     "sequence": {
-      "type": "object"
+      "$ref": "./sequence_structure.json"
     },
     "main_sequence_id": {
       "type": "string"

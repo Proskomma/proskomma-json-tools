@@ -1,5 +1,5 @@
 {
-  "$id": "https://github.com/Proskomma/proskomma-json-tools/tree/main/src/schema/structure/sequence/0_2_0/sequence_structure_0_2_0.json",
+  "$id": "https://github.com/Proskomma/proskomma-json-tools/tree/main/src/schema/structure/0_2_1/sequence_structure.json",
   "title": "Sequence (Structure)",
   "description": "A sequence contains a 'flow' of one or more blocks",
   "type": "object",
@@ -16,7 +16,7 @@
       "type": "array",
       "description": "The blocks that, together, represent the 'flow' of the sequence",
       "items": {
-        "$ref": "../../subSchema/0_2_0/block_structure_0_2_0.json"
+        "$ref": "./block_structure.json"
       }
     }
   },

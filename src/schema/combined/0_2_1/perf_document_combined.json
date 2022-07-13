@@ -1,0 +1,12 @@
+{
+  "$id": "https://github.com/Proskomma/proskomma-json-tools/tree/main/src/schema/combined/0_2_1/perf_document_combined.json",
+  "type": "object",
+  "allOf": [
+    {
+      "$ref": "../../structure/0_2_1/document_structure.json"
+    },
+    {
+      "$ref": "../../constraint/0_2_1/perf_document_constraint.json"
+    }
+  ]
+}

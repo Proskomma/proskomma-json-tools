@@ -1,5 +1,5 @@
 {
-  "$id": "https://github.com/Proskomma/proskomma-json-tools/tree/main/src/schema/constraint/subSchema/0_2_0/sofria_contentElement_constraint_0_2_0.json",
+  "$id": "https://github.com/Proskomma/proskomma-json-tools/tree/main/src/schema/constraint/0_2_1/sofria_contentElement_constraint.json",
   "type": "object",
   "allOf": [
     {
@@ -12,7 +12,7 @@
                 "type": "string"
               },
               {
-                "$ref": "./sofria_contentElement_constraint_0_2_0.json"
+                "$ref": "./sofria_contentElement_constraint.json"
               }
             ]
           }
@@ -25,7 +25,7 @@
                 "type": "string"
               },
               {
-                "$ref": "./sofria_contentElement_constraint_0_2_0.json"
+                "$ref": "./sofria_contentElement_constraint.json"
               }
             ]
           }
@@ -85,7 +85,7 @@
             "anyOf": [
               {
                 "required": [
-                  "target"
+                  "block"
                 ]
               },
               {
@@ -98,7 +98,7 @@
         },
         "else": {
           "required": [
-            "target"
+            "block"
           ]
         }
       }

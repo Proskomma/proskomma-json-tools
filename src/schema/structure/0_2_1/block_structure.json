@@ -1,5 +1,5 @@
 {
-  "$id": "https://github.com/Proskomma/proskomma-json-tools/tree/main/src/schema/structure/subSchema/0_2_0/block_structure_0_2_0.json",
+  "$id": "https://github.com/Proskomma/proskomma-json-tools/tree/main/src/schema/structure/0_2_1/block_structure.json",
   "title": "Block (Structure)",
   "description": "A block, which represents either a paragraph of text or a graft",
   "type": "object",
@@ -19,6 +19,10 @@
     "target": {
       "description": "The id of the sequence containing graft content",
       "type": "string"
+    },
+    "sequence": {
+      "description": "The sequence containing graft content",
+      "$ref": "./sequence_structure.json"
     },
     "preview_text": {
       "description": "An optional field to provide some kind of printable label for a graft",
@@ -57,15 +61,14 @@
             "type": "string"
           },
           {
-            "$ref": "./contentElement_structure_0_2_0.json"
+            "$ref": "./contentElement_structure.json"
           }
         ]
       }
     }
   },
   "required": [
-    "type",
-    "sub_type"
+    "type"
   ],
   "additionalProperties": false,
   "if": {
@@ -121,6 +124,20 @@
     "then": {
       "allOf": [
         {
+          "oneOf": [
+            {
+              "required": [
+                "sub_type"
+              ]
+            },
+            {
+              "required": [
+                "sequence"
+              ]
+            }
+          ]
+        },
+        {
           "not": {
             "required": [
               "target"
@@ -144,8 +161,17 @@
       ]
     },
     "else": {
-      "required": [
-        "target"
+      "oneOf": [
+        {
+          "required": [
+            "target"
+          ]
+        },
+        {
+          "required": [
+            "sequence"
+          ]
+        }
       ]
     }
   }
