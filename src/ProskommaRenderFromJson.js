@@ -48,7 +48,7 @@ class ProskommaRenderFromJson extends ProskommaRender {
         for (const [blockN, block] of sequence.blocks.entries()) {
             context.sequences[0].block = {
                 type: block.type,
-                subType: block.sub_type,
+                subType: block.subtype,
                 blockN,
                 wrappers: []
             }
@@ -88,8 +88,8 @@ class ProskommaRenderFromJson extends ProskommaRender {
         const elementContext = {
             type: element.type || 'text'
         };
-        if (element.sub_type) {
-            elementContext.subType = element.sub_type;
+        if (element.subtype) {
+            elementContext.subType = element.subtype;
         }
         if (element.atts) {
             elementContext.atts = element.atts;

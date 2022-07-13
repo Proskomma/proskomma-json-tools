@@ -51,7 +51,7 @@ const identityActions = {
                 workspace.currentBlock = workspace.currentSequence.block;
                 const graftRecord = {
                     type: workspace.currentBlock.type,
-                    sub_type: workspace.currentBlock.subType,
+                    subtype: workspace.currentBlock.subType,
                 };
                 if (workspace.currentBlock.target) {
                     graftRecord.target = workspace.currentBlock.target;
@@ -71,7 +71,7 @@ const identityActions = {
                 workspace.currentBlock = workspace.currentSequence.block;
                 const paraRecord = {
                     type: workspace.currentBlock.type,
-                    sub_type: workspace.currentBlock.subType,
+                    subtype: workspace.currentBlock.subType,
                     content: []
                 };
                 workspace.outputSequence.blocks.push(paraRecord);
@@ -113,7 +113,7 @@ const identityActions = {
                 const element = context.sequences[0].element;
                 const markRecord = {
                     type: element.type,
-                    sub_type: element.subType,
+                    subtype: element.subType,
                 };
                 if (element.atts) {
                     markRecord.atts = element.atts;
@@ -130,7 +130,7 @@ const identityActions = {
                 const element = context.sequences[0].element;
                 const graftRecord = {
                     type: element.type,
-                    sub_type: element.subType,
+                    subtype: element.subType,
                 };
                 if (element.target) {
                     graftRecord.target = element.target;
@@ -150,7 +150,7 @@ const identityActions = {
                 const element = context.sequences[0].element;
                 const wrapperRecord = {
                     type: element.type,
-                    sub_type: element.subType,
+                    subtype: element.subType,
                     content: [],
                 };
                 if ('atts' in element) {
@@ -178,7 +178,7 @@ const identityActions = {
                 const element = context.sequences[0].element;
                 const milestoneRecord = {
                     type: element.type,
-                    sub_type: element.subType,
+                    subtype: element.subType,
                 };
                 if (element.atts) {
                     milestoneRecord.atts = element.atts;
@@ -195,7 +195,7 @@ const identityActions = {
                 const element = context.sequences[0].element;
                 const milestoneRecord = {
                     type: element.type,
-                    sub_type: element.subType,
+                    subtype: element.subType,
                 };
                 workspace.outputContentStack[0].push(milestoneRecord);
             }

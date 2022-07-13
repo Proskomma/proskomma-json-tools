@@ -42,7 +42,7 @@ test(
             const validation = validator.validate(
                 'constraint',
                 'perfDocument',
-                '0.2.0',
+                '0.2.1',
                 output
             );
             t.ok(validation.isValid);
@@ -67,7 +67,7 @@ test(
             const validation = validator.validate(
                 'constraint',
                 'perfDocument',
-                '0.2.0',
+                '0.2.1',
                 output
             );
             t.ok(validation.isValid);

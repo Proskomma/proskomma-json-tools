@@ -45,11 +45,11 @@ class ProskommaRenderFromProskomma extends ProskommaRender {
             id: docId,
             schema: {
                 "structure": "flat",
-                "structure_version": "0.2.0",
+                "structure_version": "0.2.1",
                 "constraints": [
                     {
                         "name": "perf",
-                        "version": "0.2.0"
+                        "version": "0.2.1"
                     }
                 ]
             },
