@@ -3,7 +3,7 @@
   "blocks": [
     {
       "type": "graft",
-      "sub_type": "randomSubType",
+      "subtype": "randomSubType",
       "new": true
     }
   ]

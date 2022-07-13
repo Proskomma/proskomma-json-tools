@@ -28,28 +28,28 @@
       "blocks": [
         {
           "type": "graft",
-          "sub_type": "title",
+          "subtype": "title",
           "target": "M2JhMzg3NzQt"
         },
         {
           "type": "graft",
-          "sub_type": "introduction",
+          "subtype": "introduction",
           "new": true
         },
         {
           "type": "paragraph",
-          "sub_type": "usfm:p",
+          "subtype": "usfm:p",
           "content": [
             {
               "type": "mark",
-              "sub_type": "chapter",
+              "subtype": "chapter",
               "atts": {
                 "number": "1"
               }
             },
             {
               "type": "mark",
-              "sub_type": "verses",
+              "subtype": "verses",
               "atts": {
                 "number": "1"
               }
@@ -57,14 +57,14 @@
             "La parole de",
             {
               "type": "wrapper",
-              "sub_type": "usfm:nd",
+              "subtype": "usfm:nd",
               "content": [
                 "l’Éternel"
               ],
               "meta_content": [
                 {
                   "type": "wrapper",
-                  "sub_type": "warning:typesetChecks",
+                  "subtype": "warning:typesetChecks",
                   "content": [
                     "Expected all-caps or small-caps for name of deity"
                   ]
@@ -74,11 +74,11 @@
             " fut ",
             {
               "type": "wrapper",
-              "sub_type": "meta_content",
+              "subtype": "meta_content",
               "meta_content": [
                 {
                   "type": "mark",
-                  "sub_type": "warning:spell_checks",
+                  "subtype": "warning:spell_checks",
                   "atts": {
                     "correction_proposals": [
                       "adressée",
@@ -93,23 +93,23 @@
             },
             {
               "type": "graft",
-              "sub_type": "xref",
+              "subtype": "xref",
               "new": true
             },
             " à ",
             {
               "type": "start_milestone",
-              "sub_type": "x-proper-noun-phrase"
+              "subtype": "x-proper-noun-phrase"
             },
             "Jonas, fils d’Amitthaï",
             {
               "type": "graft",
-              "sub_type": "footnote",
+              "subtype": "footnote",
               "target": "M2JhMzg3NzQt"
             },
             {
               "type": "end_milestone",
-              "sub_type": "x-proper-noun-phrase"
+              "subtype": "x-proper-noun-phrase"
             },
             ", en ces mots: "
           ]

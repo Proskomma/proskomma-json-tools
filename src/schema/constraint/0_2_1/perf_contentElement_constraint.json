@@ -44,7 +44,7 @@
       },
       "then": {
         "properties": {
-          "sub_type": {
+          "subtype": {
             "enum": [
               "footnote",
               "xref",
@@ -115,7 +115,7 @@
       },
       "then": {
         "properties": {
-          "sub_type": {
+          "subtype": {
             "type": "string",
             "oneOf": [
               {
@@ -135,7 +135,7 @@
         },
         "if": {
           "properties": {
-            "sub_type": {
+            "subtype": {
               "enum": [
                 "chapter",
                 "verses"
@@ -172,7 +172,7 @@
       },
       "then": {
         "properties": {
-          "sub_type": {
+          "subtype": {
             "type": "string",
             "oneOf": [
               {
@@ -191,7 +191,7 @@
         },
         "if": {
           "properties": {
-            "sub_type": {
+            "subtype": {
               "enum": ["meta_content"]
             }
           }
@@ -215,7 +215,7 @@
       },
       "then": {
         "properties": {
-          "sub_type": {
+          "subtype": {
             "type": "string",
             "oneOf": [
               {
@@ -241,7 +241,7 @@
       },
       "then": {
         "properties": {
-          "sub_type": {
+          "subtype": {
             "type": "string",
             "oneOf": [
               {

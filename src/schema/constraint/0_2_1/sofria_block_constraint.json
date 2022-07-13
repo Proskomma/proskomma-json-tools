@@ -45,7 +45,7 @@
   },
   "then": {
     "properties": {
-      "sub_type": {
+      "subtype": {
         "enum": [
           "introduction",
           "intro_title",
@@ -64,7 +64,7 @@
   },
   "else": {
     "properties": {
-      "sub_type": {
+      "subtype": {
         "type": "string",
         "pattern": "^usfm:"
       }

@@ -12,7 +12,7 @@
         "graft"
       ]
     },
-    "sub_type": {
+    "subtype": {
       "description": "A type-specific subtype",
       "type": "string"
     },
@@ -127,7 +127,7 @@
           "oneOf": [
             {
               "required": [
-                "sub_type"
+                "subtype"
               ]
             },
             {

@@ -15,7 +15,7 @@
         "graft"
       ]
     },
-    "sub_type": {
+    "subtype": {
       "description": "The subtype of the element, which is context-dependent",
       "type": "string"
     },
