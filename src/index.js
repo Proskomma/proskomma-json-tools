@@ -5,6 +5,8 @@ const ProskommaRender = require("./ProskommaRender");
 const ProskommaRenderFromJson = require("./ProskommaRenderFromJson");
 const ProskommaRenderFromProskomma = require("./ProskommaRenderFromProskomma");
 const identityActions = require("./identityActions");
+const wordCountActions = require("./wordCountActions");
+const wordSearchActions = require("./wordSearchActions");
 
 module.exports = {
     perf2usfm,
@@ -13,5 +15,7 @@ module.exports = {
     ProskommaRender,
     ProskommaRenderFromJson,
     ProskommaRenderFromProskomma,
-    identityActions
+    identityActions,
+    wordCountActions,
+    wordSearchActions,
 };
