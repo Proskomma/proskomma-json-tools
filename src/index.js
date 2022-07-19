@@ -7,6 +7,7 @@ const identityActions = require("./identityActions");
 const wordCountActions = require("./wordCountActions");
 const wordSearchActions = require("./wordSearchActions");
 const longVerseCheckActions = require("./longVerseCheckActions");
+const toUsfmActions = require("./toUsfmActions");
 const mergeActions = require("./mergeActions");
 
 module.exports = {
@@ -19,5 +20,6 @@ module.exports = {
     wordCountActions,
     wordSearchActions,
     longVerseCheckActions,
+    toUsfmActions,
     mergeActions,
 };
