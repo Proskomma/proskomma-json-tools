@@ -3,34 +3,25 @@ const toUsfmActions = {
         {
             description: "Set up environment",
             test: () => true,
-            action: ({workspace}) => {
-                workspace.usfmBits = [];
-                return true;
+            action: ({context, workspace}) => {
+                workspace.usfmBits = [''];
+                for (
+                    let [key, value] of
+                    Object.entries(context.document.metadata.document)
+                        .filter(kv => !['tags', 'properties', 'bookCode'].includes(kv[0]))
+                    ) {
+                    if (['toc', 'toca'].includes(key)) {
+                        key += '1';
+                    }
+                    workspace.usfmBits.push(`\\${key} ${value}\n`);
+                };
             }
         },
-    ],
-    startSequence: [
-        {
-            description: "Display sequence type",
-            test: () => true,
-            action: ({context, workspace}) => {
-                workspace.usfmBits.push(`\n** START ${context.sequences[0].type.toUpperCase()} **`);
-            }
-        }
-    ],
-    endSequence: [
-        {
-            description: "Display sequence type",
-            test: () => true,
-            action: ({context, workspace}) => {
-                workspace.usfmBits.push(`** End ${context.sequences[0].type.toUpperCase()} **\n`);
-            }
-        }
     ],
     blockGraft: [
         {
             description: "Follow block grafts",
-            test: () => true,
+            test: ({context}) => ['title', 'heading', 'introduction'].includes(context.sequences[0].block.subType),
             action: (environment) => {
                 const target = environment.context.sequences[0].block.target;
                 if (target) {
@@ -42,12 +33,31 @@ const toUsfmActions = {
     inlineGraft: [
         {
             description: "Follow inline grafts",
-            test: () => true,
+            test: () => false,
             action: (environment) => {
                 const target = environment.context.sequences[0].element.target;
                 if (target) {
                     environment.context.renderer.renderSequenceId(environment, target);
                 }
+            }
+        }
+    ],
+
+    startParagraph: [
+        {
+            description: "Output paragraph tag",
+            test: () => true,
+            action: ({context, workspace}) => {
+                workspace.usfmBits.push(`\n\\${context.sequences[0].block.subType.split(':')[1]}\n`);
+            }
+        }
+    ],
+    endParagraph: [
+        {
+            description: "Output nl",
+            test: () => true,
+            action: ({context, workspace}) => {
+                workspace.usfmBits.push(`\n`);
             }
         }
     ],
@@ -61,13 +71,26 @@ const toUsfmActions = {
             }
         },
     ],
+    mark: [
+        {
+            description: "Output chapter or verses",
+            test: () => true,
+            action: ({config, context, workspace, output}) => {
+                const element = context.sequences[0].element;
+                if (element.subType === 'chapter') {
+                    workspace.usfmBits.push(`\n\\c ${element.atts['number']}\n`);
+                } else if (element.subType === 'verses') {
+                    workspace.usfmBits.push(`\\v ${element.atts['number']} `);
+                }
+            }
+        },
+    ],
     endDocument: [
         {
             description: "Build output",
             test: () => true,
             action: ({workspace, output}) => {
-                output.usfm = workspace.usfmBits.join('\n');
-                return true;
+                output.usfm = workspace.usfmBits.join('');
             }
         },
     ]

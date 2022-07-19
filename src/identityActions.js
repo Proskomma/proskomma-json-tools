@@ -23,14 +23,13 @@ const identityActions = {
             description: "identity",
             test: () => true,
             action: ({config, context, workspace, output}) => {
-                workspace.currentSequence = context.sequences[0];
                 output.sequences[context.sequences[0].id] = {
-                    type: workspace.currentSequence.type,
+                    type: context.sequences[0].type,
                     blocks: []
                 }
                 workspace.outputSequence = output.sequences[context.sequences[0].id];
-                if (workspace.currentSequence.type === 'main') {
-                    output.main_sequence_id = workspace.currentSequence.id;
+                if (context.sequences[0].type === 'main') {
+                    output.main_sequence_id = context.sequences[0].id;
                 }
             }
         },
@@ -48,7 +47,7 @@ const identityActions = {
             description: "identity",
             test: () => true,
             action: (environment) => {
-                environment.workspace.currentBlock = environment.workspace.currentSequence.block;
+                environment.workspace.currentBlock = environment.context.sequences[0].block;
                 const graftRecord = {
                     type: environment.workspace.currentBlock.type,
                     subtype: environment.workspace.currentBlock.subType,
@@ -69,7 +68,7 @@ const identityActions = {
             description: "identity",
             test: () => true,
             action: ({config, context, workspace, output}) => {
-                workspace.currentBlock = workspace.currentSequence.block;
+                workspace.currentBlock = context.sequences[0].block;
                 const paraRecord = {
                     type: workspace.currentBlock.type,
                     subtype: workspace.currentBlock.subType,
@@ -141,7 +140,6 @@ const identityActions = {
                     graftRecord.new = element.isNew;
                 }
                 environment.workspace.outputContentStack[0].push(graftRecord);
-                environment.context.renderer.renderSequenceId(environment, element.target);
             }
         },
     ],

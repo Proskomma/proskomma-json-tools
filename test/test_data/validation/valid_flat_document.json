@@ -23,6 +23,30 @@
     }
   },
   "sequences": {
+    "M2JhMzg3NzQt": {
+      "type": "title",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "subtype": "usfm:mt",
+          "content": [
+            "Title goes here"
+          ]
+        }
+      ]
+    },
+    "M2JhMzg3NzQs": {
+      "type": "footnote",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "subtype": "usfm:f",
+          "content": [
+            "Note goes here"
+          ]
+        }
+      ]
+    },
     "foobaa": {
       "type": "main",
       "blocks": [
@@ -105,7 +129,7 @@
             {
               "type": "graft",
               "subtype": "footnote",
-              "target": "M2JhMzg3NzQt"
+              "target": "M2JhMzg3NzQs"
             },
             {
               "type": "end_milestone",

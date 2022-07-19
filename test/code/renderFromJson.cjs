@@ -7,7 +7,6 @@ import identityActions from '../../src/identityActions';
 import wordCountActions from '../../src/wordCountActions';
 import wordSearchActions from '../../src/wordSearchActions';
 import longVerseCheckActions from '../../src/longVerseCheckActions';
-import toUsfmActions from '../../src/toUsfmActions';
 import mergeActions from '../../src/mergeActions';
 import equal from 'deep-equal';
 
@@ -105,8 +104,8 @@ test(
         }
     },
 );
-
-/*test(
+/*
+test(
     `Render PERF with identity actions (${testGroup})`,
     async function (t) {
         try {
@@ -115,14 +114,14 @@ test(
             const cl = new ProskommaRenderFromJson({srcJson: perf, actions: identityActions});
             const output = {};
             t.doesNotThrow(() => cl.renderDocument({docId: "", config: {}, output}));
+            // console.log(JSON.stringify(output, null, 2));
             t.ok(equal(perf, output));
         } catch (err) {
             console.log(err);
         }
     },
 );
- */
-
+*/
 test(
     `PERF word count (${testGroup})`,
     async function (t) {
@@ -172,22 +171,6 @@ test(
             );
             const output = {};
             t.doesNotThrow(() => cl.renderDocument({docId: "", config: {}, output}));
-        } catch (err) {
-            console.log(err);
-        }
-    },
-);
-
-test(
-    `PERF to USFM (${testGroup})`,
-    async function (t) {
-        try {
-            t.plan(1);
-            const perf = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'fra_lsg_mrk_perf_doc.json')));
-            const cl = new ProskommaRenderFromJson({srcJson: perf, actions: toUsfmActions});
-            const output = {};
-            t.doesNotThrow(() => cl.renderDocument({docId: "", config: {}, output}));
-            console.log(output.usfm);
         } catch (err) {
             console.log(err);
         }
