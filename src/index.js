@@ -1,4 +1,3 @@
-const perf2usfm = require('./perf2usfm');
 const Validator = require("./validator");
 const usfmHelps = require("./usfmHelps");
 const ProskommaRender = require("./ProskommaRender");
@@ -11,7 +10,6 @@ const longVerseCheckActions = require("./longVerseCheckActions");
 const mergeActions = require("./mergeActions");
 
 module.exports = {
-    perf2usfm,
     Validator,
     usfmHelps,
     ProskommaRender,

@@ -39,6 +39,9 @@ const identityActions = {
             description: "identity",
             test: () => true,
             action: ({config, context, workspace, output}) => {
+                if (context.sequences.length > 1) {
+                    workspace.outputSequence = output.sequences[context.sequences[1].id];
+                }
             }
         },
     ],
@@ -47,17 +50,17 @@ const identityActions = {
             description: "identity",
             test: () => true,
             action: (environment) => {
-                environment.workspace.currentBlock = environment.context.sequences[0].block;
+                const currentBlock = environment.context.sequences[0].block;
                 const graftRecord = {
-                    type: environment.workspace.currentBlock.type,
-                    subtype: environment.workspace.currentBlock.subType,
+                    type: currentBlock.type,
+                    subtype: currentBlock.subType,
                 };
-                if (environment.workspace.currentBlock.target) {
-                    graftRecord.target = environment.workspace.currentBlock.target;
+                if (currentBlock.target) {
+                    graftRecord.target = currentBlock.target;
                     environment.context.renderer.renderSequenceId(environment, graftRecord.target);
                 }
-                if (environment.workspace.currentBlock.isNew) {
-                    graftRecord.new = environment.workspace.currentBlock.isNew;
+                if (currentBlock.isNew) {
+                    graftRecord.new = currentBlock.isNew;
                 }
                 environment.workspace.outputSequence.blocks.push(graftRecord);
             }
@@ -68,10 +71,10 @@ const identityActions = {
             description: "identity",
             test: () => true,
             action: ({config, context, workspace, output}) => {
-                workspace.currentBlock = context.sequences[0].block;
+                const currentBlock = context.sequences[0].block;
                 const paraRecord = {
-                    type: workspace.currentBlock.type,
-                    subtype: workspace.currentBlock.subType,
+                    type: currentBlock.type,
+                    subtype: currentBlock.subType,
                     content: []
                 };
                 workspace.outputSequence.blocks.push(paraRecord);
@@ -134,7 +137,9 @@ const identityActions = {
                 };
                 if (element.target) {
                     graftRecord.target = element.target;
+                    const currentContent = environment.workspace.outputContentStack[0];
                     environment.context.renderer.renderSequenceId(environment, element.target);
+                    environment.workspace.outputContentStack[0] = currentContent; // Probably need more for nesting!
                 }
                 if (element.isNew) {
                     graftRecord.new = element.isNew;

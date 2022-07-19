@@ -104,7 +104,7 @@ test(
         }
     },
 );
-/*
+
 test(
     `Render PERF with identity actions (${testGroup})`,
     async function (t) {
@@ -121,7 +121,7 @@ test(
         }
     },
 );
-*/
+
 test(
     `PERF word count (${testGroup})`,
     async function (t) {

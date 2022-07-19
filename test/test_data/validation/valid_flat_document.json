@@ -1,11 +1,11 @@
 {
   "schema": {
     "structure": "flat",
-    "structure_version": "0.1.0",
+    "structure_version": "0.2.1",
     "constraints": [
       {
         "name": "perf",
-        "version": "0.1.0"
+        "version": "0.2.1"
       }
     ]
   },
@@ -23,30 +23,6 @@
     }
   },
   "sequences": {
-    "M2JhMzg3NzQt": {
-      "type": "title",
-      "blocks": [
-        {
-          "type": "paragraph",
-          "subtype": "usfm:mt",
-          "content": [
-            "Title goes here"
-          ]
-        }
-      ]
-    },
-    "M2JhMzg3NzQs": {
-      "type": "footnote",
-      "blocks": [
-        {
-          "type": "paragraph",
-          "subtype": "usfm:f",
-          "content": [
-            "Note goes here"
-          ]
-        }
-      ]
-    },
     "foobaa": {
       "type": "main",
       "blocks": [
@@ -136,6 +112,30 @@
               "subtype": "x-proper-noun-phrase"
             },
             ", en ces mots: "
+          ]
+        }
+      ]
+    },
+    "M2JhMzg3NzQt": {
+      "type": "title",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "subtype": "usfm:mt",
+          "content": [
+            "Title goes here"
+          ]
+        }
+      ]
+    },
+    "M2JhMzg3NzQs": {
+      "type": "footnote",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "subtype": "usfm:f",
+          "content": [
+            "Note goes here"
           ]
         }
       ]
