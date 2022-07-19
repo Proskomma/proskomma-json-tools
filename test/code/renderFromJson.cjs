@@ -6,6 +6,8 @@ import ProskommaRenderFromJson from '../../src/ProskommaRenderFromJson';
 import identityActions from '../../src/identityActions';
 import wordCountActions from '../../src/wordCountActions';
 import wordSearchActions from '../../src/wordSearchActions';
+import longVerseCheckActions from '../../src/longVerseCheckActions';
+import mergeActions from '../../src/mergeActions';
 import equal from 'deep-equal';
 
 const testGroup = 'Render from JSON';
@@ -15,7 +17,7 @@ test(
     async function (t) {
         try {
             t.plan(1);
-            t.doesNotThrow(() => new ProskommaRenderFromJson({srcJson:{}}));
+            t.doesNotThrow(() => new ProskommaRenderFromJson({srcJson: {}}));
         } catch (err) {
             console.log(err);
         }
@@ -108,7 +110,7 @@ test(
     async function (t) {
         try {
             t.plan(2);
-            const perf = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data',  'validation', 'valid_flat_document.json')));
+            const perf = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'validation', 'valid_flat_document.json')));
             const cl = new ProskommaRenderFromJson({srcJson: perf, actions: identityActions});
             const output = {};
             t.doesNotThrow(() => cl.renderDocument({docId: "", config: {}, output}));
@@ -143,6 +145,31 @@ test(
             const cl = new ProskommaRenderFromJson({srcJson: perf, actions: wordSearchActions});
             const output = {};
             t.doesNotThrow(() => cl.renderDocument({docId: "", config: {toSearch: "foule"}, output}));
+        } catch (err) {
+            console.log(err);
+        }
+    },
+);
+
+test(
+    `PERF long verse check (${testGroup})`,
+    async function (t) {
+        try {
+            t.plan(1);
+            const perf = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'fra_lsg_mrk_perf_doc.json')));
+            const cl = new ProskommaRenderFromJson(
+                {
+                    srcJson: perf,
+                    actions: mergeActions(
+                        [
+                            longVerseCheckActions,
+                            identityActions,
+                        ]
+                    )
+                }
+            );
+            const output = {};
+            t.doesNotThrow(() => cl.renderDocument({docId: "", config: {}, output}));
         } catch (err) {
             console.log(err);
         }
