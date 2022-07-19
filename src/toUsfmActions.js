@@ -56,7 +56,7 @@ const toUsfmActions = {
         {
             description: "Output nl",
             test: () => true,
-            action: ({context, workspace}) => {
+            action: ({workspace}) => {
                 workspace.usfmBits.push(`\n`);
             }
         }
@@ -75,7 +75,7 @@ const toUsfmActions = {
         {
             description: "Output chapter or verses",
             test: () => true,
-            action: ({config, context, workspace, output}) => {
+            action: ({context, workspace}) => {
                 const element = context.sequences[0].element;
                 if (element.subType === 'chapter') {
                     workspace.usfmBits.push(`\n\\c ${element.atts['number']}\n`);
