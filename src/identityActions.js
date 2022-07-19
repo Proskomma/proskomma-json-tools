@@ -47,19 +47,20 @@ const identityActions = {
         {
             description: "identity",
             test: () => true,
-            action: ({config, context, workspace, output}) => {
-                workspace.currentBlock = workspace.currentSequence.block;
+            action: (environment) => {
+                environment.workspace.currentBlock = environment.workspace.currentSequence.block;
                 const graftRecord = {
-                    type: workspace.currentBlock.type,
-                    subtype: workspace.currentBlock.subType,
+                    type: environment.workspace.currentBlock.type,
+                    subtype: environment.workspace.currentBlock.subType,
                 };
-                if (workspace.currentBlock.target) {
-                    graftRecord.target = workspace.currentBlock.target;
+                if (environment.workspace.currentBlock.target) {
+                    graftRecord.target = environment.workspace.currentBlock.target;
+                    environment.context.renderer.renderSequenceId(environment, graftRecord.target);
                 }
-                if (workspace.currentBlock.isNew) {
-                    graftRecord.new = workspace.currentBlock.isNew;
+                if (environment.workspace.currentBlock.isNew) {
+                    graftRecord.new = environment.workspace.currentBlock.isNew;
                 }
-                workspace.outputSequence.blocks.push(graftRecord);
+                environment.workspace.outputSequence.blocks.push(graftRecord);
             }
         },
     ],
@@ -126,19 +127,21 @@ const identityActions = {
         {
             description: "identity",
             test: () => true,
-            action: ({config, context, workspace, output}) => {
-                const element = context.sequences[0].element;
+            action: (environment) => {
+                const element = environment.context.sequences[0].element;
                 const graftRecord = {
                     type: element.type,
                     subtype: element.subType,
                 };
                 if (element.target) {
                     graftRecord.target = element.target;
+                    environment.context.renderer.renderSequenceId(environment, element.target);
                 }
                 if (element.isNew) {
                     graftRecord.new = element.isNew;
                 }
-                workspace.outputContentStack[0].push(graftRecord);
+                environment.workspace.outputContentStack[0].push(graftRecord);
+                environment.context.renderer.renderSequenceId(environment, element.target);
             }
         },
     ],

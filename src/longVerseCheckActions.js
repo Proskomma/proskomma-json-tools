@@ -9,6 +9,20 @@ const longVerseCheckActions = {
             }
         },
     ],
+    inlineGraft: [
+        {
+            description: "Do not follow grafts",
+            test: () => true,
+            action: () => null,
+        }
+    ],
+    blockGraft: [
+        {
+            description: "Do not follow grafts",
+            test: () => true,
+            action: () => null,
+        }
+    ],
     mark: [
         {
             description: "Check verse length",
@@ -33,7 +47,7 @@ const longVerseCheckActions = {
     text: [
         {
             description: "Increment verse word count",
-            test: ({context}) => context.sequences[0].type === "main",
+            test: () => true,
             action: ({context, workspace}) => {
                 const text = context.sequences[0].element.text;
                 workspace.verseWordCount += text.split(/\s+/)

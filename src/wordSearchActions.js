@@ -27,7 +27,7 @@ const wordSearchActions = {
     text: [
         {
             description: "Add matching verses to set",
-            test: ({context, workspace}) => workspace.chapter && workspace.verses && context.sequences[0].type === "main",
+            test: ({context, workspace}) => workspace.chapter && workspace.verses,
             action: ({config, context, workspace, output}) => {
                 const text = context.sequences[0].element.text;
                 if (text.toLowerCase().includes(config.toSearch.toLowerCase())) {

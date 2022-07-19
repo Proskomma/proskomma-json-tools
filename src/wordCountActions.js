@@ -11,7 +11,7 @@ const wordCountActions = {
     text: [
         {
             description: "Split strings and add words to word object",
-            test: ({config, context}) => context.sequences[0].type === "main",
+            test: () => true,
             action: ({config, context, workspace, output}) => {
                 for (let word of context.sequences[0].element.text.split(/[\s:;,.]+/).filter(w => w.length > 0)) {
                     word = word.toLowerCase();
