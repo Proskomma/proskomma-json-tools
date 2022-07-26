@@ -2,7 +2,7 @@ import test from "tape";
 import fse from "fs-extra";
 import path from "path";
 import ProskommaRenderFromJson from "../../src/ProskommaRenderFromJson";
-import toUsfmActions from "../../src/toUsfmActions";
+import toUsfmActions from "../../src/transforms/toUsfmActions";
 
 const testGroup = "Render Perf 2 USFM";
 

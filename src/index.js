@@ -4,11 +4,8 @@ const ProskommaRender = require("./ProskommaRender");
 const ProskommaRenderFromJson = require("./ProskommaRenderFromJson");
 const ProskommaRenderFromProskomma = require("./ProskommaRenderFromProskomma");
 const identityActions = require("./identityActions");
-const wordCountActions = require("./wordCountActions");
-const wordSearchActions = require("./wordSearchActions");
-const longVerseCheckActions = require("./longVerseCheckActions");
-const toUsfmActions = require("./toUsfmActions");
 const mergeActions = require("./mergeActions");
+const transforms = require("./transforms");
 
 module.exports = {
     Validator,
@@ -17,9 +14,6 @@ module.exports = {
     ProskommaRenderFromJson,
     ProskommaRenderFromProskomma,
     identityActions,
-    wordCountActions,
-    wordSearchActions,
-    longVerseCheckActions,
-    toUsfmActions,
     mergeActions,
+    transforms,
 };

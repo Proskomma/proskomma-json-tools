@@ -3,10 +3,10 @@ import test from 'tape';
 const fse = require('fs-extra');
 import path from 'path';
 import ProskommaRenderFromJson from '../../src/ProskommaRenderFromJson';
-import identityActions from '../../src/identityActions';
-import wordCountActions from '../../src/wordCountActions';
-import wordSearchActions from '../../src/wordSearchActions';
-import longVerseCheckActions from '../../src/longVerseCheckActions';
+import identityActions from '../../src/transforms/identityActions';
+import wordCountActions from '../../src/transforms/wordCountActions';
+import wordSearchActions from '../../src/transforms/wordSearchActions';
+import longVerseCheckActions from '../../src/transforms/longVerseCheckActions';
 import mergeActions from '../../src/mergeActions';
 import equal from 'deep-equal';
 
@@ -115,7 +115,7 @@ test(
             const output = {};
             t.doesNotThrow(() => cl.renderDocument({docId: "", config: {}, output}));
             // console.log(JSON.stringify(output, null, 2));
-            t.ok(equal(perf, output));
+            t.ok(equal(perf, output.perf));
         } catch (err) {
             console.log(err);
         }
