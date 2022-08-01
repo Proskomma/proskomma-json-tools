@@ -167,13 +167,7 @@ class ProskommaRenderFromProskomma extends ProskommaRender {
                         direction: "end",
                         type: scopeBits[1] === 'milestone' ? "end_milestone" : "wrapper",
                         subType: `usfm:${camelCase2snakeCase(scopeBits[2])}`,
-                        atts: {}
                     };
-                }
-                if (scopeBits[3] in this._container.atts) {
-                    this._container.atts[scopeBits[3]].push(scopeBits[5]);
-                } else {
-                    this._container.atts[scopeBits[3]] = [scopeBits[5]];
                 }
             }
         } else {
@@ -239,6 +233,11 @@ class ProskommaRenderFromProskomma extends ProskommaRender {
                             type: "start_milestone",
                             subType: `usfm:${camelCase2snakeCase(scopeBits[1])}`,
                             atts: {}
+                        };
+                    } else if (scopeBits[0] === 'milestone' && item.subType === "end") {
+                        this._container = {
+                            type: "end_milestone",
+                            subType: `usfm:${camelCase2snakeCase(scopeBits[1])}`,
                         };
                     }
                 }
