@@ -229,16 +229,22 @@ class ProskommaRenderFromProskomma extends ProskommaRender {
                             };
                         }
                     } else if (scopeBits[0] === 'milestone' && item.subType === "start") {
-                        this._container = {
-                            type: "start_milestone",
-                            subType: `usfm:${camelCase2snakeCase(scopeBits[1])}`,
-                            atts: {}
-                        };
-                    } else if (scopeBits[0] === 'milestone' && item.subType === "end") {
-                        this._container = {
-                            type: "end_milestone",
-                            subType: `usfm:${camelCase2snakeCase(scopeBits[1])}`,
-                        };
+                        if (scopeBits[1] === 'ts') {
+                            const mark = {
+                                type: "mark",
+                                subType: `usfm:${camelCase2snakeCase(scopeBits[1])}`,
+                                atts: {}
+                            };
+                            environment.context.sequences[0].element = mark;
+                            this.renderEvent('mark', environment);
+                            delete environment.context.sequences[0].element;
+                        } else {
+                            this._container = {
+                                type: "start_milestone",
+                                subType: `usfm:${camelCase2snakeCase(scopeBits[1])}`,
+                                atts: {}
+                            }
+                        }
                     }
                 }
             }
