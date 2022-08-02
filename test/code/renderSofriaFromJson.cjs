@@ -127,7 +127,7 @@ const identityActions = {
             }
         },
     ],
-    XinlineGraft: [
+    inlineGraft: [
         {
             description: "identity",
             test: () => true,
@@ -136,16 +136,14 @@ const identityActions = {
                 const graftRecord = {
                     type: element.type,
                 };
-                if (element.sequence) {
-                    graftRecord.sequence = {};
-                    const cachedSequencePointer = environment.workspace.currentSequence;
-                    environment.workspace.currentSequence = graftRecord.sequence;
-                    // const currentContent = environment.workspace.outputContentStack[0];
-                    environment.context.renderer.renderSequence(environment, element.sequence);
-                    //environment.workspace.outputContentStack[0] = currentContent; // Probably need more for nesting!
-                    environment.workspace.currentSequence = cachedSequencePointer;
-                }
+                graftRecord.sequence = {};
                 environment.workspace.outputContentStack[0].push(graftRecord);
+                const currentContent = environment.workspace.outputContentStack[0];
+                const cachedSequencePointer = environment.workspace.currentSequence;
+                environment.workspace.currentSequence = graftRecord.sequence;
+                environment.context.renderer.renderSequence(environment, element.sequence);
+                environment.workspace.outputContentStack[0] = currentContent; // Probably need more for nesting!
+                environment.workspace.currentSequence = cachedSequencePointer;
             }
         },
     ],
