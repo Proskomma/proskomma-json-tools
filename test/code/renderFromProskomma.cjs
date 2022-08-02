@@ -2,7 +2,7 @@ import test from 'tape';
 
 const fse = require('fs-extra');
 import path from 'path';
-import ProskommaRenderFromProskomma from '../../src/ProskommaRenderFromProskomma';
+import PerfRenderFromProskomma from '../../src/PerfRenderFromProskomma';
 import identityActions from '../../src/identityActions';
 import equal from 'deep-equal';
 import {UWProskomma} from 'uw-proskomma';
@@ -21,7 +21,7 @@ test(
     async function (t) {
         try {
             t.plan(1);
-            t.doesNotThrow(() => new ProskommaRenderFromProskomma({proskomma: pk}));
+            t.doesNotThrow(() => new PerfRenderFromProskomma({proskomma: pk}));
         } catch (err) {
             console.log(err);
         }
@@ -34,7 +34,7 @@ test(
         try {
             t.plan(3);
             await thaw(pk, nt_ebible_4book);
-            const cl = new ProskommaRenderFromProskomma({proskomma: pk, actions: identityActions});
+            const cl = new PerfRenderFromProskomma({proskomma: pk, actions: identityActions});
             const output = {};
             t.doesNotThrow(() => cl.renderDocument({docId: "YTM4ZjhlNGUt", config: {}, output}));
             // console.log(JSON.stringify(output, null, 2));
@@ -59,7 +59,7 @@ test(
         try {
             t.plan(3);
             await thaw(pk, nt_uw_1book);
-            const cl = new ProskommaRenderFromProskomma({proskomma: pk, actions: identityActions});
+            const cl = new PerfRenderFromProskomma({proskomma: pk, actions: identityActions});
             const output = {};
             t.doesNotThrow(() => cl.renderDocument({docId: "MWY3OWMwMTUt", config: {}, output}));
             // console.log(JSON.stringify(output, null, 2));

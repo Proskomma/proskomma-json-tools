@@ -1,6 +1,6 @@
 const ProskommaRender = require('./ProskommaRender');
 
-class ProskommaRenderFromJson extends ProskommaRender {
+class PerfRenderFromJson extends ProskommaRender {
 
     constructor(spec) {
         super(spec);
@@ -133,4 +133,4 @@ class ProskommaRenderFromJson extends ProskommaRender {
 
 }
 
-module.exports = ProskommaRenderFromJson;
+module.exports = PerfRenderFromJson;

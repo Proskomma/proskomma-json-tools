@@ -12,7 +12,7 @@ const camelCase2snakeCase = s => {
     return ret.join("");
 }
 
-class ProskommaRenderFromProskomma extends ProskommaRender {
+class PerfRenderFromProskomma extends ProskommaRender {
 
     constructor(spec) {
         super(spec);
@@ -294,4 +294,4 @@ class ProskommaRenderFromProskomma extends ProskommaRender {
 
 }
 
-module.exports = ProskommaRenderFromProskomma;
+module.exports = PerfRenderFromProskomma;

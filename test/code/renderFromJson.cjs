@@ -2,7 +2,7 @@ import test from 'tape';
 
 const fse = require('fs-extra');
 import path from 'path';
-import ProskommaRenderFromJson from '../../src/ProskommaRenderFromJson';
+import PerfRenderFromJson from '../../src/PerfRenderFromJson';
 import identityActions from '../../src/transforms/identityActions';
 import wordCountActions from '../../src/transforms/wordCountActions';
 import wordSearchActions from '../../src/transforms/wordSearchActions';
@@ -17,7 +17,7 @@ test(
     async function (t) {
         try {
             t.plan(1);
-            t.doesNotThrow(() => new ProskommaRenderFromJson({srcJson: {}}));
+            t.doesNotThrow(() => new PerfRenderFromJson({srcJson: {}}));
         } catch (err) {
             console.log(err);
         }
@@ -30,7 +30,7 @@ test(
         try {
             t.plan(1);
             const perf = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'validation', 'valid_flat_document.json')));
-            const cl = new ProskommaRenderFromJson({srcJson: perf});
+            const cl = new PerfRenderFromJson({srcJson: perf});
             t.doesNotThrow(() => cl.renderDocument({docId: "", config: {}, output: {}}));
         } catch (err) {
             console.log(err);
@@ -44,7 +44,7 @@ test(
         try {
             t.plan(1);
             const perf = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'fra_lsg_mrk_perf_doc.json')));
-            const cl = new ProskommaRenderFromJson({srcJson: perf});
+            const cl = new PerfRenderFromJson({srcJson: perf});
             cl.debugLevel = 0;
             cl.addRenderAction(
                 'blockGraft',
@@ -85,7 +85,7 @@ test(
         try {
             t.plan(1);
             const perf = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'validation', 'valid_flat_document.json')));
-            const cl = new ProskommaRenderFromJson({srcJson: perf});
+            const cl = new PerfRenderFromJson({srcJson: perf});
             cl.debugLevel = 0;
             cl.addRenderAction(
                 'metaContent',
@@ -111,7 +111,7 @@ test(
         try {
             t.plan(2);
             const perf = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'validation', 'valid_flat_document.json')));
-            const cl = new ProskommaRenderFromJson({srcJson: perf, actions: identityActions});
+            const cl = new PerfRenderFromJson({srcJson: perf, actions: identityActions});
             const output = {};
             t.doesNotThrow(() => cl.renderDocument({docId: "", config: {}, output}));
             // console.log(JSON.stringify(output, null, 2));
@@ -128,7 +128,7 @@ test(
         try {
             t.plan(1);
             const perf = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'fra_lsg_mrk_perf_doc.json')));
-            const cl = new ProskommaRenderFromJson({srcJson: perf, actions: wordCountActions});
+            const cl = new PerfRenderFromJson({srcJson: perf, actions: wordCountActions});
             const output = {};
             t.doesNotThrow(() => cl.renderDocument({docId: "", config: {}, output}));
         } catch (err) {
@@ -143,7 +143,7 @@ test(
         try {
             t.plan(1);
             const perf = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'fra_lsg_mrk_perf_doc.json')));
-            const cl = new ProskommaRenderFromJson({srcJson: perf, actions: wordSearchActions});
+            const cl = new PerfRenderFromJson({srcJson: perf, actions: wordSearchActions});
             const output = {};
             t.doesNotThrow(() => cl.renderDocument({docId: "", config: {toSearch: "foule"}, output}));
         } catch (err) {
@@ -158,7 +158,7 @@ test(
         try {
             t.plan(1);
             const perf = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'fra_lsg_mrk_perf_doc.json')));
-            const cl = new ProskommaRenderFromJson(
+            const cl = new PerfRenderFromJson(
                 {
                     srcJson: perf,
                     actions: mergeActions(
