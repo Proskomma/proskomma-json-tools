@@ -39,7 +39,6 @@ class SofriaRenderFromJson extends ProskommaRender {
         for (const [blockN, block] of sequence.blocks.entries()) {
             context.sequences[0].block = {
                 type: block.type,
-                subType: block.subtype,
                 blockN,
                 wrappers: []
             }
@@ -84,9 +83,6 @@ class SofriaRenderFromJson extends ProskommaRender {
         }
         if (element.sequence) {
             elementContext.sequence = element.sequence;
-        }
-        if (element.type === 'graft') {
-            elementContext.isNew = element.new || false
         }
         if (elementContext.type === 'text') {
             elementContext.text = element;
