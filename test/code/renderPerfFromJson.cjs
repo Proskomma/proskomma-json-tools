@@ -10,7 +10,7 @@ import longVerseCheckActions from '../../src/transforms/longVerseCheckActions';
 import mergeActions from '../../src/mergeActions';
 import equal from 'deep-equal';
 
-const testGroup = 'Render from JSON';
+const testGroup = 'Render PERF from JSON';
 
 test(
     `Instantiate class (${testGroup})`,
