@@ -4,6 +4,7 @@ const fse = require('fs-extra');
 import path from 'path';
 import SofriaRenderFromJson from '../../src/SofriaRenderFromJson';
 import equal from "deep-equal";
+import {Validator} from "../../src";
 
 const testGroup = 'Render SOFRIA from JSON';
 
@@ -135,15 +136,16 @@ const identityActions = {
                 const element = environment.context.sequences[0].element;
                 const graftRecord = {
                     type: element.type,
+                    subtype: element.subType,
+                    sequence: {},
                 };
-                graftRecord.sequence = {};
-                environment.workspace.outputContentStack[0].push(graftRecord);
-                const currentContent = environment.workspace.outputContentStack[0];
                 const cachedSequencePointer = environment.workspace.currentSequence;
+                const cachedOutputContentStack = [...environment.workspace.outputContentStack];
                 environment.workspace.currentSequence = graftRecord.sequence;
                 environment.context.renderer.renderSequence(environment, element.sequence);
-                environment.workspace.outputContentStack[0] = currentContent; // Probably need more for nesting!
+                environment.workspace.outputContentStack = cachedOutputContentStack;
                 environment.workspace.currentSequence = cachedSequencePointer;
+                environment.workspace.outputContentStack[0].push(graftRecord);
             }
         },
     ],
@@ -159,7 +161,7 @@ const identityActions = {
                     content: [],
                 };
                 if ('atts' in element) {
-                    wrapperRecord.atts = element.atts;
+                    wrapperRecord.atts = {...element.atts};
                 }
                 workspace.outputContentStack[0].push(wrapperRecord);
                 workspace.outputContentStack.unshift(wrapperRecord.content);
@@ -315,13 +317,21 @@ test(
     `Render SOFRIA with identity actions (${testGroup})`,
     async function (t) {
         try {
-            t.plan(1);
+            t.plan(2);
             const sofria = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'fra_lsg_mrk_sofria_doc.json')));
             const cl = new SofriaRenderFromJson({srcJson: sofria, actions: identityActions});
             const output = {};
             t.doesNotThrow(() => cl.renderDocument({docId: "", config: {}, output}));
-            console.log(JSON.stringify(output, null, 2));
-            // t.ok(equal(perf, output.perf));
+            // console.log(JSON.stringify(output, null, 2));
+            const validator = new Validator();
+            let validation = validator.validate(
+                'constraint',
+                'sofriaDocument',
+                '0.2.1',
+                output.sofria
+            );
+            // console.log(validation)
+            t.ok(validation.isValid);
         } catch (err) {
             console.log(err);
         }
