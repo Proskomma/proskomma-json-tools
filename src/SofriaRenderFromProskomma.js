@@ -22,16 +22,36 @@ class PerfRenderFromProskomma extends ProskommaRender {
         this.pk = spec.proskomma;
         this._tokens = [];
         this._container = null;
+        this.cachedSequenceIds = [];
+        this.sequences = null;
     }
 
     renderDocument1({docId, config, context, workspace, output}) {
         const environment = {config, context, workspace, output};
         context.renderer = this;
-        const documentResult = this.pk.gqlQuerySync(`{document(id: "${docId}") {docSetId mainSequence { id } nSequences sequences {id} headers { key value } } }`);
+        const documentResult = this.pk.gqlQuerySync(`{
+          document(id: "${docId}") {
+            docSetId
+            mainSequence { id }
+            nSequences
+            sequences {
+              id
+              type
+              nBlocks
+            }
+            headers {
+              key
+              value
+            }
+          } 
+        }`);
         const docSetId = documentResult.data.document.docSetId;
         const mainId = documentResult.data.document.mainSequence.id;
         const nSequences = documentResult.data.document.nSequences;
-        const sequenceIds = documentResult.data.document.sequences.map(s => s.id);
+        this.sequences = {};
+        for (const seq of documentResult.data.document.sequences) {
+            this.sequences[seq.id] = seq;
+        }
         const headers = {};
         for (const header of documentResult.data.document.headers) {
             headers[header.key] = header.value;
@@ -44,11 +64,11 @@ class PerfRenderFromProskomma extends ProskommaRender {
         context.document = {
             id: docId,
             schema: {
-                "structure": "flat",
+                "structure": "nested",
                 "structure_version": "0.2.1",
                 "constraints": [
                     {
-                        "name": "perf",
+                        "name": "sofria",
                         "version": "0.2.1"
                     }
                 ]
@@ -72,9 +92,9 @@ class PerfRenderFromProskomma extends ProskommaRender {
         };
         context.sequences = [];
         this.renderEvent('startDocument', environment);
-        for (const sequenceId of sequenceIds) {
-            this.renderSequenceId(environment, sequenceId);
-        }
+        this.cachedSequenceIds.unshift(mainId);
+        this.renderSequence(environment, mainId);
+        this.cachedSequenceIds.shift();
         this.renderEvent('endDocument', environment);
     }
 
@@ -87,8 +107,9 @@ class PerfRenderFromProskomma extends ProskommaRender {
         }
     }
 
-    renderSequenceId(environment, sequenceId) {
+    renderSequence(environment) {
         const context = environment.context;
+        const sequenceId = this.cachedSequenceIds[0];
         const documentResult = this.pk.gqlQuerySync(`{document(id: "${context.document.id}") {sequence(id:"${sequenceId}") {id type nBlocks } } }`);
         const sequence = documentResult.data.document.sequence;
         if (!sequence) {
@@ -117,10 +138,11 @@ class PerfRenderFromProskomma extends ProskommaRender {
                     type: "graft",
                     subType: camelCase2snakeCase(blockGraft.subType),
                     blockN: outputBlockN,
+                    sequence: this.sequences[blockGraft.payload]
                 }
-                context.sequences[0].block.target = blockGraft.payload;
-                context.sequences[0].block.isNew = false;
+                this.cachedSequenceIds.unshift(blockGraft.payload);
                 this.renderEvent('blockGraft', environment);
+                this.cachedSequenceIds.shift();
                 outputBlockN++;
             }
             context.sequences[0].block = {
@@ -183,11 +205,12 @@ class PerfRenderFromProskomma extends ProskommaRender {
                     const graft = {
                         type: "graft",
                         subType: camelCase2snakeCase(item.subType),
-                        target: item.payload,
-                        isNew: false,
+                        sequence: this.sequences[item.payload],
                     };
                     environment.context.sequences[0].element = graft;
+                    this.cachedSequenceIds.unshift(item.payload);
                     this.renderEvent('inlineGraft', environment);
+                    this.cachedSequenceIds.shift();
                     delete environment.context.sequences[0].element;
                 } else { // scope
                     this.maybeRenderText(environment);

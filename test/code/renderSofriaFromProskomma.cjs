@@ -12,7 +12,7 @@ import {Validator} from "../../src/";
 const testGroup = 'Render SOFRIA from Proskomma';
 
 const pk = new UWProskomma();
-/*
+
 test(
     `Instantiate class (${testGroup})`,
     async function (t) {
@@ -38,7 +38,7 @@ test(
                     {docId: "YTM4ZjhlNGUt", config: {}, output}
                 )
             );
-            // console.log(JSON.stringify(output, null, 2));
+            console.log(JSON.stringify(output, null, 2));
             const validator = new Validator();
             const validation = validator.validate(
                 'constraint',
@@ -79,4 +79,3 @@ test(
     },
 );
 
- */

@@ -72,9 +72,7 @@ class PerfRenderFromProskomma extends ProskommaRender {
         };
         context.sequences = [];
         this.renderEvent('startDocument', environment);
-        for (const sequenceId of sequenceIds) {
-            this.renderSequenceId(environment, sequenceId);
-        }
+        this.renderSequenceId(environment, mainId);
         this.renderEvent('endDocument', environment);
     }
 
