@@ -199,74 +199,86 @@ class PerfRenderFromProskomma extends ProskommaRender {
             }
             if (item.type === 'token') {
                 this._tokens.push(item.payload.replace(/\s+/g, " "));
-            } else {
-                if (item.type === "graft") {
-                    this.maybeRenderText(environment);
-                    const graft = {
-                        type: "graft",
-                        subType: camelCase2snakeCase(item.subType),
-                        sequence: this.sequences[item.payload],
+            } else if (item.type === "graft") {
+                this.maybeRenderText(environment);
+                const graft = {
+                    type: "graft",
+                    subType: camelCase2snakeCase(item.subType),
+                    sequence: this.sequences[item.payload],
+                };
+                environment.context.sequences[0].element = graft;
+                this.cachedSequenceIds.unshift(item.payload);
+                this.renderEvent('inlineGraft', environment);
+                this.cachedSequenceIds.shift();
+                delete environment.context.sequences[0].element;
+            } else { // scope
+                this.maybeRenderText(environment);
+                const scopeBits = item.payload.split('/');
+                if (["chapter", "verses"].includes(scopeBits[0])) {
+                    const wrapper = {
+                        type: "wrapper",
+                        subType: camelCase2snakeCase(scopeBits[0]),
+                        atts: {
+                            number: scopeBits[1]
+                        }
                     };
-                    environment.context.sequences[0].element = graft;
-                    this.cachedSequenceIds.unshift(item.payload);
-                    this.renderEvent('inlineGraft', environment);
-                    this.cachedSequenceIds.shift();
-                    delete environment.context.sequences[0].element;
-                } else { // scope
-                    this.maybeRenderText(environment);
-                    const scopeBits = item.payload.split('/');
-                    if (["chapter", "verses"].includes(scopeBits[0])) {
-                        if (item.subType === 'start') {
-                            const mark = {
-                                type: "mark",
-                                subType: camelCase2snakeCase(scopeBits[0]),
-                                atts: {
-                                    number: scopeBits[1]
-                                }
-                            };
-                            environment.context.sequences[0].element = mark;
-                            this.renderEvent('mark', environment);
-                            delete environment.context.sequences[0].element;
-                        }
-                    } else if (scopeBits[0] === 'span') {
-                        const wrapper = {
-                            type: "wrapper",
-                            subType: `usfm:${scopeBits[0]}`,
-                        };
-                        environment.context.sequences[0].element = wrapper;
-                        if (item.subType === 'start') {
-                            environment.context.sequences[0].block.wrappers.unshift(wrapper.subType);
-                            this.renderEvent('startWrapper', environment);
-                        } else {
-                            this.renderEvent('endWrapper', environment);
-                            environment.context.sequences[0].block.wrappers.shift();
-                        }
-                        delete environment.context.sequences[0].element;
-                    } else if (scopeBits[0] === 'spanWithAtts') {
-                        if (item.subType === 'start') {
-                            this._container = {
-                                direction: "start",
-                                type: "wrapper",
-                                subType: `usfm:${scopeBits[1]}`,
-                                atts: {}
-                            };
-                        }
-                    } else if (scopeBits[0] === 'milestone' && item.subType === "start") {
-                        if (scopeBits[1] === 'ts') {
-                            const mark = {
-                                type: "mark",
-                                subType: `usfm:${camelCase2snakeCase(scopeBits[1])}`,
-                                atts: {}
-                            };
-                            environment.context.sequences[0].element = mark;
-                            this.renderEvent('mark', environment);
-                            delete environment.context.sequences[0].element;
-                        } else {
-                            this._container = {
-                                type: "start_milestone",
-                                subType: `usfm:${camelCase2snakeCase(scopeBits[1])}`,
-                                atts: {}
+                    environment.context.sequences[0].element = wrapper;
+                    if (item.subType === 'start') {
+                        environment.context.sequences[0].block.wrappers.unshift(wrapper.subType);
+                        this.renderEvent('startWrapper', environment);
+                        const cvMark = {
+                            "type": "mark",
+                            "subType": `${scopeBits[0]}_label`,
+                            "atts": {
+                                "number": scopeBits[1]
                             }
+                        };
+                        environment.context.sequences[0].element = cvMark;
+                        this.renderEvent('mark', environment);
+                        environment.context.sequences[0].element = wrapper;
+                    } else {
+                        this.renderEvent('endWrapper', environment);
+                        environment.context.sequences[0].block.wrappers.shift();
+                        delete environment.context.sequences[0].element;
+                    }
+                } else if (scopeBits[0] === 'span') {
+                    const wrapper = {
+                        type: "wrapper",
+                        subType: `usfm:${scopeBits[0]}`,
+                    };
+                    environment.context.sequences[0].element = wrapper;
+                    if (item.subType === 'start') {
+                        environment.context.sequences[0].block.wrappers.unshift(wrapper.subType);
+                        this.renderEvent('startWrapper', environment);
+                    } else {
+                        this.renderEvent('endWrapper', environment);
+                        environment.context.sequences[0].block.wrappers.shift();
+                    }
+                    delete environment.context.sequences[0].element;
+                } else if (scopeBits[0] === 'spanWithAtts') {
+                    if (item.subType === 'start') {
+                        this._container = {
+                            direction: "start",
+                            type: "wrapper",
+                            subType: `usfm:${scopeBits[1]}`,
+                            atts: {}
+                        };
+                    }
+                } else if (scopeBits[0] === 'milestone' && item.subType === "start") {
+                    if (scopeBits[1] === 'ts') {
+                        const mark = {
+                            type: "mark",
+                            subType: `usfm:${camelCase2snakeCase(scopeBits[1])}`,
+                            atts: {}
+                        };
+                        environment.context.sequences[0].element = mark;
+                        this.renderEvent('mark', environment);
+                        delete environment.context.sequences[0].element;
+                    } else {
+                        this._container = {
+                            type: "start_milestone",
+                            subType: `usfm:${camelCase2snakeCase(scopeBits[1])}`,
+                            atts: {}
                         }
                     }
                 }
