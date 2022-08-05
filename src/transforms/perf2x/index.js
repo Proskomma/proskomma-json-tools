@@ -3,7 +3,7 @@ import toUsfmActions from "./toUsfmActions";
 import wordCountActions from "./wordCountActions";
 import wordSearchActions from "./wordSearchActions";
 
-export {
+export default {
     longVerseCheckActions,
     toUsfmActions,
     wordCountActions,

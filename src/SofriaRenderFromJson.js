@@ -8,6 +8,7 @@ class SofriaRenderFromJson extends ProskommaRender {
             throw new Error(`Must provide srcJson`);
         }
         this.srcJson = spec.srcJson;
+        this.cachedSequences = [];
     }
 
     renderDocument1({docId, config, context, workspace, output}) {
@@ -32,9 +33,18 @@ class SofriaRenderFromJson extends ProskommaRender {
         }
     }
 
-    renderSequence(environment, sequence) {
+    renderSequence(environment, providedSequence) {
+        let sequence;
+        if (!providedSequence) {
+            if (this.cachedSequences.length === 0) {
+                throw new Error("No sequence provided and no sequences cached");
+            }
+            sequence = this.cachedSequences[0];
+        } else {
+            sequence = providedSequence;
+        }
         const context = environment.context;
-        context.sequences.unshift(this.sequenceContext(sequence));
+        context.sequences.unshift(sequence);
         this.renderEvent('startSequence', environment);
         for (const [blockN, block] of sequence.blocks.entries()) {
             context.sequences[0].block = {
@@ -43,8 +53,10 @@ class SofriaRenderFromJson extends ProskommaRender {
                 wrappers: []
             }
             if (block.type === 'graft') {
-                context.sequences[0].block.sequence = block.sequence;
+                context.sequences[0].block.sequence = this.sequenceContext(block.sequence);
+                this.cachedSequences.unshift(block.sequence);
                 this.renderEvent('blockGraft', environment);
+                this.cachedSequences.shift();
             } else {
                 this.renderEvent('startParagraph', environment);
                 this.renderContent(block.content, environment);
@@ -53,6 +65,7 @@ class SofriaRenderFromJson extends ProskommaRender {
             delete context.sequences[0].block;
         }
         this.renderEvent('endSequence', environment);
+        this.cachedSequence = null;
         context.sequences.shift();
     }
 
@@ -82,7 +95,7 @@ class SofriaRenderFromJson extends ProskommaRender {
             elementContext.atts = element.atts;
         }
         if (element.sequence) {
-            elementContext.sequence = element.sequence;
+            elementContext.sequence = this.sequenceContext(element.sequence);
         }
         if (elementContext.type === 'text') {
             elementContext.text = element;
@@ -101,7 +114,9 @@ class SofriaRenderFromJson extends ProskommaRender {
             this.renderEvent('endMilestone', environment);
             maybeRenderMetaContent(elementContext);
         } else if (elementContext.type === "graft") {
+            this.cachedSequences.unshift(element.sequence);
             this.renderEvent('inlineGraft', environment);
+            this.cachedSequences.shift();
             maybeRenderMetaContent(elementContext);
         } else if (elementContext.type === "wrapper") {
             context.sequences[0].block.wrappers.unshift(elementContext.subType);

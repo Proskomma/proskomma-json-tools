@@ -1,20 +1,16 @@
 import test from 'tape';
 
 const fse = require('fs-extra');
-import path from 'path';
 import PerfRenderFromProskomma from '../../src/PerfRenderFromProskomma';
-import identityActions from '../../src/identityActions';
-import equal from 'deep-equal';
 import {UWProskomma} from 'uw-proskomma';
 import {thaw} from 'proskomma-freeze';
 import {nt_ebible_4book} from 'proskomma-frozen-archives';
 import {nt_uw_1book} from 'proskomma-frozen-archives';
 import {Validator} from "../../src/";
-
+import identityActions from '../../src/transforms/perf2perf/identityActions';
 const testGroup = 'Render PERF from Proskomma';
 
 const pk = new UWProskomma();
-const pk2 = new UWProskomma();
 
 test(
     `Instantiate class (${testGroup})`,
@@ -43,7 +39,7 @@ test(
                 'constraint',
                 'perfDocument',
                 '0.2.1',
-                output
+                output.perf
             );
             t.ok(validation.isValid);
             t.equal(validation.errors, null);
@@ -68,7 +64,7 @@ test(
                 'constraint',
                 'perfDocument',
                 '0.2.1',
-                output
+                output.perf
             );
             t.ok(validation.isValid);
             t.equal(validation.errors, null);
