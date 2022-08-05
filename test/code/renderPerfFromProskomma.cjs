@@ -11,7 +11,7 @@ import {nt_ebible_4book} from 'proskomma-frozen-archives';
 import {nt_uw_1book} from 'proskomma-frozen-archives';
 import {Validator} from "../../src/";
 
-const testGroup = 'Render from Proskomma';
+const testGroup = 'Render PERF from Proskomma';
 
 const pk = new UWProskomma();
 const pk2 = new UWProskomma();

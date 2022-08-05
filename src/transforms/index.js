@@ -1,8 +1,8 @@
-import identityActions from './identityActions';
-import longVerseCheckActions from "./longVerseCheckActions";
-import toUsfmActions from "./toUsfmActions";
-import wordCountActions from "./wordCountActions";
-import wordSearchActions from "./wordSearchActions";
+import identityActions from './perf2perf/identityActions';
+import longVerseCheckActions from "./perf2x/longVerseCheckActions";
+import toUsfmActions from "./perf2x/toUsfmActions";
+import wordCountActions from "./perf2x/wordCountActions";
+import wordSearchActions from "./perf2x/wordSearchActions";
 
 export {
     identityActions,

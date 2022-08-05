@@ -3,10 +3,10 @@ import test from 'tape';
 const fse = require('fs-extra');
 import path from 'path';
 import PerfRenderFromJson from '../../src/PerfRenderFromJson';
-import identityActions from '../../src/transforms/identityActions';
-import wordCountActions from '../../src/transforms/wordCountActions';
-import wordSearchActions from '../../src/transforms/wordSearchActions';
-import longVerseCheckActions from '../../src/transforms/longVerseCheckActions';
+import identityActions from '../../src/transforms/perf2perf/identityActions';
+import wordCountActions from '../../src/transforms/perf2x/wordCountActions';
+import wordSearchActions from '../../src/transforms/perf2x/wordSearchActions';
+import longVerseCheckActions from '../../src/transforms/perf2x/longVerseCheckActions';
 import mergeActions from '../../src/mergeActions';
 import equal from 'deep-equal';
 
