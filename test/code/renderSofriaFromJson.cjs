@@ -112,7 +112,7 @@ test(
             const cl = new SofriaRenderFromJson({srcJson: sofria, actions: identityActions});
             const output = {};
             t.doesNotThrow(() => cl.renderDocument({docId: "", config: {}, output}));
-            console.log(JSON.stringify(output, null, 2));
+            // console.log(JSON.stringify(output, null, 2));
             const validator = new Validator();
             let validation = validator.validate(
                 'constraint',

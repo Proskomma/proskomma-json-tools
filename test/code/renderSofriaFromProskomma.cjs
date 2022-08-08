@@ -38,7 +38,35 @@ test(
                     {docId: "YTM4ZjhlNGUt", config: {}, output}
                 )
             );
-            console.log(JSON.stringify(output, null, 2));
+            // console.log(JSON.stringify(output, null, 2));
+            const validator = new Validator();
+            const validation = validator.validate(
+                'constraint',
+                'sofriaDocument',
+                '0.2.1',
+                output.sofria
+            );
+            t.ok(validation.isValid);
+            t.equal(validation.errors, null);
+        } catch (err) {
+            console.log(err);
+        }
+    },
+);
+
+test(
+    `Render 1 chapter of SOFRIA (${testGroup})`,
+    async function (t) {
+        try {
+            t.plan(3);
+            const cl = new SofriaRenderFromProskomma({proskomma: pk, actions: identityActions});
+            const output = {};
+            t.doesNotThrow(
+                () => cl.renderDocument(
+                    {docId: "YTM4ZjhlNGUt", config: {chapters:["2"]}, output}
+                )
+            );
+            // console.log(JSON.stringify(output, null, 2));
             const validator = new Validator();
             const validation = validator.validate(
                 'constraint',

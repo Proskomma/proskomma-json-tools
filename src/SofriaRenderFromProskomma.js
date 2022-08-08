@@ -90,6 +90,9 @@ class PerfRenderFromProskomma extends ProskommaRender {
             mainSequenceId: mainId,
             nSequences,
         };
+        if (config.chapters) {
+            context.document.metadata.document.properties.chapters = config.chapters[0];
+        }
         context.sequences = [];
         this.renderEvent('startDocument', environment);
         this.cachedSequenceIds.unshift(mainId);
@@ -110,7 +113,7 @@ class PerfRenderFromProskomma extends ProskommaRender {
     renderSequence(environment) {
         const context = environment.context;
         const sequenceId = this.cachedSequenceIds[0];
-        const documentResult = this.pk.gqlQuerySync(`{document(id: "${context.document.id}") {sequence(id:"${sequenceId}") {id type nBlocks } } }`);
+        const documentResult = this.pk.gqlQuerySync(`{document(id: "${context.document.id}") {sequence(id:"${sequenceId}") {id type nBlocks blocks { os {payload} is {payload} } } } }`);
         const sequence = documentResult.data.document.sequence;
         if (!sequence) {
             throw new Error(`Sequence '${sequenceId}' not found in renderSequenceId()`);
@@ -119,6 +122,19 @@ class PerfRenderFromProskomma extends ProskommaRender {
         this.renderEvent('startSequence', environment);
         let outputBlockN = 0;
         for (let inputBlockN = 0; inputBlockN < sequence.nBlocks; inputBlockN++) {
+            if (environment.config.chapters && sequence.type === "main") {
+                const chapterScopes = [
+                    ...sequence.blocks[inputBlockN].os.map(s => s.payload),
+                    ...sequence.blocks[inputBlockN].is.map(s => s.payload)
+                ].filter(
+                    s => ['chapter'].includes(s.split('/')[0])
+                ).map(
+                    s => s.split('/')[1]
+                );
+                if (chapterScopes.length === 0 || !environment.config.chapters.includes(chapterScopes[0])) {
+                    continue;
+                }
+            }
             const blocksResult = this.pk.gqlQuerySync(
                 `{
                document(id: "${context.document.id}") {
