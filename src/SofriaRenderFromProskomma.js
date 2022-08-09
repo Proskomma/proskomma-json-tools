@@ -12,7 +12,7 @@ const camelCase2snakeCase = s => {
     return ret.join("");
 }
 
-class PerfRenderFromProskomma extends ProskommaRender {
+class SofriaRenderFromProskomma extends ProskommaRender {
 
     constructor(spec) {
         super(spec);
@@ -345,4 +345,4 @@ class PerfRenderFromProskomma extends ProskommaRender {
 
 }
 
-module.exports = PerfRenderFromProskomma;
+module.exports = SofriaRenderFromProskomma;
