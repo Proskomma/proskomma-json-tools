@@ -1,6 +1,7 @@
 import test from 'tape';
 
-const fse = require('fs-extra');
+import path from 'path';
+import fse from 'fs-extra';
 import SofriaRenderFromProskomma from '../../src/SofriaRenderFromProskomma';
 import identityActions from '../../src/transforms/sofria2sofria/identityActions';
 import {UWProskomma} from 'uw-proskomma';
@@ -106,4 +107,38 @@ test(
         }
     },
 );
+
+test(
+    `Render SOFRIA with multi-para verses (${testGroup})`,
+    async function (t) {
+        try {
+            t.plan(3);
+            const pk2 = new UWProskomma();
+            const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'verse_over_para_boundary.usfm'))).toString();
+            console.log(usfm);
+            pk2.importDocument({'org': 'eBible', 'lang': 'en', 'abbr': "web"}, "usfm", usfm);
+            const docId = pk2.gqlQuerySync('{documents { id } }').data.documents[0].id;
+            const cl = new SofriaRenderFromProskomma({proskomma: pk2, actions: identityActions});
+            const output = {};
+            t.doesNotThrow(
+                () => cl.renderDocument(
+                    {docId, config: {}, output}
+                )
+            );
+            // console.log(JSON.stringify(output, null, 2));
+            const validator = new Validator();
+            const validation = validator.validate(
+                'constraint',
+                'sofriaDocument',
+                '0.2.1',
+                output.sofria
+            );
+            t.ok(validation.isValid);
+            t.equal(validation.errors, null);
+        } catch (err) {
+            console.log(err);
+        }
+    },
+);
+
 

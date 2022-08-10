@@ -5,6 +5,7 @@ import path from 'path';
 import SofriaRenderFromJson from '../../src/SofriaRenderFromJson';
 import identityActions from '../../src/transforms/sofria2sofria/identityActions';
 import {Validator} from "../../src";
+import {UWProskomma} from "uw-proskomma";
 
 const testGroup = 'Render SOFRIA from JSON';
 

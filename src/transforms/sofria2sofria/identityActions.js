@@ -9,6 +9,8 @@ const identityActions = {
                 output.sofria.metadata = context.document.metadata;
                 output.sofria.sequence = {};
                 workspace.currentSequence = output.sofria.sequence;
+                workspace.chapter = null;
+                workspace.verses = null;
             }
         },
     ],
@@ -24,7 +26,7 @@ const identityActions = {
         {
             description: "identity",
             test: () => true,
-            action: ({config, context, workspace, output}) => {
+            action: ({context, workspace}) => {
                 workspace.currentSequence.type = context.sequences[0].type;
                 workspace.currentSequence.blocks = [];
             }
@@ -34,7 +36,9 @@ const identityActions = {
         {
             description: "identity",
             test: () => true,
-            action: ({config, context, workspace, output}) => {
+            action: ({workspace}) => {
+                workspace.chapter = null;
+                workspace.verses = null;
             }
         },
     ],
@@ -63,7 +67,7 @@ const identityActions = {
         {
             description: "identity",
             test: () => true,
-            action: ({config, context, workspace, output}) => {
+            action: ({context, workspace}) => {
                 const currentBlock = context.sequences[0].block;
                 const paraRecord = {
                     type: currentBlock.type,
@@ -74,6 +78,18 @@ const identityActions = {
                 workspace.currentContent = paraRecord.content;
                 workspace.outputBlock = workspace.currentSequence.blocks[workspace.currentSequence.blocks.length - 1];
                 workspace.outputContentStack = [workspace.outputBlock.content];
+                for (const cv of ['chapter', 'verses']) {
+                    if (workspace[cv]) {
+                        const wrapperRecord = {
+                            type: 'wrapper',
+                            subtype: cv,
+                            content: [],
+                            atts: {number: workspace[cv]}
+                        };
+                        workspace.outputContentStack[0].push(wrapperRecord);
+                        workspace.outputContentStack.unshift(wrapperRecord.content);
+                    }
+                }
             }
         },
     ],
@@ -81,8 +97,7 @@ const identityActions = {
         {
             description: "identity",
             test: () => true,
-            action: ({config, context, workspace, output}) => {
-            }
+            action: ({}) => {}
         },
     ],
     metaContent: [
@@ -90,7 +105,7 @@ const identityActions = {
             description: "identity",
             test: () => true,
             action: (environment) => {
-                const {config, context, workspace, output} = environment;
+                const {context, workspace} = environment;
                 const element = context.sequences[0].element;
                 workspace.currentContent = element.metaContent;
                 const lastOutputItem = workspace.outputContentStack[1][workspace.outputContentStack[1].length - 1];
@@ -105,7 +120,7 @@ const identityActions = {
         {
             description: "identity",
             test: () => true,
-            action: ({config, context, workspace, output}) => {
+            action: ({context, workspace}) => {
                 const element = context.sequences[0].element;
                 const markRecord = {
                     type: element.type,
@@ -143,8 +158,13 @@ const identityActions = {
         {
             description: "identity",
             test: () => true,
-            action: ({config, context, workspace, output}) => {
+            action: ({context, workspace}) => {
                 const element = context.sequences[0].element;
+                if (element.subType === "chapter") {
+                    workspace.chapter = element.atts.number;
+                } else if (element.subType === "verses") {
+                    workspace.verses = element.atts.number;
+                }
                 const wrapperRecord = {
                     type: element.type,
                     subtype: element.subType,
@@ -162,7 +182,13 @@ const identityActions = {
         {
             description: "identity",
             test: () => true,
-            action: ({config, context, workspace, output}) => {
+            action: ({context, workspace}) => {
+                const element = context.sequences[0].element;
+                if (element.subType === "chapter") {
+                    workspace.chapter = null;
+                } else if (element.subType === "verses") {
+                    workspace.verses = null;
+                }
                 workspace.outputContentStack.shift();
             }
         },
@@ -171,7 +197,7 @@ const identityActions = {
         {
             description: "identity",
             test: () => true,
-            action: ({config, context, workspace, output}) => {
+            action: ({context, workspace}) => {
                 const element = context.sequences[0].element;
                 const milestoneRecord = {
                     type: element.type,
@@ -188,7 +214,7 @@ const identityActions = {
         {
             description: "identity",
             test: () => true,
-            action: ({config, context, workspace, output}) => {
+            action: ({context, workspace}) => {
                 const element = context.sequences[0].element;
                 const milestoneRecord = {
                     type: element.type,
@@ -202,7 +228,7 @@ const identityActions = {
         {
             description: "identity",
             test: () => true,
-            action: ({config, context, workspace, output}) => {
+            action: ({context, workspace}) => {
                 const element = context.sequences[0].element;
                 workspace.outputContentStack[0].push(element.text);
             }
