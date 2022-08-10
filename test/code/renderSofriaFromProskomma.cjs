@@ -115,7 +115,6 @@ test(
             t.plan(3);
             const pk2 = new UWProskomma();
             const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'verse_over_para_boundary.usfm'))).toString();
-            console.log(usfm);
             pk2.importDocument({'org': 'eBible', 'lang': 'en', 'abbr': "web"}, "usfm", usfm);
             const docId = pk2.gqlQuerySync('{documents { id } }').data.documents[0].id;
             const cl = new SofriaRenderFromProskomma({proskomma: pk2, actions: identityActions});
