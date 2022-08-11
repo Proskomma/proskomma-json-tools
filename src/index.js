@@ -5,7 +5,6 @@ const PerfRenderFromJson = require("./PerfRenderFromJson");
 const PerfRenderFromProskomma = require("./PerfRenderFromProskomma");
 const SofriaRenderFromJson = require("./SofriaRenderFromJson");
 const SofriaRenderFromProskomma = require("./SofriaRenderFromProskomma");
-const identityActions = require("./identityActions");
 const mergeActions = require("./mergeActions");
 const transforms = require("./transforms");
 
@@ -17,7 +16,6 @@ module.exports = {
     SofriaRenderFromJson,
     SofriaRenderFromProskomma,
     PerfRenderFromProskomma,
-    identityActions,
     mergeActions,
     transforms,
 };
