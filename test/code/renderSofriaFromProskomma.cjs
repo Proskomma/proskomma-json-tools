@@ -140,4 +140,36 @@ test(
     },
 );
 
-
+test(
+    `Check for xrefs and wj in SOFRIA (${testGroup})`,
+    async function (t) {
+        try {
+            t.plan(5);
+            const pk2 = new UWProskomma();
+            const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'webbe_mrk.usfm'))).toString();
+            pk2.importDocument({'org': 'eBible', 'lang': 'en', 'abbr': "web"}, "usfm", usfm);
+            const docId = pk2.gqlQuerySync('{documents { id } }').data.documents[0].id;
+            const cl = new SofriaRenderFromProskomma({proskomma: pk2, actions: identityActions});
+            const output = {};
+            t.doesNotThrow(
+                () => cl.renderDocument(
+                    {docId, config: {}, output}
+                )
+            );
+            // console.log(JSON.stringify(output.sofria, null, 2));
+            const validator = new Validator();
+            const validation = validator.validate(
+                'constraint',
+                'sofriaDocument',
+                '0.2.1',
+                output.sofria
+            );
+            t.ok(validation.isValid);
+            t.equal(validation.errors, null);
+            const sofriaString = JSON.stringify(output.sofria);
+            t.ok(sofriaString.includes('footnote'));
+            t.ok(sofriaString.includes('usfm:wj'));
+        } catch (err) {
+            console.log(err);
+        }
+    },);

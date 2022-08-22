@@ -260,7 +260,7 @@ class SofriaRenderFromProskomma extends ProskommaRender {
                 } else if (scopeBits[0] === 'span') {
                     const wrapper = {
                         type: "wrapper",
-                        subType: `usfm:${scopeBits[0]}`,
+                        subType: `usfm:${scopeBits[1]}`,
                     };
                     environment.context.sequences[0].element = wrapper;
                     if (item.subType === 'start') {
