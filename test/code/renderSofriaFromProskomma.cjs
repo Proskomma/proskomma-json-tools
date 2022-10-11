@@ -4,15 +4,12 @@ import path from 'path';
 import fse from 'fs-extra';
 import SofriaRenderFromProskomma from '../../src/SofriaRenderFromProskomma';
 import identityActions from '../../src/transforms/sofria2sofria/identityActions';
-import {UWProskomma} from 'uw-proskomma';
-import {thaw} from 'proskomma-freeze';
-import {nt_ebible_4book} from 'proskomma-frozen-archives';
-import {nt_uw_1book} from 'proskomma-frozen-archives';
+import {Proskomma} from 'proskomma';
 import {Validator} from "../../src/";
 
 const testGroup = 'Render SOFRIA from Proskomma';
 
-const pk = new UWProskomma();
+const pk = new Proskomma();
 
 test(
     `Instantiate class (${testGroup})`,
@@ -31,12 +28,15 @@ test(
     async function (t) {
         try {
             t.plan(3);
-            await thaw(pk, nt_ebible_4book);
+            // await thaw(pk, nt_ebible_4book);
+            const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'webbe_mrk.usfm'))).toString();
+            pk.importDocument({'lang': 'eng', 'abbr': "web"}, "usfm", usfm);
+            const docId = pk.gqlQuerySync('{documents { id } }').data.documents[0].id;
             const cl = new SofriaRenderFromProskomma({proskomma: pk, actions: identityActions});
             const output = {};
             t.doesNotThrow(
                 () => cl.renderDocument(
-                    {docId: "YTM4ZjhlNGUt", config: {}, output}
+                    {docId, config: {}, output}
                 )
             );
             // console.log(JSON.stringify(output, null, 2));
@@ -60,11 +60,12 @@ test(
     async function (t) {
         try {
             t.plan(3);
+            const docId = pk.gqlQuerySync('{documents { id } }').data.documents[0].id;
             const cl = new SofriaRenderFromProskomma({proskomma: pk, actions: identityActions});
             const output = {};
             t.doesNotThrow(
                 () => cl.renderDocument(
-                    {docId: "YTM4ZjhlNGUt", config: {chapters:["2"]}, output}
+                    {docId, config: {chapters:["2"]}, output}
                 )
             );
             // console.log(JSON.stringify(output, null, 2));
@@ -88,10 +89,14 @@ test(
     async function (t) {
         try {
             t.plan(3);
-            await thaw(pk, nt_uw_1book);
-            const cl = new SofriaRenderFromProskomma({proskomma: pk, actions: identityActions});
+            // await thaw(pk, nt_uw_1book);
+            const pk2 = new Proskomma();
+            const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'ult_uw_mrk.usfm'))).toString();
+            pk2.importDocument({'lang': 'eng', 'abbr': "ult"}, "usfm", usfm);
+            const docId = pk2.gqlQuerySync('{documents { id } }').data.documents[0].id;
+            const cl = new SofriaRenderFromProskomma({proskomma: pk2, actions: identityActions});
             const output = {};
-            t.doesNotThrow(() => cl.renderDocument({docId: "MWY3OWMwMTUt", config: {}, output}));
+            t.doesNotThrow(() => cl.renderDocument({docId, config: {}, output}));
             // console.log(JSON.stringify(output, null, 2));
             const validator = new Validator();
             const validation = validator.validate(
@@ -113,11 +118,11 @@ test(
     async function (t) {
         try {
             t.plan(3);
-            const pk2 = new UWProskomma();
+            const pk3 = new Proskomma();
             const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'verse_over_para_boundary.usfm'))).toString();
-            pk2.importDocument({'org': 'eBible', 'lang': 'en', 'abbr': "web"}, "usfm", usfm);
-            const docId = pk2.gqlQuerySync('{documents { id } }').data.documents[0].id;
-            const cl = new SofriaRenderFromProskomma({proskomma: pk2, actions: identityActions});
+            pk3.importDocument({'lang': 'eng', 'abbr': "web"}, "usfm", usfm);
+            const docId = pk3.gqlQuerySync('{documents { id } }').data.documents[0].id;
+            const cl = new SofriaRenderFromProskomma({proskomma: pk3, actions: identityActions});
             const output = {};
             t.doesNotThrow(
                 () => cl.renderDocument(
@@ -145,11 +150,11 @@ test(
     async function (t) {
         try {
             t.plan(5);
-            const pk2 = new UWProskomma();
+            const pk4 = new Proskomma();
             const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'webbe_mrk.usfm'))).toString();
-            pk2.importDocument({'org': 'eBible', 'lang': 'en', 'abbr': "web"}, "usfm", usfm);
-            const docId = pk2.gqlQuerySync('{documents { id } }').data.documents[0].id;
-            const cl = new SofriaRenderFromProskomma({proskomma: pk2, actions: identityActions});
+            pk4.importDocument({'lang': 'eng', 'abbr': "web"}, "usfm", usfm);
+            const docId = pk4.gqlQuerySync('{documents { id } }').data.documents[0].id;
+            const cl = new SofriaRenderFromProskomma({proskomma: pk4, actions: identityActions});
             const output = {};
             t.doesNotThrow(
                 () => cl.renderDocument(
