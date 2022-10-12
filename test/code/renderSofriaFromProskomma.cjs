@@ -191,12 +191,15 @@ test(
                 const usx = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'sofria_export_usx', `${usxLeaf}.usx`))).toString();
                 pk5.importDocument({'lang': 'eng', 'abbr': "foo"}, "usx", usx);
                 const docId = pk5.gqlQuerySync('{documents { id } }').data.documents[0].id;
-                const cl = new SofriaRenderFromProskomma({proskomma: pk5, actions: identityActions});
+                const cl = new SofriaRenderFromProskomma({proskomma: pk5, actions: identityActions, debugLevel: 0});
                 const output = {};
                 t.doesNotThrow(
-                    () => cl.renderDocument(
-                        {docId, config: {}, output}
-                    )
+                    () => {
+                        cl.renderDocument(
+                            {docId, config: {}, output}
+                        );
+                        // console.log(JSON.stringify(output.sofria, null, 2));
+                    }
                 );
             }
         } catch (err) {
