@@ -85,12 +85,23 @@ class ProskommaRender {
         }
         let found = false;
         for (const actionOb of this.actions[event]) {
-            if (actionOb.test(renderEnvironment)) {
+            let testResult = false;
+            try {
+                testResult = actionOb.test(renderEnvironment);
+            } catch (err) {
+                throw new Error(`Exception from test of action '${actionOb.description}' for event ${event}: ${err}`);
+            }
+            if (testResult) {
                 found = true;
                 if (this.debugLevel > 0) {
                     console.log(`${"    ".repeat(context.sequences.length)}    ${event} action: ${actionOb.description}`);
                 }
-                const actionResult = actionOb.action(renderEnvironment);
+                let actionResult = false;
+                try {
+                    actionResult = actionOb.action(renderEnvironment);
+                } catch (err) {
+                    throw new Error(`Exception from action '${actionOb.description}' for event ${event}: ${err}`);
+                }
                 if (!actionResult) {
                     break;
                 }
