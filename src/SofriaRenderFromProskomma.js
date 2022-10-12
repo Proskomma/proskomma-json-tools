@@ -161,9 +161,11 @@ class SofriaRenderFromProskomma extends ProskommaRender {
                 this.cachedSequenceIds.shift();
                 outputBlockN++;
             }
+            const subTypeValues = blockResult.bs.payload.split('/');
+            let subTypeValue = subTypeValues[1]? `usfm:${subTypeValues[1]}` : subTypeValues[0];
             context.sequences[0].block = {
                 type: "paragraph",
-                subType: `usfm:${blockResult.bs.payload.split('/')[1]}`,
+                subType: subTypeValue,
                 blockN: outputBlockN,
                 wrappers: []
             }
