@@ -37,8 +37,11 @@ const identityActions = {
             description: "identity",
             test: () => true,
             action: ({workspace}) => {
-                workspace.chapter = null;
-                workspace.verses = null;
+                if (workspace.currentSequence.type === 'main') {
+                    workspace.chapter = null;
+                    workspace.verses = null;
+                }
+                workspace.currentSequence = null;
             }
         },
     ],
@@ -78,16 +81,18 @@ const identityActions = {
                 workspace.currentContent = paraRecord.content;
                 workspace.outputBlock = workspace.currentSequence.blocks[workspace.currentSequence.blocks.length - 1];
                 workspace.outputContentStack = [workspace.outputBlock.content];
-                for (const cv of ['chapter', 'verses']) {
-                    if (workspace[cv]) {
-                        const wrapperRecord = {
-                            type: 'wrapper',
-                            subtype: cv,
-                            content: [],
-                            atts: {number: workspace[cv]}
-                        };
-                        workspace.outputContentStack[0].push(wrapperRecord);
-                        workspace.outputContentStack.unshift(wrapperRecord.content);
+                if (workspace.currentSequence.type === "main") {
+                    for (const cv of ['chapter', 'verses']) {
+                        if (workspace[cv]) {
+                            const wrapperRecord = {
+                                type: 'wrapper',
+                                subtype: cv,
+                                content: [],
+                                atts: {number: workspace[cv]}
+                            };
+                            workspace.outputContentStack[0].push(wrapperRecord);
+                            workspace.outputContentStack.unshift(wrapperRecord.content);
+                        }
                     }
                 }
             }
@@ -97,7 +102,7 @@ const identityActions = {
         {
             description: "identity",
             test: () => true,
-            action: ({}) => {}
+            action: ({workspace}) => {}
         },
     ],
     metaContent: [
@@ -172,6 +177,9 @@ const identityActions = {
                 };
                 if ('atts' in element) {
                     wrapperRecord.atts = {...element.atts};
+                }
+                if (workspace.outputContentStack.length === 0) {
+                    throw new Error("outputContentStack is empty before pushing to its first element");
                 }
                 workspace.outputContentStack[0].push(wrapperRecord);
                 workspace.outputContentStack.unshift(wrapperRecord.content);

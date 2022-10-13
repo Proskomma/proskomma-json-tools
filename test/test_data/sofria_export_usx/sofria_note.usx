@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<usx version="3.0">
+  <book code="MAT" style="id">- Akawaio NT [ake] - Guyana 2010 (DBL 2015)</book>
+  <para style="h">MAꞌSIU</para>
+  <para style="mt1">Maꞌsiu</para>
+  <para style="mt2">Nʉmenukaꞌpʉ</para>
+  <chapter number="1" style="c" sid="MAT 1" />
+  <para style="p">
+    <verse number="1" style="v" sid="MAT 1:1" />Verse 1 starts here.<note caller="+" style="f"><char style="fr" closed="false">13:15 </char><char style="ft" closed="false">MAT 1:23</char></note><verse eid="MAT 1:1" /></para>
+  <para style="m"><verse number="2" style="v" sid="MAT 1:2" />And this is verse 2!<verse eid="MAT 1:2" /></para>
+  <chapter eid="MAT 1" />
+</usx>
