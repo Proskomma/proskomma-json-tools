@@ -11,6 +11,8 @@ const identityActions = {
                 workspace.currentSequence = output.sofria.sequence;
                 workspace.chapter = null;
                 workspace.verses = null;
+                workspace.cachedChapter = null;
+                workspace.cachedVerses = null;
             }
         },
     ],
@@ -167,8 +169,10 @@ const identityActions = {
                 const element = context.sequences[0].element;
                 if (element.subType === "chapter") {
                     workspace.chapter = element.atts.number;
+                    workspace.cachedChapter = workspace.chapter;
                 } else if (element.subType === "verses") {
                     workspace.verses = element.atts.number;
+                    workspace.cachedVerses = workspace.verses;
                 }
                 const wrapperRecord = {
                     type: element.type,
@@ -179,7 +183,7 @@ const identityActions = {
                     wrapperRecord.atts = {...element.atts};
                 }
                 if (workspace.outputContentStack.length === 0) {
-                    throw new Error("outputContentStack is empty before pushing to its first element");
+                    throw new Error(`outputContentStack is empty before pushing to its first element, near ${context.document.metadata.document.bookCode} ${workspace.cachedChapter}:${workspace.cachedVerses}`);
                 }
                 workspace.outputContentStack[0].push(wrapperRecord);
                 workspace.outputContentStack.unshift(wrapperRecord.content);

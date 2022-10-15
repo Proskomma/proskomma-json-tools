@@ -237,3 +237,31 @@ test(
         }
     },
 );
+
+test(
+    `Handle alternative chapter/verse for SOFRIA (${testGroup})`,
+    async function (t) {
+        try {
+            const usxLeaves = ["sofria_ca"];
+            t.plan(usxLeaves.length);
+            for (const usxLeaf of usxLeaves) {
+                const pk5 = new Proskomma();
+                const usx = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'sofria_export_usx', `${usxLeaf}.usx`))).toString();
+                pk5.importDocument({'lang': 'eng', 'abbr': "foo"}, "usx", usx);
+                const docId = pk5.gqlQuerySync('{documents { id } }').data.documents[0].id;
+                const cl = new SofriaRenderFromProskomma({proskomma: pk5, actions: identityActions, debugLevel: 0});
+                const output = {};
+                t.doesNotThrow(
+                    () => {
+                        cl.renderDocument(
+                            {docId, config: {chapters: "9"}, output}
+                        );
+                        // console.log(JSON.stringify(output.sofria, null, 2));
+                    }
+                );
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    },
+);

@@ -9,7 +9,7 @@
   "scripts": {
     "test": "bash -c \"tape -r @babel/register test/code/*.cjs | node_modules/tap-summary/bin/cmd.js\"",
     "rawTest": "tape -r @babel/register test/code/*.cjs",
-    "oneTest": "tape -r @babel/register test/code/$TESTSCRIPT.cjs",
+    "oneTest": "bash -c \"tape -r @babel/register test/code/$TESTSCRIPT.cjs\"",
     "build": "babel src -d dist; mkdir dist/schema; cp -fr src/schema/* dist/schema",
     "prepublishOnly": "rm -fr dist && npm run build"
   },

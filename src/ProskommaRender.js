@@ -89,7 +89,8 @@ class ProskommaRender {
             try {
                 testResult = actionOb.test(renderEnvironment);
             } catch (err) {
-                throw new Error(`Exception from test of action '${actionOb.description}' for event ${event}: ${err}`);
+                const msg = `Exception from test of action '${actionOb.description}' for event ${event} in ${context.sequences.length > 0 ? context.sequences[0].type : "no"} sequence: ${err}`;
+                throw new Error(msg);
             }
             if (testResult) {
                 found = true;
@@ -100,7 +101,7 @@ class ProskommaRender {
                 try {
                     actionResult = actionOb.action(renderEnvironment);
                 } catch (err) {
-                    throw new Error(`Exception from action '${actionOb.description}' for event ${event}: ${err}`);
+                    throw new Error(`Exception from action '${actionOb.description}' for event ${event} in ${context.sequences.length > 0 ? context.sequences[0].type : "no"} sequence: ${err}`);
                 }
                 if (!actionResult) {
                     break;
