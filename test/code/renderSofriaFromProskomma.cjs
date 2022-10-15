@@ -249,12 +249,13 @@ test(
                 const usx = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'sofria_export_usx', `${usxLeaf}.usx`))).toString();
                 pk5.importDocument({'lang': 'eng', 'abbr': "foo"}, "usx", usx);
                 const docId = pk5.gqlQuerySync('{documents { id } }').data.documents[0].id;
+                // console.log(pk5.gqlQuerySync(`{ document(id: "${docId}") { mainSequence { blocks { dump } } } }`).data.document.mainSequence);
                 const cl = new SofriaRenderFromProskomma({proskomma: pk5, actions: identityActions, debugLevel: 0});
                 const output = {};
                 t.doesNotThrow(
                     () => {
                         cl.renderDocument(
-                            {docId, config: {chapters: "9"}, output}
+                            {docId, config: {chapters: "8"}, output}
                         );
                         // console.log(JSON.stringify(output.sofria, null, 2));
                     }

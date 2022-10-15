@@ -167,6 +167,7 @@ const identityActions = {
             test: () => true,
             action: ({context, workspace}) => {
                 const element = context.sequences[0].element;
+                // console.log(element)
                 if (element.subType === "chapter") {
                     workspace.chapter = element.atts.number;
                     workspace.cachedChapter = workspace.chapter;
