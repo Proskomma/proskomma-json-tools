@@ -1,5 +1,5 @@
 {
-  "$id": "https://github.com/Proskomma/proskomma-json-tools/tree/main/src/schema/constraint/0_2_1/sofria_sequence_constraint.json",
+  "$id": "https://github.com/Proskomma/proskomma-json-tools/tree/main/src/schema/constraint/0_3_0/sofria_sequence_constraint.json",
 
   "type": "object",
   "properties": {

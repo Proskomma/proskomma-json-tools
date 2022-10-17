@@ -1,5 +1,5 @@
 {
-  "$id": "https://github.com/Proskomma/proskomma-json-tools/tree/main/src/schema/structure/0_2_1/contentElement_structure.json",
+  "$id": "https://github.com/Proskomma/proskomma-json-tools/tree/main/src/schema/structure/0_3_0/contentElement_structure.json",
   "title": "Content Element (Structure)",
   "description": "A content element, ie some form of (possibly nested) markup",
   "type": "object",
