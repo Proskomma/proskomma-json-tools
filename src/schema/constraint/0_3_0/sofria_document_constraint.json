@@ -1,0 +1,20 @@
+{
+  "$comment": "version 0.2.0",
+  "$id": "https://github.com/Proskomma/proskomma-json-tools/tree/main/src/schema/constraint/0_2_1/sofria_document_constraint.json",
+  "type": "object",
+  "properties": {
+    "sequences": {
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^\\S+$"
+      },
+      "additionalProperties": {
+        "$ref": "./sofria_sequence_constraint.json"
+      }
+    }
+  }
+}
+
+
+
+

@@ -259,6 +259,19 @@ class SofriaRenderFromProskomma extends ProskommaRender {
                         environment.context.sequences[0].block.wrappers.shift();
                         delete environment.context.sequences[0].element;
                     }
+                } else if (["pubChapter", "pubVerse", "altChapter", "altVerse"].includes(scopeBits[0])) {
+                    if (item.subType === 'start') {
+                        const mark = {
+                            type: "mark",
+                            subType: camelCase2snakeCase(scopeBits[0]),
+                            atts: {
+                                number: scopeBits[1]
+                            }
+                        };
+                        environment.context.sequences[0].element = mark;
+                        this.renderEvent('mark', environment);
+                        delete environment.context.sequences[0].element;
+                    }
                 } else if (scopeBits[0] === 'span') {
                     const wrapper = {
                         type: "wrapper",

@@ -1,0 +1,178 @@
+{
+  "$id": "https://github.com/Proskomma/proskomma-json-tools/tree/main/src/schema/structure/0_2_1/block_structure.json",
+  "title": "Block (Structure)",
+  "description": "A block, which represents either a paragraph of text or a graft",
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string",
+      "description": "The type of block",
+      "enum": [
+        "paragraph",
+        "graft"
+      ]
+    },
+    "subtype": {
+      "description": "A type-specific subtype",
+      "type": "string"
+    },
+    "target": {
+      "description": "The id of the sequence containing graft content",
+      "type": "string"
+    },
+    "sequence": {
+      "description": "The sequence containing graft content",
+      "$ref": "./sequence_structure.json"
+    },
+    "preview_text": {
+      "description": "An optional field to provide some kind of printable label for a graft",
+      "type": "string"
+    },
+    "new": {
+      "description": "If present and true, is interpreted as a request for the server to create a new graft",
+      "type": "boolean"
+    },
+    "atts": {
+      "type": "object",
+      "description": "An object containing USFM attributes or subtype-specific additional information (such as the number of a verse or chapter). The value may be a boolean, a string or an array of strings",
+      "additionalProperties": {
+        "oneOf": [
+          {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          {
+            "type": "string"
+          },
+          {
+            "type": "boolean"
+          }
+        ]
+      }
+    },
+    "content": {
+      "type": "array",
+      "description": "The content of the block",
+      "items": {
+        "oneOf": [
+          {
+            "type": "string"
+          },
+          {
+            "$ref": "./contentElement_structure.json"
+          }
+        ]
+      }
+    }
+  },
+  "required": [
+    "type"
+  ],
+  "additionalProperties": false,
+  "if": {
+    "properties": {
+      "type": {
+        "enum": [
+          "paragraph"
+        ]
+      }
+    }
+  },
+  "then": {
+    "required": [
+      "content"
+    ],
+    "allOf": [
+      {
+        "not": {
+          "required": [
+            "new"
+          ]
+        }
+      },
+      {
+        "not": {
+          "required": [
+            "preview_text"
+          ]
+        }
+      },
+      {
+        "not": {
+          "required": [
+            "target"
+          ]
+        }
+      }
+    ]
+  },
+  "else": {
+    "if": {
+      "required": [
+        "new"
+      ],
+      "properties": {
+        "new": {
+          "enum": [
+            true
+          ]
+        }
+      }
+    },
+    "then": {
+      "allOf": [
+        {
+          "oneOf": [
+            {
+              "required": [
+                "subtype"
+              ]
+            },
+            {
+              "required": [
+                "sequence"
+              ]
+            }
+          ]
+        },
+        {
+          "not": {
+            "required": [
+              "target"
+            ]
+          }
+        },
+        {
+          "not": {
+            "required": [
+              "preview_text"
+            ]
+          }
+        },
+        {
+          "not": {
+            "required": [
+              "content"
+            ]
+          }
+        }
+      ]
+    },
+    "else": {
+      "oneOf": [
+        {
+          "required": [
+            "target"
+          ]
+        },
+        {
+          "required": [
+            "sequence"
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "$id": "https://github.com/Proskomma/proskomma-json-tools/tree/main/src/schema/constraint/0_2_1/perf_block_constraint.json",
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": [
+        "paragraph",
+        "graft"
+      ]
+    },
+    "content": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "type": "string"
+          },
+          {
+            "$ref": "./perf_contentElement_constraint.json"
+          }
+        ]
+      }
+    },
+    "meta_content": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "type": "string"
+          },
+          {
+            "$ref": "./perf_contentElement_constraint.json"
+          }
+        ]
+      }
+    }
+  },
+  "if": {
+    "properties": {
+      "type": {
+        "enum": ["graft"]
+      }
+    }
+  },
+  "then": {
+    "properties": {
+      "subtype": {
+        "enum": [
+          "introduction",
+          "intro_title",
+          "Intro_end_title",
+          "title",
+          "end_title",
+          "heading",
+          "remark",
+          "sidebar",
+          "table",
+          "tree",
+          "kv"
+        ]
+      }
+    }
+  },
+  "else": {
+    "properties": {
+      "subtype": {
+        "type": "string",
+        "pattern": "^usfm:"
+      }
+    }
+  }
+}
+
+

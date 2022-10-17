@@ -27,7 +27,7 @@ test(
     async function (t) {
         try {
             t.plan(3);
-            
+
             // await thaw(pk, nt_ebible_4book);
             const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'webbe_mrk.usfm'))).toString();
             pk.importDocument({'lang': 'eng', 'abbr': "web"}, "usfm", usfm);
@@ -113,3 +113,46 @@ test(
             console.log(err);
         }
     },);
+
+test(
+    `Handle alternative chapter/verse for PERF (${testGroup})`,
+    async function (t) {
+        try {
+            const usxLeaves = ["sofria_ca"];
+            t.plan(usxLeaves.length * 6);
+            for (const usxLeaf of usxLeaves) {
+                const pk5 = new Proskomma();
+                const usx = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'sofria_export_usx', `${usxLeaf}.usx`))).toString();
+                pk5.importDocument({'lang': 'eng', 'abbr': "foo"}, "usx", usx);
+                const docId = pk5.gqlQuerySync('{documents { id } }').data.documents[0].id;
+                // console.log(pk5.gqlQuerySync(`{ document(id: "${docId}") { mainSequence { blocks { dump } } } }`).data.document.mainSequence);
+                const cl = new PerfRenderFromProskomma({proskomma: pk5, actions: identityActions, debugLevel: 0});
+                const output = {};
+                t.doesNotThrow(
+                    () => {
+                        cl.renderDocument(
+                            {docId, config: {}, output}
+                        );
+                        // console.log(JSON.stringify(output.perf, null, 2));
+                    }
+                );
+                const validator = new Validator();
+                const validation = validator.validate(
+                    'constraint',
+                    'perfDocument',
+                    '0.3.0',
+                    output.perf
+                );
+                t.ok(validation.isValid);
+                t.equal(validation.errors, null);
+                const perfString = JSON.stringify(output.perf);
+                t.ok(perfString.includes('alt_chapter'));
+                t.ok(perfString.includes('alt_verse'));
+                t.ok(perfString.includes('pub_verse'));
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    },
+);
+

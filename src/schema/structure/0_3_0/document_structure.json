@@ -1,0 +1,191 @@
+{
+  "$comment": "version 0.1.0",
+  "$id": "https://github.com/Proskomma/proskomma-json-tools/tree/main/src/schema/structure/0_2_1/document_structure.json",
+  "title": "Document (Structure)",
+  "description": "A document, typically corresponding to a single USFM or USX book",
+  "type": "object",
+  "properties": {
+    "schema": {
+      "type": "object",
+      "properties": {
+        "structure": {
+          "description": "The basic 'shape' of the content",
+          "type": "string",
+          "enum": [
+            "flat",
+            "nested"
+          ]
+        },
+        "structure_version": {
+          "description": "the semantic version of the structure schema",
+          "type": "string"
+        },
+        "constraints": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "enum": [
+                  "perf",
+                  "sofria"
+                ]
+              },
+              "version": {
+                "description": "the semantic version of the constraint schema",
+                "type": "string"
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "name",
+              "version"
+            ]
+          }
+        }
+      },
+      "required": [
+        "structure",
+        "structure_version",
+        "constraints"
+      ],
+      "additionalProperties": false
+    },
+    "metadata": {
+      "description": "Metadata describing the document and the translation it belongs to",
+      "type": "object",
+      "properties": {
+        "translation": {
+          "type": "object",
+          "description": "Metadata concerning the translation to which the document belongs",
+          "properties": {
+            "tags": {
+              "description": "Tags attached to the translation",
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "properties": {
+              "type": "object",
+              "description": "Key/value properties attached to the translation",
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "selectors": {
+              "type": "object",
+              "description": "Proskomma selectors for the translation that, together, provide a primary key in the translation store",
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          },
+          "additionalProperties": {
+            "type": "string"
+          },
+          "required": ["id"]
+        },
+        "document": {
+          "type": "object",
+          "description": "Metadata concerning the document itself",
+          "properties": {
+            "tags": {
+              "type": "array",
+              "description": "Tags attached to the document",
+              "items": {
+                "type": "string"
+              }
+            },
+            "properties": {
+              "type": "object",
+              "description": "Key/value properties attached to the document",
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "chapters": {
+              "type": "string",
+              "pattern": "^[1-9][0-9]*(-[1-9][0-9]*)?$"
+            }
+          },
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "sequences": {
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^\\S+$"
+      },
+      "additionalProperties": {
+        "$ref": "./sequence_structure.json"
+      }
+    },
+    "sequence": {
+      "$ref": "./sequence_structure.json"
+    },
+    "main_sequence_id": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema",
+    "metadata"
+  ],
+  "additionalProperties": false,
+  "if": {
+    "properties": {
+      "schema": {
+        "type": "object",
+        "properties": {
+          "structure": {
+            "enum": [
+              "flat"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "then": {
+    "required": [
+      "sequences",
+      "main_sequence_id"
+    ],
+    "not": {
+      "required": [
+        "sequence"
+      ]
+    }
+  },
+  "else": {
+    "required": [
+      "sequence"
+    ],
+    "allOf": [
+      {
+        "not": {
+          "required": [
+            "sequences"
+          ]
+        }
+      },
+      {
+        "not": {
+          "required": [
+            "main_sequence_id"
+          ]
+        }
+      }
+    ]
+  }
+}
+
+
+
+

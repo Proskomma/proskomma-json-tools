@@ -1,0 +1,91 @@
+{
+  "$id": "https://github.com/Proskomma/proskomma-json-tools/tree/main/src/schema/structure/0_2_1/contentElement_structure.json",
+  "title": "Content Element (Structure)",
+  "description": "A content element, ie some form of (possibly nested) markup",
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string",
+      "description": "The type of element",
+      "enum": [
+        "mark",
+        "wrapper",
+        "start_milestone",
+        "end_milestone",
+        "graft"
+      ]
+    },
+    "subtype": {
+      "description": "The subtype of the element, which is context-dependent",
+      "type": "string"
+    },
+    "atts": {
+      "type": "object",
+      "description": "An object containing USFM attributes or subtype-specific additional information (such as the number of a verse or chapter). The value may be a boolean, a string or an array of strings",
+      "additionalProperties": {
+        "oneOf": [
+          {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          {
+            "type": "string"
+          },
+          {
+            "type": "boolean"
+          }
+        ]
+      }
+    },
+    "target": {
+      "type": "string",
+      "description": "The id of the sequence containing graft content"
+    },
+    "sequence": {
+      "description": "The sequence containing graft content",
+      "$ref": "./sequence_structure.json"
+    },
+    "preview_text": {
+      "description": "An optional field to provide some kind of printable label for a graft",
+      "type": "string"
+    },
+    "new": {
+      "type": "boolean",
+      "description": "If present and true, is interpreted as a request for the server to create a new graft"
+    },
+    "content": {
+      "type": "array",
+      "description": "Nested content within the content element",
+      "items": {
+        "oneOf": [
+          {
+            "type": "string"
+          },
+          {
+            "$ref": "./contentElement_structure.json"
+          }
+        ]
+      }
+    },
+    "meta_content": {
+      "type": "array",
+      "description": "Non-Scripture content related to the content element, such as checking data or related resources",
+      "items": {
+        "oneOf": [
+          {
+            "type": "string"
+          },
+          {
+            "$ref": "./contentElement_structure.json"
+          }
+        ]
+      }
+    }
+  },
+  "required": [
+    "type"
+  ],
+  "additionalProperties": false
+}

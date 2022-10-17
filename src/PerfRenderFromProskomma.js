@@ -190,7 +190,7 @@ class PerfRenderFromProskomma extends ProskommaRender {
                 } else { // scope
                     this.maybeRenderText(environment);
                     const scopeBits = item.payload.split('/');
-                    if (["chapter", "verses"].includes(scopeBits[0])) {
+                    if (["chapter", "verses", "pubChapter", "pubVerse", "altChapter", "altVerse"].includes(scopeBits[0])) {
                         if (item.subType === 'start') {
                             const mark = {
                                 type: "mark",

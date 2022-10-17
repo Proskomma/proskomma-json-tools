@@ -1,0 +1,29 @@
+{
+  "$id": "https://github.com/Proskomma/proskomma-json-tools/tree/main/src/schema/structure/0_2_1/sequence_structure.json",
+  "title": "Sequence (Structure)",
+  "description": "A sequence contains a 'flow' of one or more blocks",
+  "type": "object",
+  "properties": {
+    "type": {
+      "description": "The type of sequence",
+      "type": "string"
+    },
+    "preview_text": {
+      "description": "An optional field to provide some kind of printable label",
+      "type": "string"
+    },
+    "blocks": {
+      "type": "array",
+      "description": "The blocks that, together, represent the 'flow' of the sequence",
+      "items": {
+        "$ref": "./block_structure.json"
+      }
+    }
+  },
+  "required": [
+    "type"
+  ],
+  "additionalProperties": false
+}
+
+

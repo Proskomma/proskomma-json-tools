@@ -12,6 +12,19 @@ const sofriaSequenceConstraintSchema_0_2_1 = require('./schema/constraint/0_2_1/
 const sofriaBlockConstraintSchema_0_2_1 = require('./schema/constraint/0_2_1/sofria_block_constraint.json');
 const sofriaContentElementConstraintSchema_0_2_1 = require('./schema/constraint/0_2_1/sofria_contentElement_constraint.json');
 
+const documentStructureSchema_0_3_0 = require('./schema/structure/0_3_0/document_structure.json');
+const sequenceStructureSchema_0_3_0 = require('./schema/structure/0_3_0/sequence_structure.json');
+const blockStructureSchema_0_3_0 = require('./schema/structure/0_3_0/block_structure.json');
+const contentElementStructureSchema_0_3_0 = require('./schema/structure/0_3_0/contentElement_structure.json');
+const perfDocumentConstraintSchema_0_3_0 = require('./schema/constraint/0_3_0/perf_document_constraint.json');
+const perfSequenceConstraintSchema_0_3_0 = require('./schema/constraint/0_3_0/perf_sequence_constraint.json');
+const perfBlockConstraintSchema_0_3_0 = require('./schema/constraint/0_3_0/perf_block_constraint.json');
+const perfContentElementConstraintSchema_0_3_0 = require('./schema/constraint/0_3_0/perf_contentElement_constraint.json');
+const sofriaDocumentConstraintSchema_0_3_0 = require('./schema/constraint/0_3_0/sofria_document_constraint.json');
+const sofriaSequenceConstraintSchema_0_3_0 = require('./schema/constraint/0_3_0/sofria_sequence_constraint.json');
+const sofriaBlockConstraintSchema_0_3_0 = require('./schema/constraint/0_3_0/sofria_block_constraint.json');
+const sofriaContentElementConstraintSchema_0_3_0 = require('./schema/constraint/0_3_0/sofria_contentElement_constraint.json');
+
 class Validator {
 
     constructor() {
@@ -32,6 +45,16 @@ class Validator {
                                 .addSchema(sequenceStructureSchema_0_2_1)
                                 .compile(documentStructureSchema_0_2_1)
                         }
+                    ],
+                    "0.3.0": [
+                        {
+                            "name": "Document Structure",
+                            "validator": new Ajv()
+                                .addSchema(contentElementStructureSchema_0_3_0)
+                                .addSchema(blockStructureSchema_0_3_0)
+                                .addSchema(sequenceStructureSchema_0_3_0)
+                                .compile(documentStructureSchema_0_3_0)
+                        }
                     ]
                 }
             ],
@@ -45,6 +68,15 @@ class Validator {
                                 .addSchema(contentElementStructureSchema_0_2_1)
                                 .addSchema(blockStructureSchema_0_2_1)
                                 .compile(sequenceStructureSchema_0_2_1)
+                        }
+                    ],
+                    "0.3.0": [
+                        {
+                            "name": "Sequence Structure",
+                            "validator": new Ajv()
+                                .addSchema(contentElementStructureSchema_0_3_0)
+                                .addSchema(blockStructureSchema_0_3_0)
+                                .compile(sequenceStructureSchema_0_3_0)
                         }
                     ]
                 }
@@ -73,6 +105,24 @@ class Validator {
                                 .addSchema(perfSequenceConstraintSchema_0_2_1)
                                 .compile(perfDocumentConstraintSchema_0_2_1)
                         }
+                    ],
+                    "0.3.0": [
+                        {
+                            "name": "Document Structure",
+                            "validator": new Ajv()
+                                .addSchema(contentElementStructureSchema_0_3_0)
+                                .addSchema(blockStructureSchema_0_3_0)
+                                .addSchema(sequenceStructureSchema_0_3_0)
+                                .compile(documentStructureSchema_0_3_0)
+                        },
+                        {
+                            "name": "PERF Document",
+                            "validator": new Ajv()
+                                .addSchema(perfContentElementConstraintSchema_0_3_0)
+                                .addSchema(perfBlockConstraintSchema_0_3_0)
+                                .addSchema(perfSequenceConstraintSchema_0_3_0)
+                                .compile(perfDocumentConstraintSchema_0_3_0)
+                        }
                     ]
                 }
             ],
@@ -93,6 +143,22 @@ class Validator {
                                 .addSchema(perfContentElementConstraintSchema_0_2_1)
                                 .addSchema(perfBlockConstraintSchema_0_2_1)
                                 .compile(perfSequenceConstraintSchema_0_2_1)
+                        }
+                    ],
+                    "0.3.0": [
+                        {
+                            "name": "Sequence Structure",
+                            "validator": new Ajv()
+                                .addSchema(contentElementStructureSchema_0_3_0)
+                                .addSchema(blockStructureSchema_0_3_0)
+                                .compile(sequenceStructureSchema_0_3_0)
+                        },
+                        {
+                            "name": "PERF Sequence",
+                            "validator": new Ajv()
+                                .addSchema(perfContentElementConstraintSchema_0_3_0)
+                                .addSchema(perfBlockConstraintSchema_0_3_0)
+                                .compile(perfSequenceConstraintSchema_0_3_0)
                         }
                     ]
                 }
@@ -117,6 +183,24 @@ class Validator {
                                     .addSchema(sofriaSequenceConstraintSchema_0_2_1)
                                     .compile(sofriaDocumentConstraintSchema_0_2_1)
                             }
+                        ],
+                        "0.3.0": [
+                            {
+                                "name": "Document Structure",
+                                "validator": new Ajv()
+                                    .addSchema(contentElementStructureSchema_0_3_0)
+                                    .addSchema(blockStructureSchema_0_3_0)
+                                    .addSchema(sequenceStructureSchema_0_3_0)
+                                    .compile(documentStructureSchema_0_3_0)
+                            },
+                            {
+                                "name": "SOFRIA Document",
+                                "validator": new Ajv()
+                                    .addSchema(sofriaContentElementConstraintSchema_0_3_0)
+                                    .addSchema(sofriaBlockConstraintSchema_0_3_0)
+                                    .addSchema(sofriaSequenceConstraintSchema_0_3_0)
+                                    .compile(sofriaDocumentConstraintSchema_0_3_0)
+                            }
                         ]
                     }
                 ],
@@ -137,6 +221,22 @@ class Validator {
                                 .addSchema(sofriaContentElementConstraintSchema_0_2_1)
                                 .addSchema(sofriaBlockConstraintSchema_0_2_1)
                                 .compile(sofriaSequenceConstraintSchema_0_2_1)
+                        }
+                    ],
+                    "0.3.0": [
+                        {
+                            "name": "Sequence Structure",
+                            "validator": new Ajv()
+                                .addSchema(contentElementStructureSchema_0_3_0)
+                                .addSchema(blockStructureSchema_0_3_0)
+                                .compile(sequenceStructureSchema_0_3_0)
+                        },
+                        {
+                            "name": "SOFRIA Sequence",
+                            "validator": new Ajv()
+                                .addSchema(sofriaContentElementConstraintSchema_0_3_0)
+                                .addSchema(sofriaBlockConstraintSchema_0_3_0)
+                                .compile(sofriaSequenceConstraintSchema_0_3_0)
                         }
                     ]
                 }

@@ -243,7 +243,7 @@ test(
     async function (t) {
         try {
             const usxLeaves = ["sofria_ca"];
-            t.plan(usxLeaves.length);
+            t.plan(usxLeaves.length * 6);
             for (const usxLeaf of usxLeaves) {
                 const pk5 = new Proskomma();
                 const usx = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'sofria_export_usx', `${usxLeaf}.usx`))).toString();
@@ -255,11 +255,24 @@ test(
                 t.doesNotThrow(
                     () => {
                         cl.renderDocument(
-                            {docId, config: {chapters: "8"}, output}
+                            {docId, config: {}, output}
                         );
                         // console.log(JSON.stringify(output.sofria, null, 2));
                     }
                 );
+                const validator = new Validator();
+                const validation = validator.validate(
+                    'constraint',
+                    'sofriaDocument',
+                    '0.3.0',
+                    output.sofria
+                );
+                t.ok(validation.isValid);
+                t.equal(validation.errors, null);
+                const sofriaString = JSON.stringify(output.sofria);
+                t.ok(sofriaString.includes('alt_chapter'));
+                t.ok(sofriaString.includes('alt_verse'));
+                t.ok(sofriaString.includes('pub_verse'));
             }
         } catch (err) {
             console.log(err);
