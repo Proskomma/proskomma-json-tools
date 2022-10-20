@@ -85,7 +85,7 @@
             "anyOf": [
               {
                 "required": [
-                  "block"
+                  "blocks"
                 ]
               },
               {
@@ -98,7 +98,7 @@
         },
         "else": {
           "required": [
-            "block"
+            "sequence"
           ]
         }
       }

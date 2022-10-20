@@ -1,4 +1,7 @@
 const Ajv = require('ajv');
+
+const succinctSchema_0_2_0 = require('./schema/succinct/0_2_0/proskomma_succinct.json');
+
 const documentStructureSchema_0_2_1 = require('./schema/structure/0_2_1/document_structure.json');
 const sequenceStructureSchema_0_2_1 = require('./schema/structure/0_2_1/sequence_structure.json');
 const blockStructureSchema_0_2_1 = require('./schema/structure/0_2_1/block_structure.json');
@@ -33,6 +36,18 @@ class Validator {
             constraint: {}
         };
         for (const [key, schemaOb] of [
+            [
+                'succinct',
+                {
+                    "0.2.0": [
+                        {
+                            "name": "Proskomma Serialized Succinct",
+                            "validator": new Ajv()
+                                .compile(succinctSchema_0_2_0)
+                        }
+                    ],
+                }
+            ],
             [
                 'document',
                 {
