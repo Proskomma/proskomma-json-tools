@@ -284,9 +284,9 @@ class Validator {
         if (!(data)) {
             throw new Error(`Usage: validate(schemaType, schemaKey, schemaVersion, data)`);
         }
-        const knownSchemaTypes = ["structure", "constraint", "proskomma"];
+        const knownSchemaTypes = Object.keys(this.schema);
         if (!knownSchemaTypes.includes(schemaType)) {
-            throw new Error(`Schema type must be one of ${knownSchemaTypes.map(s => `'${s}'`).join(', ')} not '${schemaType}'`)
+            throw new Error(`Schema type must be one of ${knownSchemaTypes.map(s => `'${s}'`).join(', ')}, not '${schemaType}'`)
         }
         if (!this.schema[schemaType][schemaKey]) {
             throw new Error(`Unknown ${schemaType} schema key ${schemaKey}`);
