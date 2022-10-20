@@ -232,23 +232,21 @@ test(
     },
 );
 
-/*
 test(
     `validate constraints of succinct JSON (${testGroup})`,
     async function (t) {
         try {
             t.plan(2);
-            const sofria = fse.readJsonSync(
-                path.resolve(
-                    path.join(__dirname, '..', 'test_data', 'fra_lsg_mrk_sofria_doc.json')
-                )
-            )
+            const usfm = fse.readFileSync(path.resolve(path.join(__dirname, '..', 'test_data', 'webbe_mrk.usfm'))).toString();
+            const pk = new Proskomma();
+            pk.importDocument({'lang': 'eng', 'abbr': "web"}, "usfm", usfm);
+            const succinct = pk.serializeSuccinct('eng_web')
             const validator = new Validator();
             const validation = validator.validate(
-                'constraint',
-                'sofriaDocument',
-                '0.3.0',
-                sofria
+                'proskomma',
+                'succinct',
+                '0.2.0',
+                succinct
             );
             t.ok(validation.isValid);
             t.equal(validation.errors, null);
@@ -258,5 +256,3 @@ test(
     },
 );
 
-
- */

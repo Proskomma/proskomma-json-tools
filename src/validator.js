@@ -33,7 +33,8 @@ class Validator {
     constructor() {
         this.schema = {
             structure: {},
-            constraint: {}
+            constraint: {},
+            proskomma: {},
         };
         for (const [key, schemaOb] of [
             [
@@ -47,7 +48,11 @@ class Validator {
                         }
                     ],
                 }
-            ],
+            ]
+        ]) {
+            this.schema.proskomma[key] = schemaOb;
+        }
+        for (const [key, schemaOb] of [
             [
                 'document',
                 {
@@ -178,47 +183,47 @@ class Validator {
                     ]
                 }
             ],
-                [
+            [
                 'sofriaDocument',
-                    {
-                        "0.2.1": [
-                            {
-                                "name": "Document Structure",
-                                "validator": new Ajv()
-                                    .addSchema(contentElementStructureSchema_0_2_1)
-                                    .addSchema(blockStructureSchema_0_2_1)
-                                    .addSchema(sequenceStructureSchema_0_2_1)
-                                    .compile(documentStructureSchema_0_2_1)
-                            },
-                            {
-                                "name": "SOFRIA Document",
-                                "validator": new Ajv()
-                                    .addSchema(sofriaContentElementConstraintSchema_0_2_1)
-                                    .addSchema(sofriaBlockConstraintSchema_0_2_1)
-                                    .addSchema(sofriaSequenceConstraintSchema_0_2_1)
-                                    .compile(sofriaDocumentConstraintSchema_0_2_1)
-                            }
-                        ],
-                        "0.3.0": [
-                            {
-                                "name": "Document Structure",
-                                "validator": new Ajv()
-                                    .addSchema(contentElementStructureSchema_0_3_0)
-                                    .addSchema(blockStructureSchema_0_3_0)
-                                    .addSchema(sequenceStructureSchema_0_3_0)
-                                    .compile(documentStructureSchema_0_3_0)
-                            },
-                            {
-                                "name": "SOFRIA Document",
-                                "validator": new Ajv()
-                                    .addSchema(sofriaContentElementConstraintSchema_0_3_0)
-                                    .addSchema(sofriaBlockConstraintSchema_0_3_0)
-                                    .addSchema(sofriaSequenceConstraintSchema_0_3_0)
-                                    .compile(sofriaDocumentConstraintSchema_0_3_0)
-                            }
-                        ]
-                    }
-                ],
+                {
+                    "0.2.1": [
+                        {
+                            "name": "Document Structure",
+                            "validator": new Ajv()
+                                .addSchema(contentElementStructureSchema_0_2_1)
+                                .addSchema(blockStructureSchema_0_2_1)
+                                .addSchema(sequenceStructureSchema_0_2_1)
+                                .compile(documentStructureSchema_0_2_1)
+                        },
+                        {
+                            "name": "SOFRIA Document",
+                            "validator": new Ajv()
+                                .addSchema(sofriaContentElementConstraintSchema_0_2_1)
+                                .addSchema(sofriaBlockConstraintSchema_0_2_1)
+                                .addSchema(sofriaSequenceConstraintSchema_0_2_1)
+                                .compile(sofriaDocumentConstraintSchema_0_2_1)
+                        }
+                    ],
+                    "0.3.0": [
+                        {
+                            "name": "Document Structure",
+                            "validator": new Ajv()
+                                .addSchema(contentElementStructureSchema_0_3_0)
+                                .addSchema(blockStructureSchema_0_3_0)
+                                .addSchema(sequenceStructureSchema_0_3_0)
+                                .compile(documentStructureSchema_0_3_0)
+                        },
+                        {
+                            "name": "SOFRIA Document",
+                            "validator": new Ajv()
+                                .addSchema(sofriaContentElementConstraintSchema_0_3_0)
+                                .addSchema(sofriaBlockConstraintSchema_0_3_0)
+                                .addSchema(sofriaSequenceConstraintSchema_0_3_0)
+                                .compile(sofriaDocumentConstraintSchema_0_3_0)
+                        }
+                    ]
+                }
+            ],
             [
                 'sofriaSequence',
                 {
@@ -268,7 +273,7 @@ class Validator {
             for (const [schemaLabel, schemaVersions] of Object.entries(schemas)) {
                 ret[schemaType][schemaLabel] = {};
                 for (const [version, versionSteps] of Object.entries(schemaVersions)) {
-                    ret[schemaType][schemaLabel][version] = versionSteps.map(vs =>vs.name);
+                    ret[schemaType][schemaLabel][version] = versionSteps.map(vs => vs.name);
                 }
             }
         }
@@ -279,8 +284,9 @@ class Validator {
         if (!(data)) {
             throw new Error(`Usage: validate(schemaType, schemaKey, schemaVersion, data)`);
         }
-        if (!["structure", "constraint"].includes(schemaType)) {
-            throw new Error(`Schema type must be 'structure' or 'constraint' not '${schemaType}'`)
+        const knownSchemaTypes = ["structure", "constraint", "proskomma"];
+        if (!knownSchemaTypes.includes(schemaType)) {
+            throw new Error(`Schema type must be one of ${knownSchemaTypes.map(s => `'${s}'`).join(', ')} not '${schemaType}'`)
         }
         if (!this.schema[schemaType][schemaKey]) {
             throw new Error(`Unknown ${schemaType} schema key ${schemaKey}`);
