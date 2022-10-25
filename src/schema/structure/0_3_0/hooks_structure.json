@@ -1,0 +1,19 @@
+{
+  "$id": "https://github.com/Proskomma/proskomma-json-tools/tree/main/src/schema/structure/0_3_0/hook_structure.json",
+  "title": "Hook (Structure)",
+  "description": "Hooks, ie typed labels that may be used to link documents",
+  "type": "array",
+  "items": {
+    "type": "array",
+    "items": [
+      {
+        "type": "string"
+      },
+      {
+        "type": "string"
+      }
+    ],
+    "minItems": 2,
+    "maxItems": 2
+  }
+}

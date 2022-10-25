@@ -256,3 +256,24 @@ test(
     },
 );
 
+test(
+    `validate hooks (${testGroup})`,
+    async function (t) {
+        try {
+            t.plan(2);
+            const perf = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'validation', 'hook_perf.json')));
+            const validator = new Validator();
+            const validation = validator.validate(
+                'structure',
+                'document',
+                '0.3.0',
+                perf
+            );
+            console.log(validation)
+            t.ok(validation.isValid);
+            t.equal(validation.errors, null);
+        } catch (err) {
+            console.log(err);
+        }
+    },
+);

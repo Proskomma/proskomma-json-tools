@@ -1,11 +1,11 @@
 {
   "schema": {
     "structure": "flat",
-    "structure_version": "0.2.1",
+    "structure_version": "0.3.0",
     "constraints": [
       {
         "name": "perf",
-        "version": "0.2.1"
+        "version": "0.3.0"
       }
     ]
   },
@@ -22,10 +22,6 @@
       "other_stuff_key_including_headers": ""
     }
   },
-  "hooks": [
-    ["foo", "baa"],
-    ["foo2", "baa2"]
-  ],
   "sequences": {
     "foobaa": {
       "type": "main",
