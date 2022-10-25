@@ -1,11 +1,11 @@
 {
   "schema": {
     "structure": "nested",
-    "structure_version": "0.2.0",
+    "structure_version": "0.3.0",
     "constraints": [
       {
         "name": "sofria",
-        "version": "0.2.0"
+        "version": "0.3.0"
       }
     ]
   },

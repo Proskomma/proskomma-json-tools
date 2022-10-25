@@ -1,6 +1,6 @@
 const ProskommaRender = require('./ProskommaRender');
 
-class ProskommaRenderFromJson extends ProskommaRender {
+class SofriaRenderFromJson extends ProskommaRender {
 
     constructor(spec) {
         super(spec);
@@ -8,6 +8,7 @@ class ProskommaRenderFromJson extends ProskommaRender {
             throw new Error(`Must provide srcJson`);
         }
         this.srcJson = spec.srcJson;
+        this.cachedSequences = [];
     }
 
     renderDocument1({docId, config, context, workspace, output}) {
@@ -17,45 +18,45 @@ class ProskommaRenderFromJson extends ProskommaRender {
             id: docId,
             schema: this.srcJson.schema,
             metadata: this.srcJson.metadata,
-            mainSequenceId: this.srcJson.main_sequence_id,
-            nSequences: Object.keys(this.srcJson.sequences).length,
         };
         context.sequences = [];
         this.renderEvent('startDocument', environment);
-        this.renderSequenceId(environment, this.srcJson.main_sequence_id);
+        this.renderSequence(environment, this.srcJson.sequence);
         this.renderEvent('endDocument', environment);
     }
 
-    sequenceContext(sequence, sequenceId) {
+    sequenceContext(sequence) {
         return {
-            id: sequenceId,
             type: sequence.type,
             nBlocks: sequence.blocks.length,
             milestones: new Set([]),
         }
     }
 
-    renderSequenceId(environment, sequenceId) {
-        const context = environment.context;
-        const sequence = this.srcJson.sequences[sequenceId];
-        if (!sequence) {
-            throw new Error(`Sequence '${sequenceId}' not found in renderSequenceId()`);
+    renderSequence(environment, providedSequence) {
+        let sequence;
+        if (!providedSequence) {
+            if (this.cachedSequences.length === 0) {
+                throw new Error("No sequence provided and no sequences cached");
+            }
+            sequence = this.cachedSequences[0];
+        } else {
+            sequence = providedSequence;
         }
-        context.sequences.unshift(this.sequenceContext(sequence, sequenceId));
+        const context = environment.context;
+        context.sequences.unshift(sequence);
         this.renderEvent('startSequence', environment);
         for (const [blockN, block] of sequence.blocks.entries()) {
             context.sequences[0].block = {
                 type: block.type,
-                subType: block.subtype,
                 blockN,
                 wrappers: []
             }
             if (block.type === 'graft') {
-                if (block.target) {
-                    context.sequences[0].block.target = block.target;
-                }
-                context.sequences[0].block.isNew = block.new || false;
+                context.sequences[0].block.sequence = this.sequenceContext(block.sequence);
+                this.cachedSequences.unshift(block.sequence);
                 this.renderEvent('blockGraft', environment);
+                this.cachedSequences.shift();
             } else {
                 this.renderEvent('startParagraph', environment);
                 this.renderContent(block.content, environment);
@@ -64,6 +65,7 @@ class ProskommaRenderFromJson extends ProskommaRender {
             delete context.sequences[0].block;
         }
         this.renderEvent('endSequence', environment);
+        this.cachedSequence = null;
         context.sequences.shift();
     }
 
@@ -92,11 +94,8 @@ class ProskommaRenderFromJson extends ProskommaRender {
         if (element.atts) {
             elementContext.atts = element.atts;
         }
-        if (element.target) {
-            elementContext.target = element.target;
-        }
-        if (element.type === 'graft') {
-            elementContext.isNew = element.new || false
+        if (element.sequence) {
+            elementContext.sequence = this.sequenceContext(element.sequence);
         }
         if (elementContext.type === 'text') {
             elementContext.text = element;
@@ -115,7 +114,9 @@ class ProskommaRenderFromJson extends ProskommaRender {
             this.renderEvent('endMilestone', environment);
             maybeRenderMetaContent(elementContext);
         } else if (elementContext.type === "graft") {
+            this.cachedSequences.unshift(element.sequence);
             this.renderEvent('inlineGraft', environment);
+            this.cachedSequences.shift();
             maybeRenderMetaContent(elementContext);
         } else if (elementContext.type === "wrapper") {
             context.sequences[0].block.wrappers.unshift(elementContext.subType);
@@ -133,4 +134,4 @@ class ProskommaRenderFromJson extends ProskommaRender {
 
 }
 
-module.exports = ProskommaRenderFromJson;
+module.exports = SofriaRenderFromJson;

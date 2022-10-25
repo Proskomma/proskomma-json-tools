@@ -1,0 +1,41 @@
+{
+  "$id": "https://github.com/Proskomma/proskomma-json-tools/tree/main/src/schema/constraint/0_3_0/sofria_sequence_constraint.json",
+
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": [
+        "main",
+        "introduction",
+        "intro_title",
+        "intro_end_title",
+        "title",
+        "end_title",
+        "heading",
+        "remark",
+        "sidebar",
+        "table",
+        "tree",
+        "kv",
+        "footnote",
+        "note_caller",
+        "xref",
+        "pub_number",
+        "alt_number",
+        "esb_cat",
+        "fig",
+        "temp"
+      ]
+    },
+    "blocks": {
+      "type": "array",
+      "items": {
+        "$ref": "./sofria_block_constraint.json"
+      }
+    }
+  }
+
+}
+
+

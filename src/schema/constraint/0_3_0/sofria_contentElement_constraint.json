@@ -1,0 +1,270 @@
+{
+  "$id": "https://github.com/Proskomma/proskomma-json-tools/tree/main/src/schema/constraint/0_3_0/sofria_contentElement_constraint.json",
+  "type": "object",
+  "allOf": [
+    {
+      "properties": {
+        "content": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "$ref": "./sofria_contentElement_constraint.json"
+              }
+            ]
+          }
+        },
+        "meta_content": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "$ref": "./sofria_contentElement_constraint.json"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "enum": [
+              "graft"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "subtype": {
+            "enum": [
+              "footnote",
+              "xref",
+              "note_caller"
+            ]
+          }
+        },
+        "allOf": [
+          {
+            "not": {
+              "required": [
+                "content"
+              ]
+            }
+          },
+          {
+            "not": {
+              "required": [
+                "meta_content"
+              ]
+            }
+          }
+        ],
+        "if": {
+          "required": [
+            "new"
+          ],
+          "properties": {
+            "new": {
+              "enum": [
+                true
+              ]
+            }
+          }
+        },
+        "then": {
+          "not": {
+            "anyOf": [
+              {
+                "required": [
+                  "blocks"
+                ]
+              },
+              {
+                "required": [
+                  "preview_text"
+                ]
+              }
+            ]
+          }
+        },
+        "else": {
+          "required": [
+            "sequence"
+          ]
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "enum": [
+              "mark"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "subtype": {
+            "type": "string",
+            "oneOf": [
+              {
+                "enum": [
+                  "chapter_label",
+                  "verses_label",
+                  "alt_chapter",
+                  "alt_verse",
+                  "pub_chapter",
+                  "pub_verse"
+                ]
+              },
+              {
+                "pattern": "^[A-Za-z][A-Za-z0-9]*:\\S+$"
+              },
+              {
+                "pattern": "^x-\\S+$"
+              }
+            ]
+          }
+        },
+        "if": {
+          "properties": {
+            "subtype": {
+              "enum": [
+                "chapter",
+                "verses"
+              ]
+            }
+          }
+        },
+        "then": {
+          "type": "object",
+          "required": [
+            "atts"
+          ],
+          "properties": {
+            "atts": {
+              "type": "object",
+              "required": [
+                "number"
+              ],
+              "maxProperties": 1
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "enum": [
+              "wrapper"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "subtype": {
+            "type": "string",
+            "oneOf": [
+              {
+                "enum": [
+                  "meta_content",
+                  "chapter",
+                  "verses"
+                ]
+              },
+              {
+                "pattern": "^[A-Za-z][A-Za-z0-9]*:\\S+$"
+              },
+              {
+                "pattern": "^x-\\S+$"
+              }
+            ]
+          }
+        },
+        "if": {
+          "properties": {
+            "subtype": {
+              "enum": ["meta_content"]
+            }
+          }
+        },
+        "then": {
+          "not": {
+            "required": ["atts"]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "enum": [
+              "start_milestone"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "subtype": {
+            "type": "string",
+            "oneOf": [
+              {
+                "pattern": "^[A-Za-z][A-Za-z0-9]*:\\S+$"
+              },
+              {
+                "pattern": "^x-\\S+$"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "enum": [
+              "end_milestone"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "subtype": {
+            "type": "string",
+            "oneOf": [
+              {
+                "pattern": "^[A-Za-z][A-Za-z0-9]*:\\S+$"
+              },
+              {
+                "pattern": "^x-\\S+$"
+              }
+            ]
+          }
+        },
+        "not": {
+          "required": [
+            "atts"
+          ]
+        }
+      }
+    }
+  ]
+}

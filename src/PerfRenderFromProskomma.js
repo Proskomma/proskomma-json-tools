@@ -12,7 +12,7 @@ const camelCase2snakeCase = s => {
     return ret.join("");
 }
 
-class ProskommaRenderFromProskomma extends ProskommaRender {
+class PerfRenderFromProskomma extends ProskommaRender {
 
     constructor(spec) {
         super(spec);
@@ -72,9 +72,7 @@ class ProskommaRenderFromProskomma extends ProskommaRender {
         };
         context.sequences = [];
         this.renderEvent('startDocument', environment);
-        for (const sequenceId of sequenceIds) {
-            this.renderSequenceId(environment, sequenceId);
-        }
+        this.renderSequenceId(environment, mainId);
         this.renderEvent('endDocument', environment);
     }
 
@@ -167,13 +165,7 @@ class ProskommaRenderFromProskomma extends ProskommaRender {
                         direction: "end",
                         type: scopeBits[1] === 'milestone' ? "end_milestone" : "wrapper",
                         subType: `usfm:${camelCase2snakeCase(scopeBits[2])}`,
-                        atts: {}
                     };
-                }
-                if (scopeBits[3] in this._container.atts) {
-                    this._container.atts[scopeBits[3]].push(scopeBits[5]);
-                } else {
-                    this._container.atts[scopeBits[3]] = [scopeBits[5]];
                 }
             }
         } else {
@@ -198,7 +190,7 @@ class ProskommaRenderFromProskomma extends ProskommaRender {
                 } else { // scope
                     this.maybeRenderText(environment);
                     const scopeBits = item.payload.split('/');
-                    if (["chapter", "verses"].includes(scopeBits[0])) {
+                    if (["chapter", "verses", "pubChapter", "pubVerse", "altChapter", "altVerse"].includes(scopeBits[0])) {
                         if (item.subType === 'start') {
                             const mark = {
                                 type: "mark",
@@ -214,7 +206,7 @@ class ProskommaRenderFromProskomma extends ProskommaRender {
                     } else if (scopeBits[0] === 'span') {
                         const wrapper = {
                             type: "wrapper",
-                            subType: `usfm:${scopeBits[0]}`,
+                            subType: `usfm:${scopeBits[1]}`,
                         };
                         environment.context.sequences[0].element = wrapper;
                         if (item.subType === 'start') {
@@ -235,11 +227,22 @@ class ProskommaRenderFromProskomma extends ProskommaRender {
                             };
                         }
                     } else if (scopeBits[0] === 'milestone' && item.subType === "start") {
-                        this._container = {
-                            type: "start_milestone",
-                            subType: `usfm:${camelCase2snakeCase(scopeBits[1])}`,
-                            atts: {}
-                        };
+                        if (scopeBits[1] === 'ts') {
+                            const mark = {
+                                type: "mark",
+                                subType: `usfm:${camelCase2snakeCase(scopeBits[1])}`,
+                                atts: {}
+                            };
+                            environment.context.sequences[0].element = mark;
+                            this.renderEvent('mark', environment);
+                            delete environment.context.sequences[0].element;
+                        } else {
+                            this._container = {
+                                type: "start_milestone",
+                                subType: `usfm:${camelCase2snakeCase(scopeBits[1])}`,
+                                atts: {}
+                            }
+                        }
                     }
                 }
             }
@@ -289,4 +292,4 @@ class ProskommaRenderFromProskomma extends ProskommaRender {
 
 }
 
-module.exports = ProskommaRenderFromProskomma;
+module.exports = PerfRenderFromProskomma;

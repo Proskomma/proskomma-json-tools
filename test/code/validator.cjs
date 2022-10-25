@@ -2,8 +2,11 @@ import test from 'tape';
 import path from 'path';
 import fse from 'fs-extra';
 import {Validator} from '../../src';
+import {Proskomma} from "proskomma";
 
 const testGroup = 'Validator';
+
+const pk = new Proskomma();
 
 test(
     `schemaInfo (${testGroup})`,
@@ -14,10 +17,10 @@ test(
             t.ok('structure' in validatorInfo);
             t.ok('constraint' in validatorInfo);
             t.ok('perfSequence' in validatorInfo.constraint);
-            t.ok('0.2.1' in validatorInfo.constraint.perfSequence);
-            t.equal(validatorInfo.constraint.perfSequence["0.2.1"].length, 2);
-            t.equal(validatorInfo.constraint.perfSequence["0.2.1"][0], 'Sequence Structure');
-            t.equal(validatorInfo.constraint.perfSequence["0.2.1"][1], 'PERF Sequence');
+            t.ok('0.3.0' in validatorInfo.constraint.perfSequence);
+            t.equal(validatorInfo.constraint.perfSequence["0.3.0"].length, 2);
+            t.equal(validatorInfo.constraint.perfSequence["0.3.0"][0], 'Sequence Structure');
+            t.equal(validatorInfo.constraint.perfSequence["0.3.0"][1], 'PERF Sequence');
          } catch (err) {
             console.log(err);
         }
@@ -34,7 +37,7 @@ test(
             t.throws(() => validator.validate('banana', 'foo', 'baa', {}), /Schema type/);
             t.throws(() => validator.validate('structure', 'foo', 'baa', {}), /structure schema key/);
             t.throws(() => validator.validate('structure', 'document', 'baa', {}), /Unknown version/);
-            t.doesNotThrow(() => validator.validate('structure', 'document', '0.2.1', {}));
+            t.doesNotThrow(() => validator.validate('structure', 'document', '0.3.0', {}));
         } catch (err) {
             console.log(err);
         }
@@ -55,7 +58,7 @@ test(
             const validation = validator.validate(
                 'structure',
                 'document',
-                '0.2.1',
+                '0.3.0',
                 perf
             );
             t.ok(validation.isValid);
@@ -80,7 +83,7 @@ test(
             const validation = validator.validate(
                 'structure',
                 'sequence',
-                '0.2.1',
+                '0.3.0',
                 perf
             );
             t.ok(validation.isValid);
@@ -105,7 +108,7 @@ test(
             const validation = validator.validate(
                 'constraint',
                 'perfSequence',
-                '0.2.1',
+                '0.3.0',
                 perf
             );
             t.ok(validation.isValid);
@@ -130,7 +133,7 @@ test(
             const validation = validator.validate(
                 'constraint',
                 'perfDocument',
-                '0.2.1',
+                '0.3.0',
                 perf
             );
             t.ok(validation.isValid);
@@ -155,7 +158,7 @@ test(
             let validation = validator.validate(
                 'constraint',
                 'perfSequence',
-                '0.2.1',
+                '0.3.0',
                 perf
             );
             t.notOk(validation.isValid);
@@ -168,7 +171,7 @@ test(
             validation = validator.validate(
                 'constraint',
                 'perfSequence',
-                '0.2.1',
+                '0.3.0',
                 perf
             );
             t.notOk(validation.isValid);
@@ -193,7 +196,7 @@ test(
             const validation = validator.validate(
                 'structure',
                 'document',
-                '0.2.1',
+                '0.3.0',
                 sofria
             );
             t.ok(validation.isValid);
@@ -218,7 +221,7 @@ test(
             const validation = validator.validate(
                 'constraint',
                 'sofriaDocument',
-                '0.2.1',
+                '0.3.0',
                 sofria
             );
             t.ok(validation.isValid);
@@ -228,3 +231,28 @@ test(
         }
     },
 );
+
+test(
+    `validate constraints of succinct JSON (${testGroup})`,
+    async function (t) {
+        try {
+            t.plan(2);
+            const usfm = fse.readFileSync(path.resolve(path.join(__dirname, '..', 'test_data', 'webbe_mrk.usfm'))).toString();
+            const pk = new Proskomma();
+            pk.importDocument({'lang': 'eng', 'abbr': "web"}, "usfm", usfm);
+            const succinct = pk.serializeSuccinct('eng_web')
+            const validator = new Validator();
+            const validation = validator.validate(
+                'proskomma',
+                'succinct',
+                '0.2.0',
+                succinct
+            );
+            t.ok(validation.isValid);
+            t.equal(validation.errors, null);
+        } catch (err) {
+            console.log(err);
+        }
+    },
+);
+

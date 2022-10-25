@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<usx version="3.0">
+  <book code="PSA" style="id">Spanish: Inspired by Traducción en lenguaje actual 2006</book>
+  <para style="ide">UTF-8</para>
+  <para style="h">SALMOS</para>
+  <para style="toc1">Salmos</para>
+  <para style="mt">Salmos</para>
+  <chapter number="8" style="c" sid="PSA 8" />
+  <para style="q1">
+    <verse number="1" style="v" altnumber="2" sid="PSA 8:1" /> <char style="vp">1 (2)</char> Content before altChapter.<verse eid="PSA 8:1" /></para>
+  <chapter eid="PSA 8" />
+  <chapter number="9" style="c" altnumber="9a" sid="PSA 9" />
+  <para style="q1">
+    <verse number="1-2" style="v" altnumber="2-3" sid="PSA 9:1-2" /> <char style="vp">1-2 (2-3)</char>First verse after altChapter<verse eid="PSA 9:1-2" /></para>
+  <para style="q1">
+    <verse number="3-4" style="v" altnumber="4-5" sid="PSA 9:3-4" /> <char style="vp">3-4 (4-5)</char> Second and last verse after altChapter<verse eid="PSA 9:3-4" /></para>
+  <chapter eid="PSA 9" />
+  <chapter number="10" style="c" altnumber="9b" sid="PSA 10" />
+    <para style="q1"><verse number="1" sid="PSA 10:1"/>A verse in chapter 10.<verse eid="PSA 10:1"/></para>
+  <chapter number="148" style="c" sid="PSA 148" />
+  <para style="q1">
+    <verse number="1-4" style="v" sid="PSA 148:1-4" />First verse after end of altChapter.<verse eid="PSA 148:1-4" /></para>
+  <chapter eid="PSA 148" />
+</usx>
