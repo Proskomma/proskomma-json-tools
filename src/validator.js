@@ -19,6 +19,7 @@ const documentStructureSchema_0_3_0 = require('./schema/structure/0_3_0/document
 const sequenceStructureSchema_0_3_0 = require('./schema/structure/0_3_0/sequence_structure.json');
 const blockStructureSchema_0_3_0 = require('./schema/structure/0_3_0/block_structure.json');
 const contentElementStructureSchema_0_3_0 = require('./schema/structure/0_3_0/contentElement_structure.json');
+const hookStructureSchema_0_3_0 = require('./schema/structure/0_3_0/hooks_structure.json');
 const perfDocumentConstraintSchema_0_3_0 = require('./schema/constraint/0_3_0/perf_document_constraint.json');
 const perfSequenceConstraintSchema_0_3_0 = require('./schema/constraint/0_3_0/perf_sequence_constraint.json');
 const perfBlockConstraintSchema_0_3_0 = require('./schema/constraint/0_3_0/perf_block_constraint.json');
@@ -70,6 +71,7 @@ class Validator {
                         {
                             "name": "Document Structure",
                             "validator": new Ajv()
+                                .addSchema(hookStructureSchema_0_3_0)
                                 .addSchema(contentElementStructureSchema_0_3_0)
                                 .addSchema(blockStructureSchema_0_3_0)
                                 .addSchema(sequenceStructureSchema_0_3_0)
@@ -94,6 +96,7 @@ class Validator {
                         {
                             "name": "Sequence Structure",
                             "validator": new Ajv()
+                                .addSchema(hookStructureSchema_0_3_0)
                                 .addSchema(contentElementStructureSchema_0_3_0)
                                 .addSchema(blockStructureSchema_0_3_0)
                                 .compile(sequenceStructureSchema_0_3_0)
@@ -130,6 +133,7 @@ class Validator {
                         {
                             "name": "Document Structure",
                             "validator": new Ajv()
+                                .addSchema(hookStructureSchema_0_3_0)
                                 .addSchema(contentElementStructureSchema_0_3_0)
                                 .addSchema(blockStructureSchema_0_3_0)
                                 .addSchema(sequenceStructureSchema_0_3_0)
@@ -138,6 +142,7 @@ class Validator {
                         {
                             "name": "PERF Document",
                             "validator": new Ajv()
+                                .addSchema(hookStructureSchema_0_3_0)
                                 .addSchema(perfContentElementConstraintSchema_0_3_0)
                                 .addSchema(perfBlockConstraintSchema_0_3_0)
                                 .addSchema(perfSequenceConstraintSchema_0_3_0)
@@ -169,6 +174,7 @@ class Validator {
                         {
                             "name": "Sequence Structure",
                             "validator": new Ajv()
+                                .addSchema(hookStructureSchema_0_3_0)
                                 .addSchema(contentElementStructureSchema_0_3_0)
                                 .addSchema(blockStructureSchema_0_3_0)
                                 .compile(sequenceStructureSchema_0_3_0)
@@ -176,6 +182,7 @@ class Validator {
                         {
                             "name": "PERF Sequence",
                             "validator": new Ajv()
+                                .addSchema(hookStructureSchema_0_3_0)
                                 .addSchema(perfContentElementConstraintSchema_0_3_0)
                                 .addSchema(perfBlockConstraintSchema_0_3_0)
                                 .compile(perfSequenceConstraintSchema_0_3_0)
@@ -208,6 +215,7 @@ class Validator {
                         {
                             "name": "Document Structure",
                             "validator": new Ajv()
+                                .addSchema(hookStructureSchema_0_3_0)
                                 .addSchema(contentElementStructureSchema_0_3_0)
                                 .addSchema(blockStructureSchema_0_3_0)
                                 .addSchema(sequenceStructureSchema_0_3_0)
@@ -216,6 +224,7 @@ class Validator {
                         {
                             "name": "SOFRIA Document",
                             "validator": new Ajv()
+                                .addSchema(hookStructureSchema_0_3_0)
                                 .addSchema(sofriaContentElementConstraintSchema_0_3_0)
                                 .addSchema(sofriaBlockConstraintSchema_0_3_0)
                                 .addSchema(sofriaSequenceConstraintSchema_0_3_0)
@@ -247,6 +256,7 @@ class Validator {
                         {
                             "name": "Sequence Structure",
                             "validator": new Ajv()
+                                .addSchema(hookStructureSchema_0_3_0)
                                 .addSchema(contentElementStructureSchema_0_3_0)
                                 .addSchema(blockStructureSchema_0_3_0)
                                 .compile(sequenceStructureSchema_0_3_0)
@@ -254,6 +264,7 @@ class Validator {
                         {
                             "name": "SOFRIA Sequence",
                             "validator": new Ajv()
+                                .addSchema(hookStructureSchema_0_3_0)
                                 .addSchema(sofriaContentElementConstraintSchema_0_3_0)
                                 .addSchema(sofriaBlockConstraintSchema_0_3_0)
                                 .compile(sofriaSequenceConstraintSchema_0_3_0)

@@ -1,0 +1,33 @@
+{
+  "$id": "https://github.com/Proskomma/proskomma-json-tools/tree/main/src/schema/structure/0_3_0/hook_structure.json",
+  "title": "Hook (Structure)",
+  "description": "Hooks, ie typed labels that may be used to link documents",
+  "type": "array",
+  "items": {
+    "type": "array",
+    "items": [
+      {
+        "type": "string",
+        "oneOf": [
+          {"enum":  [
+            "bcv_ref",
+            "book_ref"
+          ]},
+          {"pattern": "^x-(app|publisher)-[a-z][a-z0-9]+-\\S{2,256}$"},
+          {"pattern": "^x-local-\\S{2,256}$"}
+        ]
+      },
+      {
+        "type": "string",
+        "oneOf": [
+          {"enum":  [
+            "label"
+          ]},
+          {"pattern": "^\\w{1,255}$"}
+        ]
+      }
+    ],
+    "minItems": 2,
+    "maxItems": 2
+  }
+}

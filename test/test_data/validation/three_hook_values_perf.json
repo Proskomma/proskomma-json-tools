@@ -1,0 +1,148 @@
+{
+  "schema": {
+    "structure": "flat",
+    "structure_version": "0.3.0",
+    "constraints": [
+      {
+        "name": "perf",
+        "version": "0.3.0"
+      }
+    ]
+  },
+  "metadata": {
+    "translation": {
+      "id": "frob",
+      "tags": [],
+      "selectors": {},
+      "other_stuff_key": ""
+    },
+    "document": {
+      "chapters": "1-3",
+      "tags": [],
+      "other_stuff_key_including_headers": ""
+    }
+  },
+  "hooks": [
+    ["foo", "baa", "frob"]
+  ],
+  "sequences": {
+    "foobaa": {
+      "type": "main",
+      "blocks": [
+        {
+          "type": "graft",
+          "subtype": "title",
+          "target": "M2JhMzg3NzQt"
+        },
+        {
+          "type": "graft",
+          "subtype": "introduction",
+          "new": true
+        },
+        {
+          "type": "paragraph",
+          "subtype": "usfm:p",
+          "content": [
+            {
+              "type": "mark",
+              "subtype": "chapter",
+              "atts": {
+                "number": "1"
+              }
+            },
+            {
+              "type": "mark",
+              "subtype": "verses",
+              "atts": {
+                "number": "1"
+              }
+            },
+            "La parole de",
+            {
+              "type": "wrapper",
+              "subtype": "usfm:nd",
+              "content": [
+                "l’Éternel"
+              ],
+              "meta_content": [
+                {
+                  "type": "wrapper",
+                  "subtype": "warning:typesetChecks",
+                  "content": [
+                    "Expected all-caps or small-caps for name of deity"
+                  ]
+                }
+              ]
+            },
+            " fut ",
+            {
+              "type": "wrapper",
+              "subtype": "meta_content",
+              "meta_content": [
+                {
+                  "type": "mark",
+                  "subtype": "warning:spell_checks",
+                  "atts": {
+                    "correction_proposals": [
+                      "adressée",
+                      "adressé"
+                    ]
+                  }
+                }
+              ],
+              "content": [
+                "adresssée"
+              ]
+            },
+            {
+              "type": "graft",
+              "subtype": "xref",
+              "new": true
+            },
+            " à ",
+            {
+              "type": "start_milestone",
+              "subtype": "x-proper-noun-phrase"
+            },
+            "Jonas, fils d’Amitthaï",
+            {
+              "type": "graft",
+              "subtype": "footnote",
+              "target": "M2JhMzg3NzQs"
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "x-proper-noun-phrase"
+            },
+            ", en ces mots: "
+          ]
+        }
+      ]
+    },
+    "M2JhMzg3NzQt": {
+      "type": "title",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "subtype": "usfm:mt",
+          "content": [
+            "Title goes here"
+          ]
+        }
+      ]
+    },
+    "M2JhMzg3NzQs": {
+      "type": "footnote",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "subtype": "usfm:f",
+          "content": [
+            "Note goes here"
+          ]
+        }
+      ]
+    }
+  },
+  "main_sequence_id": "foobaa"
+}
