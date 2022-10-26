@@ -28,6 +28,9 @@
   "sequences": {
     "foobaa": {
       "type": "main",
+      "hooks": [
+        ["foo", "baa"]
+      ],
       "blocks": [
         {
           "type": "graft",
@@ -42,6 +45,9 @@
         {
           "type": "paragraph",
           "subtype": "usfm:p",
+          "hooks": [
+            ["foo", "baa"]
+          ],
           "content": [
             {
               "type": "mark",
@@ -61,6 +67,9 @@
             {
               "type": "wrapper",
               "subtype": "usfm:nd",
+              "hooks": [
+                ["foo", "baa"]
+              ],
               "content": [
                 "l’Éternel"
               ],

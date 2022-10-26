@@ -82,6 +82,10 @@
           }
         ]
       }
+    },
+    "hooks": {
+      "type": "array",
+      "$ref": "./hook_structure.json"
     }
   },
   "required": [

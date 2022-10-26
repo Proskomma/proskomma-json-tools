@@ -18,6 +18,10 @@
       "items": {
         "$ref": "./block_structure.json"
       }
+    },
+    "hooks": {
+      "type": "array",
+      "$ref": "./hook_structure.json"
     }
   },
   "required": [
