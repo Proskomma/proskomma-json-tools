@@ -6,7 +6,10 @@
       "type": "string",
       "enum": [
         "paragraph",
-        "graft"
+        "graft",
+        "row",
+        "node",
+        "lookup"
       ]
     },
     "content": {
@@ -39,7 +42,9 @@
   "if": {
     "properties": {
       "type": {
-        "enum": ["graft"]
+        "enum": [
+          "graft"
+        ]
       }
     }
   },
@@ -63,13 +68,122 @@
     }
   },
   "else": {
-    "properties": {
-      "subtype": {
-        "type": "string",
-        "pattern": "^usfm:"
+    "if": {
+      "properties": {
+        "type": {
+          "enum": ["row"]
+        }
+      }
+    },
+    "then": {
+      "properties": {
+        "subtype": {
+          "type": "string",
+          "oneOf": [
+            {
+              "enum": [
+                "row:heading",
+                "row:body"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "else": {
+      "if": {
+        "properties": {
+          "type": {"enum": ["node"]}
+        }
+      },
+      "then": {
+        "properties": {
+          "subtype": {
+            "type": "string",
+            "oneOf": [
+              {"enum":  ["node"]},
+              {
+                "pattern": "^x-\\S+$"
+              }
+            ]
+          },
+          "atts": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "parent": {
+                "type": "string"
+              },
+              "children": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "id"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "else": {
+        "if": {
+          "properties": {
+            "type": {"enum": ["lookup"]}
+          }
+        },
+        "then": {
+          "properties": {
+            "subtype": {
+              "type": "string",
+              "oneOf": [
+                {"enum":  ["lookup"]},
+                {
+                  "pattern": "^x-\\S+$"
+                }
+              ]
+            },
+            "atts": {
+              "type": "object",
+              "properties": {
+                "primary": {
+                  "type": "string"
+                },
+                "secondary": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "required": [
+                "primary"
+              ],
+              "additionalProperties": false
+            }
+
+          }
+        },
+        "else": {
+          "properties": {
+            "subtype": {
+              "type": "string",
+              "oneOf": [
+                {
+                  "pattern": "^usfm:"
+                },
+                {
+                  "pattern": "^x-\\S+$"
+                }
+              ]
+            }
+          }
+        }
       }
     }
   }
 }
-
-

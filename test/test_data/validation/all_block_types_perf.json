@@ -1,0 +1,73 @@
+{
+  "schema": {
+    "structure": "flat",
+    "structure_version": "0.3.0",
+    "constraints": [
+      {
+        "name": "perf",
+        "version": "0.3.0"
+      }
+    ]
+  },
+  "metadata": {
+    "translation": {
+      "id": "frob",
+      "tags": [],
+      "selectors": {},
+      "other_stuff_key": ""
+    },
+    "document": {
+      "chapters": "1-3",
+      "tags": [],
+      "other_stuff_key_including_headers": ""
+    }
+  },
+  "sequences": {
+    "foobaa": {
+      "type": "main",
+      "blocks": [
+        {
+          "type": "row",
+          "subtype": "row:body",
+          "content": [
+            {
+              "type": "wrapper",
+              "subtype": "row:cell",
+              "content": [
+                "Cell content goes here"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "node",
+          "subtype": "x-noun-phrase",
+          "atts": {
+            "id": "abcde",
+            "parent": "xyz",
+            "children": ["def", "ghi"]
+          },
+          "content": [
+            "Node content goes here"
+          ]
+        },
+        {
+          "type": "lookup",
+          "subtype": "lookup",
+          "atts": {
+            "primary": "thummim",
+            "secondary": [
+              "worship",
+              "ot",
+              "funky"
+            ]
+          },
+          "content": [
+            "Node content goes here"
+          ]
+        }
+      ]
+    }
+  },
+  "main_sequence_id": "foobaa"
+}
