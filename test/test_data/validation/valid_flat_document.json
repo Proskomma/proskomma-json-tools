@@ -22,10 +22,6 @@
       "other_stuff_key_including_headers": ""
     }
   },
-  "hooks": [
-    ["foo", "baa"],
-    ["foo2", "baa2"]
-  ],
   "sequences": {
     "foobaa": {
       "type": "main",

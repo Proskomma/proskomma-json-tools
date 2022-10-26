@@ -23,13 +23,13 @@
     }
   },
   "hooks": [
-    ["foo", "baa"]
+    ["book_ref", "JON"]
   ],
   "sequences": {
     "foobaa": {
       "type": "main",
       "hooks": [
-        ["foo", "baa"]
+        ["book_ref", "JON"]
       ],
       "blocks": [
         {
@@ -46,7 +46,7 @@
           "type": "paragraph",
           "subtype": "usfm:p",
           "hooks": [
-            ["foo", "baa"]
+            ["x-app-foo-frob", "baa"]
           ],
           "content": [
             {
@@ -68,7 +68,7 @@
               "type": "wrapper",
               "subtype": "usfm:nd",
               "hooks": [
-                ["foo", "baa"]
+                ["x-local-foo", "baa"]
               ],
               "content": [
                 "l’Éternel"

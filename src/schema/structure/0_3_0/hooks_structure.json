@@ -7,7 +7,15 @@
     "type": "array",
     "items": [
       {
-        "type": "string"
+        "type": "string",
+        "oneOf": [
+          {"enum":  [
+            "bcv_ref",
+            "book_ref"
+          ]},
+          {"pattern": "^x-(app|publisher)-[a-z][a-z0-9]+-\\S+$"},
+          {"pattern": "^x-local-\\S+$"}
+        ]
       },
       {
         "type": "string"
