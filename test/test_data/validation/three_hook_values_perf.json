@@ -23,7 +23,7 @@
     }
   },
   "hooks": [
-    ["foo", "baa"]
+    ["foo", "baa", "frob"]
   ],
   "sequences": {
     "foobaa": {

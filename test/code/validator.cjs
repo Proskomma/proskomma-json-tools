@@ -269,9 +269,32 @@ test(
                 '0.3.0',
                 perf
             );
-            console.log(validation)
             t.ok(validation.isValid);
             t.equal(validation.errors, null);
+        } catch (err) {
+            console.log(err);
+        }
+    },
+);
+
+test(
+    `fail on invalid hooks (${testGroup})`,
+    async function (t) {
+        try {
+            const tests = [['three_hook_values_perf', '2 items']]
+            t.plan(2 * tests.length);
+            for (const [test_file, test_error] of tests) {
+                const perf = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'validation', `${test_file}.json`)));
+                const validator = new Validator();
+                const validation = validator.validate(
+                    'structure',
+                    'document',
+                    '0.3.0',
+                    perf
+                );
+                t.notOk(validation.isValid);
+                t.ok(validation.errors[0].message.includes(test_error));
+            }
         } catch (err) {
             console.log(err);
         }
