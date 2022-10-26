@@ -300,3 +300,28 @@ test(
         }
     },
 );
+
+test(
+    `validate non-para PERF block types (${testGroup})`,
+    async function (t) {
+        try {
+            t.plan(2);
+            const perf = fse.readJsonSync(
+                path.resolve(
+                    path.join(__dirname, '..', 'test_data', 'validation', 'all_block_types_perf.json')
+                )
+            )
+            const validator = new Validator();
+            const validation = validator.validate(
+                'constraint',
+                'perfDocument',
+                '0.3.0',
+                perf
+            );
+            t.ok(validation.isValid);
+            t.equal(validation.errors, null);
+        } catch (err) {
+            console.log(err);
+        }
+    },
+);

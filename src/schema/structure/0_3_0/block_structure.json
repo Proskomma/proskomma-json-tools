@@ -9,6 +9,9 @@
       "description": "The type of block",
       "enum": [
         "paragraph",
+        "row",
+        "node",
+        "lookup",
         "graft"
       ]
     },
@@ -79,7 +82,10 @@
     "properties": {
       "type": {
         "enum": [
-          "paragraph"
+          "paragraph",
+          "row",
+          "node",
+          "lookup"
         ]
       }
     }
