@@ -281,7 +281,7 @@ test(
     `fail on invalid hooks (${testGroup})`,
     async function (t) {
         try {
-            const tests = [['three_hook_values_perf', '2 items']]
+            const tests = [['three_hook_values_perf', '2 items'], ['odd_hook_values_perf', 'allowed values']]
             t.plan(2 * tests.length);
             for (const [test_file, test_error] of tests) {
                 const perf = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'validation', `${test_file}.json`)));

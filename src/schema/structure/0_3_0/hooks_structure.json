@@ -13,12 +13,18 @@
             "bcv_ref",
             "book_ref"
           ]},
-          {"pattern": "^x-(app|publisher)-[a-z][a-z0-9]+-\\S+$"},
-          {"pattern": "^x-local-\\S+$"}
+          {"pattern": "^x-(app|publisher)-[a-z][a-z0-9]+-\\S{2,256}$"},
+          {"pattern": "^x-local-\\S{2,256}$"}
         ]
       },
       {
-        "type": "string"
+        "type": "string",
+        "oneOf": [
+          {"enum":  [
+            "label"
+          ]},
+          {"pattern": "^\\w{1,255}$"}
+        ]
       }
     ],
     "minItems": 2,
