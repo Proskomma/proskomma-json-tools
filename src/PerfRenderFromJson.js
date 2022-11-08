@@ -97,6 +97,8 @@ class PerfRenderFromJson extends ProskommaRender {
         }
         if (element.atts) {
             elementContext.atts = element.atts;
+        } else {
+            elementContext.atts = {};
         }
         if (element.target) {
             elementContext.target = element.target;
