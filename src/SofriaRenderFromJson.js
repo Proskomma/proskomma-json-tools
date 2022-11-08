@@ -93,6 +93,8 @@ class SofriaRenderFromJson extends ProskommaRender {
         }
         if (element.atts) {
             elementContext.atts = element.atts;
+        } else {
+            elementContext.atts = {};
         }
         if (element.sequence) {
             elementContext.sequence = this.sequenceContext(element.sequence);

@@ -1,0 +1,73 @@
+{
+  "schema": {
+    "structure": "flat",
+    "structure_version": "0.2.0",
+    "constraints": [
+      {
+        "name": "perf",
+        "version": "0.2.0"
+      }
+    ]
+  },
+  "metadata": {
+    "translation": {
+      "id": "eBible/fra_fraLSG",
+      "selectors": {
+        "org": "eBible",
+        "lang": "fra",
+        "abbr": "fraLSG"
+      },
+      "tags": [],
+      "properties": {
+        "title": "Louis Segond 1910",
+        "copyright": "public domain",
+        "direction": "ltr",
+        "script": "Latin"
+      }
+    },
+    "document": {
+      "tags": [],
+      "properties": {},
+      "id": "MRK MRKFLS1910.PTX, Louis Segond 1910, French, 31-10-2011, Moon Sun Kim. Updated for DBL by E. Canales, September 2012.",
+      "bookCode": "MRK",
+      "ide": "UTF-8",
+      "h": "MARC",
+      "toc": "Évangile selon Marc",
+      "toc2": "Marc"
+    }
+  },
+  "sequences": {
+    "ZjI2YmQyYjAt": {
+      "type": "main",
+      "blocks": [
+        {
+          "type": "graft",
+          "subtype": "title",
+          "target": "ZWFkNDk0YjUt"
+        },
+        {
+          "type": "paragraph",
+          "subtype": "usfm:p",
+          "content": [
+            {
+              "type": "mark",
+              "subtype": "chapter",
+              "atts": {
+                "number": "1"
+              }
+            },
+            {
+              "type": "mark",
+              "subtype": "verses",
+              "atts": {
+                "number": "1"
+              }
+            },
+            "Commencement de l’Évangile de Jésus-Christ, Fils de Dieu. "
+          ]
+        }
+      ]
+    }
+  },
+  "main_sequence_id": "ZjI2YmQyYjAt"
+}
