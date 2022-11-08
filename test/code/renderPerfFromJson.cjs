@@ -123,6 +123,44 @@ test(
 );
 
 test(
+    `Render PERF with missing grafts ignored (${testGroup})`,
+    async function (t) {
+        try {
+            t.plan(1);
+            const perf = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'missing_graft_perf.json')));
+            const cl = new PerfRenderFromJson({
+                srcJson: perf,
+                ignoreMissingSequences: true,
+                actions: identityActions
+            });
+            const output = {};
+            t.doesNotThrow(() => cl.renderDocument({docId: "", config: {}, output}));
+            // console.log(JSON.stringify(output, null, 2));
+        } catch (err) {
+            console.log(err);
+        }
+    },
+);
+
+test(
+    `Render PERF with missing grafts throwing (${testGroup})`,
+    async function (t) {
+        try {
+            t.plan(1);
+            const perf = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'missing_graft_perf.json')));
+            const cl = new PerfRenderFromJson({
+                srcJson: perf,
+                actions: identityActions
+            });
+            const output = {};
+            t.throws(() => cl.renderDocument({docId: "", config: {}, output}), /not found.*not set/);
+        } catch (err) {
+            console.log(err);
+        }
+    },
+);
+
+test(
     `PERF word count (${testGroup})`,
     async function (t) {
         try {
