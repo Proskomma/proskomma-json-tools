@@ -114,7 +114,7 @@ test(
             const cl = new PerfRenderFromJson({srcJson: perf, actions: identityActions});
             const output = {};
             t.doesNotThrow(() => cl.renderDocument({docId: "", config: {}, output}));
-            // console.log(JSON.stringify(output, null, 2));
+            // console.log(JSON.stringify(output.perf, null, 2));
             t.ok(equal(perf, output.perf));
         } catch (err) {
             console.log(err);
@@ -131,7 +131,18 @@ test(
             const cl = new PerfRenderFromJson({
                 srcJson: perf,
                 ignoreMissingSequences: true,
-                actions: identityActions
+                actions: mergeActions([
+                    {
+                        unresolvedBlockGraft: [
+                            {
+                                description: "Ignore unresolved block grafts",
+                                test: () => false,
+                                action: () => {}
+                            }
+                        ]
+                    },
+                    identityActions
+                ])
             });
             const output = {};
             t.doesNotThrow(() => cl.renderDocument({docId: "", config: {}, output}));
@@ -153,7 +164,7 @@ test(
                 actions: identityActions
             });
             const output = {};
-            t.throws(() => cl.renderDocument({docId: "", config: {}, output}), /not found.*not set/);
+            t.throws(() => cl.renderDocument({docId: "", config: {}, output}), /No action for unresolved.*fix your data/);
         } catch (err) {
             console.log(err);
         }
