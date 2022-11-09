@@ -14,11 +14,13 @@ class ProskommaRender {
             "endDocument",
             "startSequence",
             "endSequence",
+            "unresolvedBlockGraft",
             "blockGraft",
             "startParagraph",
             "endParagraph",
             "metaContent",
             "mark",
+            "unresolvedInlineGraft",
             "inlineGraft",
             "startWrapper",
             "endWrapper",
@@ -107,6 +109,9 @@ class ProskommaRender {
                     break;
                 }
             }
+        }
+        if (['unresolvedBlockGraft', 'unresolvedInlineGraft'].includes(event) && this.actions[event].length === 0) {
+            throw new Error(`No action for ${event} graft event in ${context.sequences.length > 0 ? context.sequences[0].type : "no"} sequence: add an action or fix your data!`)
         }
         if (!found && this.debugLevel > 1) {
             console.log(`${"    ".repeat(context.sequences.length)}    No matching action`);

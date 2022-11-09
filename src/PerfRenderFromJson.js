@@ -8,7 +8,6 @@ class PerfRenderFromJson extends ProskommaRender {
             throw new Error(`Must provide srcJson`);
         }
         this.srcJson = spec.srcJson;
-        this.ignoreMissingSequences = spec.ignoreMissingSequences || false;
     }
 
     renderDocument1({docId, config, context, workspace, output}) {
@@ -53,15 +52,13 @@ class PerfRenderFromJson extends ProskommaRender {
             }
             if (block.type === 'graft') {
                 if (block.target && !this.srcJson.sequences[block.target]) {
-                    if (this.ignoreMissingSequences) {
-                        continue;
-                    } else {
-                        throw new Error(`Sequence '${block.target} not found and ignoreMissingSequences not set'`);
-                    }
+                    context.sequences[0].block.target = block.target;
+                    this.renderEvent('unresolvedBlockGraft', environment);
+                } else {
+                    context.sequences[0].block.target = block.target;
+                    context.sequences[0].block.isNew = block.new || false;
+                    this.renderEvent('blockGraft', environment);
                 }
-                context.sequences[0].block.target = block.target;
-                context.sequences[0].block.isNew = block.new || false;
-                this.renderEvent('blockGraft', environment);
             } else {
                 this.renderEvent('startParagraph', environment);
                 this.renderContent(block.content, environment);
@@ -125,10 +122,8 @@ class PerfRenderFromJson extends ProskommaRender {
         } else if (elementContext.type === "graft") {
             if (element.target) {
                 if (element.target && !this.srcJson.sequences[element.target]) {
-                    if (this.ignoreMissingSequences) {
-                    } else {
-                        throw new Error(`Sequence '${element.target} not found and ignoreMissingSequences not set'`);
-                    }
+                    this.renderEvent('unresolvedInlineGraft', environment);
+                    return;
                 }
             }
             this.renderEvent('inlineGraft', environment);
