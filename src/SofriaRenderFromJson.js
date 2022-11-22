@@ -93,7 +93,7 @@ class SofriaRenderFromJson extends ProskommaRender {
         }
         if (element.atts) {
             elementContext.atts = element.atts;
-        } else {
+        } else if (element.subType !== "end_milestone") {
             elementContext.atts = {};
         }
         if (element.sequence) {
