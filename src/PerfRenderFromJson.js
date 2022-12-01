@@ -94,7 +94,7 @@ class PerfRenderFromJson extends ProskommaRender {
         }
         if (element.atts) {
             elementContext.atts = element.atts;
-        } else if (element.subType !== "end_milestone"  && element.subType !== "meta_content") {
+        } else if (element.subtype !== "end_milestone"  && element.subtype !== "meta_content") {
             elementContext.atts = {};
         }
         if (element.target) {

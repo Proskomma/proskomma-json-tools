@@ -237,7 +237,7 @@ class PerfRenderFromProskomma extends ProskommaRender {
                             const mark = {
                                 type: "mark",
                                 subType: `usfm:${camelCase2snakeCase(scopeBits[1])}`,
-                                atts: {}
+                                atts: {},
                             };
                             environment.context.sequences[0].element = mark;
                             this.renderEvent('mark', environment);
@@ -246,7 +246,7 @@ class PerfRenderFromProskomma extends ProskommaRender {
                             this._container = {
                                 type: "start_milestone",
                                 subType: `usfm:${camelCase2snakeCase(scopeBits[1])}`,
-                                atts: {}
+                                atts: {},
                             }
                         }
                     }
