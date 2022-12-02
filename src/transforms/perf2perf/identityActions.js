@@ -119,7 +119,7 @@ const identityActions = {
                     type: element.type,
                     subtype: element.subType,
                 };
-                if (element.atts && typeof(element.atts) == "object" && Object.keys(element.atts).length != 0) {
+                if (element.atts && typeof(element.atts) === "object" && Object.keys(element.atts).length !== 0) {
                     markRecord.atts = element.atts;
                 }
                 workspace.outputContentStack[0].push(markRecord);
@@ -160,7 +160,7 @@ const identityActions = {
                     subtype: element.subType,
                     content: [],
                 };
-                if ('atts' in element && typeof(element.atts) == "object" && Object.keys(element.atts).length != 0) {
+                if ('atts' in element && typeof(element.atts) === "object" && Object.keys(element.atts).length !== 0) {
                     wrapperRecord.atts = element.atts;
                 }
                 workspace.outputContentStack[0].push(wrapperRecord);
@@ -187,7 +187,7 @@ const identityActions = {
                     type: element.type,
                     subtype: element.subType,
                 };
-                if (element.atts && typeof(element.atts) == "object" && Object.keys(element.atts).length != 0) {
+                if (element.atts && typeof(element.atts) === "object" && Object.keys(element.atts).length !== 0) {
                     milestoneRecord.atts = element.atts;
                 }
                 workspace.outputContentStack[0].push(milestoneRecord);
