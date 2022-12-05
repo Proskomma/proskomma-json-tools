@@ -1,4 +1,4 @@
-import { PerfRenderFromJson } from '../index';
+import PerfRenderFromJson from '../PerfRenderFromJson';
 
 const initialBlockRecord = ct => ({
     type: ct.sequences[0].block.type,

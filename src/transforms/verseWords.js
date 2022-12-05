@@ -1,4 +1,4 @@
-import { PerfRenderFromJson } from '../index';
+import PerfRenderFromJson from '../PerfRenderFromJson';
 import xre from "xregexp";
 
 const localVerseWordsActions = {

@@ -1,4 +1,4 @@
-import { PerfRenderFromJson } from '../index';
+import PerfRenderFromJson from '../PerfRenderFromJson';
 
 const oneifyTag = t => {
     if (['toc', 'toca', 'mt', 'imt', 's', 'ms', 'mte', 'sd'].includes(t)) {

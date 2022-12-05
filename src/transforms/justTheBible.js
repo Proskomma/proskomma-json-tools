@@ -1,4 +1,5 @@
-import {PerfRenderFromJson, mergeActions} from '../index';
+import PerfRenderFromJson from '../PerfRenderFromJson';
+import mergeActions from '../../src/mergeActions';
 import identityActions from './identityActions';
 
 const localJustTheBibleActions = {
