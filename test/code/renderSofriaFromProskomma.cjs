@@ -3,7 +3,7 @@ import test from 'tape';
 import path from 'path';
 import fse from 'fs-extra';
 import SofriaRenderFromProskomma from '../../src/SofriaRenderFromProskomma';
-import identityActions from '../../src/transforms/sofria2sofria/identityActions';
+import identityActions from '../../src/transforms_legacy/sofria2sofria/identityActions';
 import {Proskomma} from 'proskomma';
 import {Validator} from "../../src/";
 
@@ -28,7 +28,7 @@ test(
     async function (t) {
         try {
             t.plan(3);
-            const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'webbe_mrk.usfm'))).toString();
+            const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'usfms','webbe_mrk.usfm'))).toString();
             pk.importDocument({'lang': 'eng', 'abbr': "web"}, "usfm", usfm);
             const docId = pk.gqlQuerySync('{documents { id } }').data.documents[0].id;
             const cl = new SofriaRenderFromProskomma({proskomma: pk, actions: identityActions});
@@ -89,7 +89,7 @@ test(
         try {
             t.plan(3);
             const pk2 = new Proskomma();
-            const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'ult_uw_mrk.usfm'))).toString();
+            const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'usfms', 'ult_uw_mrk.usfm'))).toString();
             pk2.importDocument({'lang': 'eng', 'abbr': "ult"}, "usfm", usfm);
             const docId = pk2.gqlQuerySync('{documents { id } }').data.documents[0].id;
             const cl = new SofriaRenderFromProskomma({proskomma: pk2, actions: identityActions});
@@ -117,7 +117,7 @@ test(
         try {
             t.plan(3);
             const pk3 = new Proskomma();
-            const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'verse_over_para_boundary.usfm'))).toString();
+            const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'usfms', 'verse_over_para_boundary.usfm'))).toString();
             pk3.importDocument({'lang': 'eng', 'abbr': "web"}, "usfm", usfm);
             const docId = pk3.gqlQuerySync('{documents { id } }').data.documents[0].id;
             const cl = new SofriaRenderFromProskomma({proskomma: pk3, actions: identityActions});
@@ -149,7 +149,7 @@ test(
         try {
             t.plan(5);
             const pk4 = new Proskomma();
-            const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'webbe_mrk.usfm'))).toString();
+            const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'usfms', 'webbe_mrk.usfm'))).toString();
             pk4.importDocument({'lang': 'eng', 'abbr': "web"}, "usfm", usfm);
             const docId = pk4.gqlQuerySync('{documents { id } }').data.documents[0].id;
             const cl = new SofriaRenderFromProskomma({proskomma: pk4, actions: identityActions});
@@ -211,7 +211,7 @@ test(
     async function (t) {
         try {
             t.plan(3);
-            const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'rems.usfm'))).toString();
+            const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'usfms', 'rems.usfm'))).toString();
             const pk6 = new Proskomma();
             pk6.importDocument({'lang': 'eng', 'abbr': "web"}, "usfm", usfm);
             const docId = pk6.gqlQuerySync('{documents { id } }').data.documents[0].id;

@@ -1,0 +1,40 @@
+[
+  {
+    "id": 0,
+    "type": "Inputs",
+    "inputs": {
+      "perf": "json"
+    }
+  },
+  {
+    "id": 1,
+    "title": "Simplify Input PERF",
+    "name": "justTheBible",
+    "transformName": "justTheBible",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "perf",
+        "type": "json",
+        "source": "Input perf"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "perf",
+        "type": "json"
+      }
+    ]
+  },
+  {
+    "id": 999,
+    "type": "Outputs",
+    "outputs": [
+      {
+        "name": "perf",
+        "type": "json",
+        "source": "Transform 1 perf"
+      }
+    ]
+  }
+]

@@ -189,7 +189,7 @@ test(
             t.plan(2);
             const sofria = fse.readJsonSync(
                 path.resolve(
-                    path.join(__dirname, '..', 'test_data', 'fra_lsg_mrk_sofria_doc.json')
+                    path.join(__dirname, '..', 'test_data', 'perfs', 'fra_lsg_mrk_sofria_doc.json')
                 )
             )
             const validator = new Validator();
@@ -214,7 +214,7 @@ test(
             t.plan(2);
             const sofria = fse.readJsonSync(
                 path.resolve(
-                    path.join(__dirname, '..', 'test_data', 'fra_lsg_mrk_sofria_doc.json')
+                    path.join(__dirname, '..', 'test_data', 'perfs', 'fra_lsg_mrk_sofria_doc.json')
                 )
             )
             const validator = new Validator();
@@ -237,7 +237,7 @@ test(
     async function (t) {
         try {
             t.plan(2);
-            const usfm = fse.readFileSync(path.resolve(path.join(__dirname, '..', 'test_data', 'webbe_mrk.usfm'))).toString();
+            const usfm = fse.readFileSync(path.resolve(path.join(__dirname, '..', 'test_data', 'usfms', 'webbe_mrk.usfm'))).toString();
             const pk = new Proskomma();
             pk.importDocument({'lang': 'eng', 'abbr': "web"}, "usfm", usfm);
             const succinct = pk.serializeSuccinct('eng_web')

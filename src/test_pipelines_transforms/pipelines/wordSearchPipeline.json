@@ -1,0 +1,150 @@
+[
+  {
+    "id": 0,
+    "type": "Inputs",
+    "inputs": {
+      "perf": "json",
+      "searchString": "text",
+      "ignoreCase": "text",
+      "asRegex": "text",
+      "logic": "text",
+      "asPartial": "text"
+    }
+  },
+  {
+    "id": 1,
+    "title": "Simplify Input PERF",
+    "name": "justTheBible",
+    "transformName": "justTheBible",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "perf",
+        "type": "json",
+        "source": "Input perf"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "perf",
+        "type": "json"
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "title": "Merge Text in Input PERF",
+    "name": "mergePerfText",
+    "transformName": "mergePerfText",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "perf",
+        "type": "json",
+        "source": "Transform 1 perf"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "perf",
+        "type": "json"
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "title": "Search Term",
+    "type": "Source",
+    "sourceLocation": "local",
+    "localValue": "Jesus",
+    "outputType": "text"
+  },
+  {
+    "id": 4,
+    "title": "Ignore Case",
+    "type": "Source",
+    "sourceLocation": "local",
+    "localValue": "1",
+    "outputType": "text"
+  },
+  {
+    "id": 5,
+    "title": "Regex",
+    "type": "Source",
+    "sourceLocation": "local",
+    "localValue": "0",
+    "outputType": "text"
+  },
+  {
+    "id": 5,
+    "title": "Logic",
+    "type": "Source",
+    "sourceLocation": "local",
+    "localValue": "O",
+    "outputType": "text"
+  },
+  {
+    "id": 6,
+    "title": "Partial",
+    "type": "Source",
+    "sourceLocation": "local",
+    "localValue": "0",
+    "outputType": "text"
+  },
+  {
+    "id": 7,
+    "title": "Do Word Search",
+    "name": "wordSearch",
+    "transformName": "wordSearch",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "perf",
+        "type": "json",
+        "source": "Transform 2 perf"
+      },
+      {
+        "name": "searchString",
+        "type": "text",
+        "source": "Input searchString"
+      },
+      {
+        "name": "ignoreCase",
+        "type": "text",
+        "source": "Input ignoreCase"
+      },
+      {
+        "name": "regex",
+        "type": "text",
+        "source": "Input asRegex"
+      },
+      {
+        "name": "logic",
+        "type": "text",
+        "source": "Input logic"
+      },
+      {
+        "name": "partial",
+        "type": "text",
+        "source": "Input asPartial"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "matches",
+        "type": "json"
+      }
+    ]
+  },
+  {
+    "id": 999,
+    "type": "Outputs",
+    "outputs": [
+      {
+        "name": "matches",
+        "type": "json",
+        "source": "Transform 7 matches"
+      }
+    ]
+  }
+]

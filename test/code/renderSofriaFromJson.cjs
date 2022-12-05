@@ -3,7 +3,7 @@ import test from 'tape';
 const fse = require('fs-extra');
 import path from 'path';
 import SofriaRenderFromJson from '../../src/SofriaRenderFromJson';
-import identityActions from '../../src/transforms/sofria2sofria/identityActions';
+import identityActions from '../../src/transforms_legacy/sofria2sofria/identityActions';
 import {Validator} from "../../src";
 
 const testGroup = 'Render SOFRIA from JSON';
@@ -27,7 +27,7 @@ test(
     async function (t) {
         try {
             t.plan(1);
-            const sofria = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'fra_lsg_mrk_sofria_doc.json')));
+            const sofria = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'perfs', 'fra_lsg_mrk_sofria_doc.json')));
             const cl = new SofriaRenderFromJson({srcJson: sofria});
             t.doesNotThrow(() => cl.renderDocument({docId: "", config: {}, output: {}}));
         } catch (err) {
@@ -41,7 +41,7 @@ test(
     async function (t) {
         try {
             t.plan(1);
-            const sofria = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'fra_lsg_mrk_sofria_doc.json')));
+            const sofria = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'perfs', 'fra_lsg_mrk_sofria_doc.json')));
             const cl = new SofriaRenderFromJson({srcJson: sofria});
             cl.debugLevel = 0;
             cl.addRenderAction(
@@ -82,7 +82,7 @@ test(
     async function (t) {
         try {
             t.plan(1);
-            const sofria = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'fra_lsg_mrk_sofria_doc.json')));
+            const sofria = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'perfs', 'fra_lsg_mrk_sofria_doc.json')));
             const cl = new SofriaRenderFromJson({srcJson: sofria});
             cl.debugLevel = 0;
             cl.addRenderAction(
@@ -108,7 +108,7 @@ test(
     async function (t) {
         try {
             t.plan(2);
-            const sofria = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'fra_lsg_mrk_sofria_doc.json')));
+            const sofria = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'perfs', 'fra_lsg_mrk_sofria_doc.json')));
             const cl = new SofriaRenderFromJson({srcJson: sofria, actions: identityActions});
             const output = {};
             t.doesNotThrow(() => cl.renderDocument({docId: "", config: {}, output}));
