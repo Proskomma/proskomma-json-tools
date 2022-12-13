@@ -45,7 +45,7 @@ test(`usfm has premature ts milestone (${testGroup})`, async (t) => {
             selectors: {'lang': 'fra', 'abbr': 'ult'}
         });
 
-        console.log(JSON.stringify(output.perf.sequences, null, 2));
+        // console.log(JSON.stringify(output.perf.sequences, null, 2));
 
         const validatorResult = validator.validate('constraint','perfDocument','0.2.1', output.perf);
         if (!validatorResult.isValid) {
