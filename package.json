@@ -10,7 +10,7 @@
     "test": "npm run build && bash -c \"tape -r @babel/register test/code/*.cjs | node_modules/tap-summary/bin/cmd.js\"",
     "rawTest": "tape -r @babel/register test/code/*.cjs",
     "oneTest": "bash -c \"tape -r @babel/register test/code/$TESTSCRIPT.cjs\"",
-    "build": "babel src -d dist; mkdir dist/schema; cp -fr src/schema/* dist/schema; cp -fr src/pipelines/*.json dist/pipelines/; cp -fr src/test_pipelines_transforms/pipelines/*.json dist/test_pipelines_transforms/pipelines/",
+    "build": "rm -fr dist; babel src -d dist; cp -fr src/schema/ dist/; cp -fr src/pipelines/*.json dist/pipelines/; cp -fr src/test_pipelines_transforms/pipelines/*.json dist/test_pipelines_transforms/pipelines/",
     "prepublishOnly": "rm -fr dist && npm run build"
   },
   "repository": {
