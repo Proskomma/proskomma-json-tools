@@ -1,10 +1,10 @@
 import test from 'tape';
 
 const fse = require('fs-extra');
-import PerfRenderFromProskomma from '../../src/PerfRenderFromProskomma';
+import PerfRenderFromProskomma from '../../dist/PerfRenderFromProskomma';
 import {Proskomma} from 'proskomma';
-import {Validator} from "../../src/";
-import identityActions from '../../src/transforms/identityActions';
+import {Validator} from "../../dist/";
+import identityActions from '../../dist/transforms_legacy/perf2perf/identityActions';
 import path from "path";
 const testGroup = 'Render PERF from Proskomma';
 

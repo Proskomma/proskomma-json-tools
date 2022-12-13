@@ -2,7 +2,7 @@ import test from 'tape';
 import path from 'path';
 import fse from 'fs-extra';
 import {Validator} from '../../src';
-import {Proskomma} from "proskomma";
+import {Proskomma} from 'proskomma';
 
 const testGroup = 'Validator';
 
@@ -18,9 +18,9 @@ test(
             t.ok('constraint' in validatorInfo);
             t.ok('perfSequence' in validatorInfo.constraint);
             t.ok('0.3.0' in validatorInfo.constraint.perfSequence);
-            t.equal(validatorInfo.constraint.perfSequence["0.3.0"].length, 2);
-            t.equal(validatorInfo.constraint.perfSequence["0.3.0"][0], 'Sequence Structure');
-            t.equal(validatorInfo.constraint.perfSequence["0.3.0"][1], 'PERF Sequence');
+            t.equal(validatorInfo.constraint.perfSequence['0.3.0'].length, 2);
+            t.equal(validatorInfo.constraint.perfSequence['0.3.0'][0], 'Sequence Structure');
+            t.equal(validatorInfo.constraint.perfSequence['0.3.0'][1], 'PERF Sequence');
          } catch (err) {
             console.log(err);
         }
@@ -162,7 +162,7 @@ test(
                 perf
             );
             t.notOk(validation.isValid);
-            t.equal(validation.lastSchema, "Sequence Structure");
+            t.equal(validation.lastSchema, 'Sequence Structure');
             perf = fse.readJsonSync(
                 path.resolve(
                     path.join(__dirname, '..', 'test_data', 'validation', 'perf_invalid_flat_sequence.json')
@@ -175,7 +175,7 @@ test(
                 perf
             );
             t.notOk(validation.isValid);
-            t.equal(validation.lastSchema, "PERF Sequence");
+            t.equal(validation.lastSchema, 'PERF Sequence');
         } catch (err) {
             console.log(err);
         }
@@ -239,7 +239,7 @@ test(
             t.plan(2);
             const usfm = fse.readFileSync(path.resolve(path.join(__dirname, '..', 'test_data', 'usfms', 'webbe_mrk.usfm'))).toString();
             const pk = new Proskomma();
-            pk.importDocument({'lang': 'eng', 'abbr': "web"}, "usfm", usfm);
+            pk.importDocument({'lang': 'eng', 'abbr': 'web'}, 'usfm', usfm);
             const succinct = pk.serializeSuccinct('eng_web')
             const validator = new Validator();
             const validation = validator.validate(

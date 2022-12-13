@@ -2,12 +2,12 @@ import test from 'tape';
 
 const fse = require('fs-extra');
 import path from 'path';
-import { PerfRenderFromJson } from '../../src/index';
-import identityActions from '../../src/transforms/identityActions';
-import wordCountActions from '../../src/transforms_legacy/perf2x/wordCountActions';
-import wordSearchActions from '../../src/transforms_legacy/perf2x/wordSearchActions';
-import longVerseCheckActions from '../../src/transforms_legacy/perf2x/longVerseCheckActions';
-import mergeActions from '../../src/mergeActions';
+import { PerfRenderFromJson } from '../../dist/index';
+import identityActions from '../../dist/transforms_legacy/perf2perf/identityActions';
+import wordCountActions from '../../dist/transforms_legacy/perf2x/wordCountActions';
+import wordSearchActions from '../../dist/transforms_legacy/perf2x/wordSearchActions';
+import longVerseCheckActions from '../../dist/transforms_legacy/perf2x/longVerseCheckActions';
+import mergeActions from '../../dist/mergeActions';
 import equal from 'deep-equal';
 
 const testGroup = 'Render PERF from JSON';

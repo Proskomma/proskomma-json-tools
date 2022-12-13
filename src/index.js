@@ -8,10 +8,10 @@ const SofriaRenderFromJson = require('./SofriaRenderFromJson');
 const SofriaRenderFromProskomma = require('./SofriaRenderFromProskomma');
 const mergeActions = require('./mergeActions');
 const pipelines = require('./pipelines');
-const transforms = require('./transforms');
-const testPipelines = require('./test_pipelines_transforms');
-const testTransforms = require('./test_pipelines_transforms');
-const transforms_legacy = require('./transforms_legacy');
+const transforms = require('./transforms_legacy');
+const testTransforms = require('./test_pipelines_transforms/transforms').default;
+const testPipelines = require('./test_pipelines_transforms/pipelines').default;
+// const testTransforms = require('./test_pipelines_transforms');
 
 module.exports = {
     Validator,
@@ -27,5 +27,4 @@ module.exports = {
     transforms,
     testPipelines,
     testTransforms,
-    transforms_legacy,
 };

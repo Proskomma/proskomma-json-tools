@@ -7,8 +7,8 @@
     }
   },
   {
-    "id": 4,
-    "title": "Transform 4",
+    "id": 1,
+    "title": "Perf to versewords",
     "name": "verseWords",
     "type": "Transform",
     "transformName": "verseWords",
@@ -28,7 +28,7 @@
     "description": "PERF=>JSON: Counts words occurrences"
   },
   {
-    "id": 6,
+    "id": 2,
     "title": "Strip Alignment",
     "name": "stripAlignment",
     "type": "Transform",
@@ -42,7 +42,7 @@
       {
         "name": "verseWords",
         "type": "json",
-        "source": "Transform 4 verseWords"
+        "source": "Transform 1 verseWords"
       }
     ],
     "outputs": [
@@ -58,7 +58,7 @@
     "description": "PERF=>PERF: Strips alignment markup"
   },
   {
-    "id": 9,
+    "id": 3,
     "title": "Merge stripped perf",
     "name": "mergePerfText",
     "type": "Transform",
@@ -67,7 +67,7 @@
       {
         "name": "perf",
         "type": "json",
-        "source": "Transform 6 perf"
+        "source": "Transform 2 perf"
       }
     ],
     "outputs": [
@@ -85,12 +85,12 @@
       {
         "name": "perf",
         "type": "json",
-        "source": "Transform 9 perf"
+        "source": "Transform 3 perf"
       },
       {
         "name": "strippedAlignment",
         "type": "json",
-        "source": "Transform 6 strippedAlignment"
+        "source": "Transform 2 strippedAlignment"
       }
     ]
   }

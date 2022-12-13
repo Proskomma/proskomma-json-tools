@@ -2,9 +2,9 @@ import test from 'tape';
 
 const fse = require('fs-extra');
 import path from 'path';
-import SofriaRenderFromJson from '../../src/SofriaRenderFromJson';
-import identityActions from '../../src/transforms_legacy/sofria2sofria/identityActions';
-import {Validator} from "../../src";
+import SofriaRenderFromJson from '../../dist/SofriaRenderFromJson';
+import identityActions from '../../dist/transforms_legacy/sofria2sofria/identityActions';
+import {Validator} from "../../dist";
 
 const testGroup = 'Render SOFRIA from JSON';
 

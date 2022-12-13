@@ -220,4 +220,4 @@ const identityActions = {
     ]
 };
 
-module.exports = identityActions;
+export default identityActions;

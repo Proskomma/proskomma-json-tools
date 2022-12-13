@@ -1,5 +1,5 @@
-import officalPipelines from "../pipelines";
-import officalTransforms from "../transforms";
+import officialPipelines from '../pipelines';
+import namespaceTransforms from '../transforms_legacy';
 
 class PipelineHandler {
     /**
@@ -10,18 +10,20 @@ class PipelineHandler {
      * @param {boolean} verbose - print pipeline reading step by step
      */
     constructor({pipelines = null, transforms = null, proskomma = null, verbose=false}) {
+        // TODO add namespaces [usfm, perf, sofria]
         if (proskomma !== null) {
             this.proskomma = proskomma;
-            const query = "{ id }";
+            const query = '{ id }';
             const content = proskomma.gqlQuerySync(query) || {};
     
             if (!content || !content.data.id) {
-                throw new Error("Provided Proskomma instance does not have any ID");
+                throw new Error('Provided Proskomma instance does not have any ID');
             }
         }
 
-        this.pipelines = officalPipelines;
-        this.transforms = officalTransforms;
+        this.pipelines = officialPipelines;
+        this.namespaces = namespaceTransforms;
+        this.transforms = {};
 
         if(pipelines != null) {
             for(let key of Object.keys(pipelines)) {
@@ -46,7 +48,7 @@ class PipelineHandler {
     }
 
     listPipelinesNames() {
-        console.log(Object.keys(this.pipelines).join("\n"));
+        console.log(Object.keys(this.pipelines).join('\n'));
     }
 
     /**
@@ -70,7 +72,7 @@ class PipelineHandler {
                 throw new Error(`Input ${inputSpecName} not provided as input to ${pipelineName}`);
             }
             if ((typeof data[inputSpecName] === 'string') !== (inputSpecType === 'text')) {
-                throw new Error(`Input ${inputSpecName} must be ${inputSpecType} but ${typeof data[inputSpecName] === 'string' ? "text": "json"} was provided`);
+                throw new Error(`Input ${inputSpecName} must be ${inputSpecType} but ${typeof data[inputSpecName] === 'string' ? 'text': 'json'} was provided`);
             }
         }
         return pipeline;
@@ -85,21 +87,41 @@ class PipelineHandler {
      */
     async runPipeline(pipelineName, data) {
         const pipeline = this.getPipeline(pipelineName, data);
+        this.loadTransforms(pipeline, 'perf');
         return await this.evaluateSteps({specSteps: pipeline, inputValues: data});
     }
 
+    loadTransforms(pipeline, namespace='perf') {
+        const transformSteps = pipeline.filter(s => s.type==='Transform');
+        if (transformSteps.length === 0) {
+            throw new Error(`No Transform steps found in report steps`);
+        }
+        var names = Object.keys(transformSteps).map(val => transformSteps[val]['name']);
+        if(namespace==='perf' || namespace ==='usfm') {
+            for(const [key, tr] of Object.entries(this.namespaces)) {
+                if(key !== 'sofria2sofria') {
+                    for(const [k, t] of Object.entries(tr)) {
+                        if(names.includes(k)) {
+                            this.transforms[k] = t;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     evaluateSteps({specSteps, inputValues}) {
-        this.verbose && console.log("** Evaluate **");
+        this.verbose && console.log('** Evaluate **');
         // Find input, output and transforms
-        const inputStep = specSteps.filter(s => s.type==="Inputs")[0];
+        const inputStep = specSteps.filter(s => s.type==='Inputs')[0];
         if (!inputStep) {
             throw new Error(`No Inputs step found in report steps`);
         }
-        const outputStep = specSteps.filter(s => s.type==="Outputs")[0];
+        const outputStep = specSteps.filter(s => s.type==='Outputs')[0];
         if (!outputStep) {
             throw new Error(`No Outputs step found in report steps`);
         }
-        const transformSteps = specSteps.filter(s => s.type==="Transform");
+        const transformSteps = specSteps.filter(s => s.type==='Transform');
         if (transformSteps.length === 0) {
             throw new Error(`No Transform steps found in report steps`);
         }
@@ -167,7 +189,7 @@ class PipelineHandler {
             this.verbose && console.log(`Copying Transform ${transformN} ${output.name} to Output ${output.name}`);
             outputValues[output.name] = transformOutputs[transformN][output.name];
         }
-        this.verbose && console.log("****");
+        this.verbose && console.log('****');
         return outputValues;
     }
 }

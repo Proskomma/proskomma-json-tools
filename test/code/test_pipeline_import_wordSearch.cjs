@@ -1,31 +1,33 @@
-const { PipelineHandler, testPipelines, testTransforms } = require("../../dist/index");
-const test = require("tape");
-const { Proskomma } = require("proskomma");
-const fse = require("fs-extra");
-const path = require("path");
+const { PipelineHandler, testPipelines, testTransforms } = require('../../dist/index');
+// const { testPipelines, testTransforms } = require('../../dist/test_pipelines_transforms');
+const test = require('tape');
+const { Proskomma } = require('proskomma');
+const fse = require('fs-extra');
+const path = require('path');
 
 const testGroup = 'wordSearch';
+
 
 const pipelineH = new PipelineHandler({
     pipelines: testPipelines,
     transforms: testTransforms,
     proskomma:new Proskomma(),
-    verbose:true
+    verbose:false
 });
 
-const perfContent = fse.readJsonSync(path.resolve(__dirname, "../test_data/perfs/titus_aligned_eng.json"));
+const perfContent = fse.readJsonSync(path.resolve(__dirname, '../test_data/perfs/titus_aligned_eng.json'));
 
 test(`returns output with valid args (${testGroup})`, (t) => {
     t.plan(6);
     try {
         t.doesNotThrow(async () => {
-            let output = await pipelineH.runPipeline("wordSearchPipeline", {
+            let output = await pipelineH.runPipeline('wordSearchPipeline', {
                 perf: perfContent,
-                searchString: "God",
-                ignoreCase: "0",
-                asRegex: "0",
-                logic: "A",
-                asPartial: "0"
+                searchString: 'God',
+                ignoreCase: '0',
+                asRegex: '0',
+                logic: 'A',
+                asPartial: '0'
             });
 
             t.ok('matches' in output);
@@ -37,6 +39,6 @@ test(`returns output with valid args (${testGroup})`, (t) => {
         })
     } catch (err) {
         console.log(err);
-        t.fail("perf2usfmPipeline throws on valid perf");
+        t.fail('perf2usfmPipeline throws on valid perf');
     }
 });
