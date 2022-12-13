@@ -8,7 +8,7 @@ test(
     async function (t) {
         try {
             t.plan(10);
-            for (const v of ["characterTags", "bodyTags", "headingTags", "introHeadingTags", "introBodyTags"]) {
+            for (const v of ['characterTags', 'bodyTags', 'headingTags', 'introHeadingTags', 'introBodyTags']) {
                 t.ok(v in usfmHelps);
                 t.ok(usfmHelps[v].length > 0);
             }

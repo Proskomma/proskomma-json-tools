@@ -1,0 +1,46 @@
+[
+  {
+    "id": 0,
+    "type": "Inputs",
+    "inputs": {
+      "usfm": "text",
+      "selectors": "json"
+    }
+  },
+  {
+    "id": 2,
+    "title": "USFM to PERF",
+    "name": "usfm2perf",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "usfm",
+        "type": "text",
+        "source": "Input usfm"
+      },
+      {
+        "name": "selectors",
+        "type": "json",
+        "source": "Input selectors"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "perf",
+        "type": "json"
+      }
+    ],
+    "description": "USFM=>PERF: Conversion via Proskomma"
+  },
+  {
+    "id": 999,
+    "type": "Outputs",
+    "outputs": [
+      {
+        "name": "perf",
+        "type": "json",
+        "source": "Transform 2 perf"
+      }
+    ]
+  }
+]

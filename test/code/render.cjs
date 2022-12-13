@@ -40,7 +40,7 @@ test(
             t.throws(
                 () => cl.addRenderAction(
                     'banana',
-                    {description: "Test Action"}
+                    {description: 'Test Action'}
                 ),
                 /Unknown event/
             );
@@ -64,16 +64,16 @@ test(
 
             class MySubclass extends ProskommaRender {}
             const cl = new MySubclass({});
-            t.doesNotThrow(() => cl.addRenderAction('startDocument', {description: "Test Action", test: () => false}));
+            t.doesNotThrow(() => cl.addRenderAction('startDocument', {description: 'Test Action', test: () => false}));
             let desc = cl.describeRenderActions('startDocument');
-            t.ok(desc.includes("DO Test Action"));
-            t.ok(desc.includes("IF () => false"));
-            t.doesNotThrow(() => cl.addRenderAction('startDocument', {description: "Further Verifications"}));
+            t.ok(desc.includes('DO Test Action'));
+            t.ok(desc.includes('IF () => false'));
+            t.doesNotThrow(() => cl.addRenderAction('startDocument', {description: 'Further Verifications'}));
             desc = cl.describeRenderActions('startDocument');
-            t.ok(desc.includes("DO Test Action"));
-            t.ok(desc.includes("DO Further Verifications"));
-            t.ok(desc.includes("IF () => true"));
-            t.ok(desc.includes("IF () => false"));
+            t.ok(desc.includes('DO Test Action'));
+            t.ok(desc.includes('DO Further Verifications'));
+            t.ok(desc.includes('IF () => true'));
+            t.ok(desc.includes('IF () => false'));
         } catch (err) {
             console.log(err);
         }

@@ -2,10 +2,10 @@ import test from 'tape';
 
 import path from 'path';
 import fse from 'fs-extra';
-import SofriaRenderFromProskomma from '../../src/SofriaRenderFromProskomma';
-import identityActions from '../../src/transforms/sofria2sofria/identityActions';
+import SofriaRenderFromProskomma from '../../dist/SofriaRenderFromProskomma';
+import identityActions from '../../dist/transforms/sofria2sofria/identityActions';
 import {Proskomma} from 'proskomma';
-import {Validator} from "../../src/";
+import {Validator} from '../../dist/';
 
 const testGroup = 'Render SOFRIA from Proskomma';
 
@@ -28,8 +28,8 @@ test(
     async function (t) {
         try {
             t.plan(3);
-            const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'webbe_mrk.usfm'))).toString();
-            pk.importDocument({'lang': 'eng', 'abbr': "web"}, "usfm", usfm);
+            const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'usfms','webbe_mrk.usfm'))).toString();
+            pk.importDocument({'lang': 'eng', 'abbr': 'web'}, 'usfm', usfm);
             const docId = pk.gqlQuerySync('{documents { id } }').data.documents[0].id;
             const cl = new SofriaRenderFromProskomma({proskomma: pk, actions: identityActions});
             const output = {};
@@ -64,7 +64,7 @@ test(
             const output = {};
             t.doesNotThrow(
                 () => cl.renderDocument(
-                    {docId, config: {chapters: ["2"]}, output}
+                    {docId, config: {chapters: ['2']}, output}
                 )
             );
             // console.log(JSON.stringify(output, null, 2));
@@ -89,8 +89,8 @@ test(
         try {
             t.plan(3);
             const pk2 = new Proskomma();
-            const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'ult_uw_mrk.usfm'))).toString();
-            pk2.importDocument({'lang': 'eng', 'abbr': "ult"}, "usfm", usfm);
+            const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'usfms', 'ult_uw_mrk.usfm'))).toString();
+            pk2.importDocument({'lang': 'eng', 'abbr': 'ult'}, 'usfm', usfm);
             const docId = pk2.gqlQuerySync('{documents { id } }').data.documents[0].id;
             const cl = new SofriaRenderFromProskomma({proskomma: pk2, actions: identityActions});
             const output = {};
@@ -117,8 +117,8 @@ test(
         try {
             t.plan(3);
             const pk3 = new Proskomma();
-            const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'verse_over_para_boundary.usfm'))).toString();
-            pk3.importDocument({'lang': 'eng', 'abbr': "web"}, "usfm", usfm);
+            const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'usfms', 'verse_over_para_boundary.usfm'))).toString();
+            pk3.importDocument({'lang': 'eng', 'abbr': 'web'}, 'usfm', usfm);
             const docId = pk3.gqlQuerySync('{documents { id } }').data.documents[0].id;
             const cl = new SofriaRenderFromProskomma({proskomma: pk3, actions: identityActions});
             const output = {};
@@ -149,8 +149,8 @@ test(
         try {
             t.plan(5);
             const pk4 = new Proskomma();
-            const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'webbe_mrk.usfm'))).toString();
-            pk4.importDocument({'lang': 'eng', 'abbr': "web"}, "usfm", usfm);
+            const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'usfms', 'webbe_mrk.usfm'))).toString();
+            pk4.importDocument({'lang': 'eng', 'abbr': 'web'}, 'usfm', usfm);
             const docId = pk4.gqlQuerySync('{documents { id } }').data.documents[0].id;
             const cl = new SofriaRenderFromProskomma({proskomma: pk4, actions: identityActions});
             const output = {};
@@ -182,12 +182,12 @@ test(
     `Handle conjunction of note and straddle para for SOFRIA (${testGroup})`,
     async function (t) {
         try {
-            const usxLeaves = ["sofria_note", "sofria_verse_straddles_para", "sofria_note_plus_verse_straddles_paras"];
+            const usxLeaves = ['sofria_note', 'sofria_verse_straddles_para', 'sofria_note_plus_verse_straddles_paras'];
             t.plan(usxLeaves.length);
             for (const usxLeaf of usxLeaves) {
                 const pk5 = new Proskomma();
                 const usx = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'sofria_export_usx', `${usxLeaf}.usx`))).toString();
-                pk5.importDocument({'lang': 'eng', 'abbr': "foo"}, "usx", usx);
+                pk5.importDocument({'lang': 'eng', 'abbr': 'foo'}, 'usx', usx);
                 const docId = pk5.gqlQuerySync('{documents { id } }').data.documents[0].id;
                 const cl = new SofriaRenderFromProskomma({proskomma: pk5, actions: identityActions, debugLevel: 0});
                 const output = {};
@@ -211,9 +211,9 @@ test(
     async function (t) {
         try {
             t.plan(3);
-            const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'rems.usfm'))).toString();
+            const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'usfms', 'rems.usfm'))).toString();
             const pk6 = new Proskomma();
-            pk6.importDocument({'lang': 'eng', 'abbr': "web"}, "usfm", usfm);
+            pk6.importDocument({'lang': 'eng', 'abbr': 'web'}, 'usfm', usfm);
             const docId = pk6.gqlQuerySync('{documents { id } }').data.documents[0].id;
             const cl = new SofriaRenderFromProskomma({proskomma: pk6, actions: identityActions});
             const output = {};
@@ -242,14 +242,14 @@ test(
     `Handle alternative chapter/verse for SOFRIA (${testGroup})`,
     async function (t) {
         try {
-            const usxLeaves = ["sofria_ca"];
+            const usxLeaves = ['sofria_ca'];
             t.plan(usxLeaves.length * 6);
             for (const usxLeaf of usxLeaves) {
                 const pk5 = new Proskomma();
                 const usx = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'sofria_export_usx', `${usxLeaf}.usx`))).toString();
-                pk5.importDocument({'lang': 'eng', 'abbr': "foo"}, "usx", usx);
+                pk5.importDocument({'lang': 'eng', 'abbr': 'foo'}, 'usx', usx);
                 const docId = pk5.gqlQuerySync('{documents { id } }').data.documents[0].id;
-                // console.log(pk5.gqlQuerySync(`{ document(id: "${docId}") { mainSequence { blocks { dump } } } }`).data.document.mainSequence);
+                // console.log(pk5.gqlQuerySync(`{ document(id: '${docId}') { mainSequence { blocks { dump } } } }`).data.document.mainSequence);
                 const cl = new SofriaRenderFromProskomma({proskomma: pk5, actions: identityActions, debugLevel: 0});
                 const output = {};
                 t.doesNotThrow(

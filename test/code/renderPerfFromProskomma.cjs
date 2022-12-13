@@ -1,10 +1,10 @@
 import test from 'tape';
 
 const fse = require('fs-extra');
-import PerfRenderFromProskomma from '../../src/PerfRenderFromProskomma';
+import PerfRenderFromProskomma from '../../dist/PerfRenderFromProskomma';
 import {Proskomma} from 'proskomma';
-import {Validator} from "../../src/";
-import identityActions from '../../src/transforms/perf2perf/identityActions';
+import {Validator} from "../../dist/";
+import identityActions from '../../dist/transforms/perf2perf/identityActions';
 import path from "path";
 const testGroup = 'Render PERF from Proskomma';
 
@@ -29,7 +29,7 @@ test(
             t.plan(3);
 
             // await thaw(pk, nt_ebible_4book);
-            const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'webbe_mrk.usfm'))).toString();
+            const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'usfms', 'webbe_mrk.usfm'))).toString();
             pk.importDocument({'lang': 'eng', 'abbr': "web"}, "usfm", usfm);
             const cl = new PerfRenderFromProskomma({proskomma: pk, actions: identityActions});
             const docId = pk.gqlQuerySync('{documents { id } }').data.documents[0].id;
@@ -58,7 +58,7 @@ test(
             t.plan(3);
             // await thaw(pk, nt_uw_1book);
             const pk2 = new Proskomma();
-            const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'webbe_mrk.usfm'))).toString();
+            const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'usfms', 'webbe_mrk.usfm'))).toString();
             pk2.importDocument({'lang': 'eng', 'abbr': "web"}, "usfm", usfm);
             const docId = pk2.gqlQuerySync('{documents { id } }').data.documents[0].id;
             const cl = new PerfRenderFromProskomma({proskomma: pk2, actions: identityActions});
@@ -86,7 +86,7 @@ test(
         try {
             t.plan(5);
             const pk3 = new Proskomma();
-            const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'webbe_mrk.usfm'))).toString();
+            const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'usfms', 'webbe_mrk.usfm'))).toString();
             pk3.importDocument({'lang': 'eng', 'abbr': "web"}, "usfm", usfm);
             const docId = pk3.gqlQuerySync('{documents { id } }').data.documents[0].id;
             const cl = new PerfRenderFromProskomma({proskomma: pk3, actions: identityActions});

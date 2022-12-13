@@ -2,12 +2,12 @@ import test from 'tape';
 
 const fse = require('fs-extra');
 import path from 'path';
-import PerfRenderFromJson from '../../src/PerfRenderFromJson';
-import identityActions from '../../src/transforms/perf2perf/identityActions';
-import wordCountActions from '../../src/transforms/perf2x/wordCountActions';
-import wordSearchActions from '../../src/transforms/perf2x/wordSearchActions';
-import longVerseCheckActions from '../../src/transforms/perf2x/longVerseCheckActions';
-import mergeActions from '../../src/mergeActions';
+import { PerfRenderFromJson } from '../../dist/index';
+import identityActions from '../../dist/transforms/perf2perf/identityActions';
+import wordCountActions from '../../dist/transforms/perf2x/wordCountActions';
+import wordSearchActions from '../../dist/transforms/perf2x/wordSearchActions';
+import longVerseCheckActions from '../../dist/transforms/perf2x/longVerseCheckActions';
+import mergeActions from '../../dist/mergeActions';
 import equal from 'deep-equal';
 
 const testGroup = 'Render PERF from JSON';
@@ -43,7 +43,7 @@ test(
     async function (t) {
         try {
             t.plan(1);
-            const perf = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'fra_lsg_mrk_perf_doc.json')));
+            const perf = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'perfs', 'fra_lsg_mrk_perf_doc.json')));
             const cl = new PerfRenderFromJson({srcJson: perf});
             cl.debugLevel = 0;
             cl.addRenderAction(
@@ -127,7 +127,7 @@ test(
     async function (t) {
         try {
             t.plan(1);
-            const perf = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'missing_graft_perf.json')));
+            const perf = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'perfs', 'missing_graft_perf.json')));
             const cl = new PerfRenderFromJson({
                 srcJson: perf,
                 ignoreMissingSequences: true,
@@ -158,7 +158,7 @@ test(
     async function (t) {
         try {
             t.plan(1);
-            const perf = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'missing_graft_perf.json')));
+            const perf = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'perfs', 'missing_graft_perf.json')));
             const cl = new PerfRenderFromJson({
                 srcJson: perf,
                 actions: identityActions
@@ -176,7 +176,7 @@ test(
     async function (t) {
         try {
             t.plan(1);
-            const perf = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'fra_lsg_mrk_perf_doc.json')));
+            const perf = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'perfs', 'fra_lsg_mrk_perf_doc.json')));
             const cl = new PerfRenderFromJson({srcJson: perf, actions: wordCountActions});
             const output = {};
             t.doesNotThrow(() => cl.renderDocument({docId: "", config: {}, output}));
@@ -191,7 +191,7 @@ test(
     async function (t) {
         try {
             t.plan(1);
-            const perf = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'fra_lsg_mrk_perf_doc.json')));
+            const perf = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'perfs', 'fra_lsg_mrk_perf_doc.json')));
             const cl = new PerfRenderFromJson({srcJson: perf, actions: wordSearchActions});
             const output = {};
             t.doesNotThrow(() => cl.renderDocument({docId: "", config: {toSearch: "foule"}, output}));
@@ -206,7 +206,7 @@ test(
     async function (t) {
         try {
             t.plan(1);
-            const perf = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'fra_lsg_mrk_perf_doc.json')));
+            const perf = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'perfs', 'fra_lsg_mrk_perf_doc.json')));
             const cl = new PerfRenderFromJson(
                 {
                     srcJson: perf,
