@@ -3,7 +3,7 @@ import test from 'tape';
 import path from 'path';
 import fse from 'fs-extra';
 import SofriaRenderFromProskomma from '../../dist/SofriaRenderFromProskomma';
-import identityActions from '../../dist/transforms_legacy/sofria2sofria/identityActions';
+import identityActions from '../../dist/transforms/sofria2sofria/identityActions';
 import {Proskomma} from 'proskomma';
 import {Validator} from '../../dist/';
 

@@ -1,6 +1,6 @@
 import PerfRenderFromJson from '../../PerfRenderFromJson';
 import mergeActions from '../../mergeActions';
-import transforms from '../';
+import transforms from '..';
 
 const localJustTheBibleActions = {
     startMilestone: [

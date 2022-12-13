@@ -1,5 +1,5 @@
 import officialPipelines from '../pipelines';
-import namespaceTransforms from '../transforms_legacy';
+import namespaceTransforms from '../transforms';
 
 class PipelineHandler {
     /**
