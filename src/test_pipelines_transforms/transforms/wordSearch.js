@@ -1,4 +1,4 @@
-import PerfRenderFromJson from '../../../src/PerfRenderFromJson';
+import PerfRenderFromJson from '../../PerfRenderFromJson';
 import xre from "xregexp";
 const splitWords = xre('([\\p{Letter}\\p{Number}\\p{Mark}\\u2060]{1,127})');
 
@@ -89,10 +89,10 @@ const addMatch = function(workspace, config) {
       ...config,
       andLogic: false, // for highlighting we match any found
     }
-    
+
     let text = workspace.chunks.join('');
     const words = xre.split(text, splitWords);
-    
+
     for (const value of words) {
       if (value) {
         const found = findMatch(config_, value, search, workspace);
@@ -115,8 +115,8 @@ const addMatch = function(workspace, config) {
 function findMatch(config, text, search, workspace) {
     if (config.regex) {
         return workspace.regex.test(text);
-    } 
-    
+    }
+
     const isSearchArray = Array.isArray(search);
     if (config.ignoreCase) {
     text = text.toLowerCase();
@@ -130,12 +130,12 @@ function findMatch(config, text, search, workspace) {
   if (!isSearchArray) {
     search = [search];
   }
-  
+
   if (!config.partialMatch) { // if word search, we separate text into array of words to match
     const words = xre.split(text, splitWords);
     text = words;
   }
-  
+
   let allMatched = true;
   let anyMatched = false;
   for (const searchTerm of search) {
@@ -155,8 +155,8 @@ function findMatch(config, text, search, workspace) {
 
 const doSearch = function(workspace, config){
     if (workspace.chunks.length) {
-        let text = workspace.chunks.join(''); 
-        
+        let text = workspace.chunks.join('');
+
         let search_ = config.toSearch;
         const found = findMatch(config, text, search_, workspace);
         if (found) {
@@ -185,7 +185,7 @@ const wordSearchCode = function ({perf, searchString, ignoreCase = '1', logic = 
         toSearch = '/' + newSearch + '/';
       }
     }
-    
+
     let regexFlags = '';
     if ( toSearch.startsWith('/') && toSearch.includes('/', 2) ) {
         regex_ = true;
