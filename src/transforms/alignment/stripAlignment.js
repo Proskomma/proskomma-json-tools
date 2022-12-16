@@ -1,7 +1,7 @@
 import PerfRenderFromJson from '../../PerfRenderFromJson';
 import mergeActions from '../../mergeActions';
-import transforms from '..';
 import xre from "xregexp";
+const { identityActions } = require('../perf2perf/identityActions');
 
 const localStripMarkupActions = {
     startDocument: [
@@ -192,7 +192,7 @@ const stripMarkupCode = function ({ perf, verseWords }) {
             actions: mergeActions(
                 [
                     localStripMarkupActions,
-                    transforms.perf2perf.identityActions,
+                    identityActions,
                 ]
             )
         }
@@ -230,4 +230,4 @@ const stripAlignment = {
     ],
     code: stripMarkupCode
 }
-export default stripAlignment;
+module.exports = { stripAlignment };

@@ -4,7 +4,7 @@ import stripAlignmentPipeline from './stripAlignmentPipeline.json';
 import perf2usfmPipeline from './perf2usfmPipeline.json';
 import justTheBiblePipeline from './justTheBiblePipeline.json';
 
-export default {
+module.exports =  {
     usfm2perfPipeline,
     mergeAlignmentPipeline,
     stripAlignmentPipeline,

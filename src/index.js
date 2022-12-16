@@ -9,9 +9,8 @@ const SofriaRenderFromProskomma = require('./SofriaRenderFromProskomma');
 const mergeActions = require('./mergeActions');
 const pipelines = require('./pipelines');
 const transforms = require('./transforms');
-const testTransforms = require('./test_pipelines_transforms/transforms').default;
-const testPipelines = require('./test_pipelines_transforms/pipelines').default;
-// const testTransforms = require('./test_pipelines_transforms');
+const testTransforms = require('./test_pipelines_transforms/transforms');
+const testPipelines = require('./test_pipelines_transforms/pipelines');
 
 module.exports = {
     Validator,

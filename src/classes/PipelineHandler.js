@@ -1,5 +1,5 @@
-import officialPipelines from '../pipelines';
-import namespaceTransforms from '../transforms';
+const namespaceTransforms = require('../transforms');
+const officialPipelines = require('../pipelines');
 
 class PipelineHandler {
     /**
@@ -49,6 +49,14 @@ class PipelineHandler {
 
     listPipelinesNames() {
         console.log(Object.keys(this.pipelines).join('\n'));
+    }
+
+    listTransformsNames() {
+        console.log(Object.keys(this.transforms).join('\n'));
+    }
+
+    listNamespacesNames() {
+        console.log(Object.keys(this.namespaces).join('\n'));
     }
 
     /**

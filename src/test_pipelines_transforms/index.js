@@ -1,7 +1,7 @@
-import testTransforms from "./transforms";
-import testPipelines from "./pipelines";
+const testTransforms = require('./transforms');
+const testPipelines = require('./pipelines');
 
-export default {
+module.exports = {
     testTransforms,
-    testPipelines
+    testPipelines,
 }

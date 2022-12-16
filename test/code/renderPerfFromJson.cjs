@@ -3,10 +3,8 @@ import test from 'tape';
 const fse = require('fs-extra');
 import path from 'path';
 import { PerfRenderFromJson } from '../../dist/index';
-import identityActions from '../../dist/transforms/perf2perf/identityActions';
-import wordCountActions from '../../dist/transforms/perf2x/wordCountActions';
-import wordSearchActions from '../../dist/transforms/perf2x/wordSearchActions';
-import longVerseCheckActions from '../../dist/transforms/perf2x/longVerseCheckActions';
+const transforms = require('../../dist/transforms');
+
 import mergeActions from '../../dist/mergeActions';
 import equal from 'deep-equal';
 
@@ -111,7 +109,7 @@ test(
         try {
             t.plan(2);
             const perf = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'validation', 'valid_flat_document.json')));
-            const cl = new PerfRenderFromJson({srcJson: perf, actions: identityActions});
+            const cl = new PerfRenderFromJson({srcJson: perf, actions: transforms.perf2perf.identityActions});
             const output = {};
             t.doesNotThrow(() => cl.renderDocument({docId: "", config: {}, output}));
             // console.log(JSON.stringify(output.perf, null, 2));
@@ -141,7 +139,7 @@ test(
                             }
                         ]
                     },
-                    identityActions
+                    transforms.perf2perf.identityActions
                 ])
             });
             const output = {};
@@ -161,7 +159,7 @@ test(
             const perf = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'perfs', 'missing_graft_perf.json')));
             const cl = new PerfRenderFromJson({
                 srcJson: perf,
-                actions: identityActions
+                actions: transforms.perf2perf.identityActions
             });
             const output = {};
             t.throws(() => cl.renderDocument({docId: "", config: {}, output}), /No action for unresolved.*fix your data/);
@@ -177,7 +175,7 @@ test(
         try {
             t.plan(1);
             const perf = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'perfs', 'fra_lsg_mrk_perf_doc.json')));
-            const cl = new PerfRenderFromJson({srcJson: perf, actions: wordCountActions});
+            const cl = new PerfRenderFromJson({srcJson: perf, actions: transforms.perf2x.wordCountActions});
             const output = {};
             t.doesNotThrow(() => cl.renderDocument({docId: "", config: {}, output}));
         } catch (err) {
@@ -192,7 +190,7 @@ test(
         try {
             t.plan(1);
             const perf = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'perfs', 'fra_lsg_mrk_perf_doc.json')));
-            const cl = new PerfRenderFromJson({srcJson: perf, actions: wordSearchActions});
+            const cl = new PerfRenderFromJson({srcJson: perf, actions: transforms.perf2x.wordSearchActions});
             const output = {};
             t.doesNotThrow(() => cl.renderDocument({docId: "", config: {toSearch: "foule"}, output}));
         } catch (err) {
@@ -212,8 +210,8 @@ test(
                     srcJson: perf,
                     actions: mergeActions(
                         [
-                            longVerseCheckActions,
-                            identityActions,
+                            transforms.perf2x.longVerseCheckActions,
+                            transforms.perf2perf.identityActions,
                         ]
                     )
                 }

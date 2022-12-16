@@ -1,10 +1,10 @@
 import test from 'tape';
 
 const fse = require('fs-extra');
+const transforms = require('../../dist/transforms');
 import PerfRenderFromProskomma from '../../dist/PerfRenderFromProskomma';
 import {Proskomma} from 'proskomma';
 import {Validator} from "../../dist/";
-import identityActions from '../../dist/transforms/perf2perf/identityActions';
 import path from "path";
 const testGroup = 'Render PERF from Proskomma';
 
@@ -31,7 +31,7 @@ test(
             // await thaw(pk, nt_ebible_4book);
             const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'usfms', 'webbe_mrk.usfm'))).toString();
             pk.importDocument({'lang': 'eng', 'abbr': "web"}, "usfm", usfm);
-            const cl = new PerfRenderFromProskomma({proskomma: pk, actions: identityActions});
+            const cl = new PerfRenderFromProskomma({proskomma: pk, actions: transforms.perf2perf.identityActions});
             const docId = pk.gqlQuerySync('{documents { id } }').data.documents[0].id;
             const output = {};
             t.doesNotThrow(() => cl.renderDocument({docId, config: {}, output}));
@@ -61,10 +61,9 @@ test(
             const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'usfms', 'webbe_mrk.usfm'))).toString();
             pk2.importDocument({'lang': 'eng', 'abbr': "web"}, "usfm", usfm);
             const docId = pk2.gqlQuerySync('{documents { id } }').data.documents[0].id;
-            const cl = new PerfRenderFromProskomma({proskomma: pk2, actions: identityActions});
+            const cl = new PerfRenderFromProskomma({proskomma: pk2, actions: transforms.perf2perf.identityActions});
             const output = {};
             t.doesNotThrow(() => cl.renderDocument({docId, config: {}, output}));
-            // console.log(JSON.stringify(output, null, 2));
             const validator = new Validator();
             const validation = validator.validate(
                 'constraint',
@@ -89,7 +88,7 @@ test(
             const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'usfms', 'webbe_mrk.usfm'))).toString();
             pk3.importDocument({'lang': 'eng', 'abbr': "web"}, "usfm", usfm);
             const docId = pk3.gqlQuerySync('{documents { id } }').data.documents[0].id;
-            const cl = new PerfRenderFromProskomma({proskomma: pk3, actions: identityActions});
+            const cl = new PerfRenderFromProskomma({proskomma: pk3, actions: transforms.perf2perf.identityActions});
             const output = {};
             t.doesNotThrow(
                 () => cl.renderDocument(
@@ -126,7 +125,7 @@ test(
                 pk5.importDocument({'lang': 'eng', 'abbr': "foo"}, "usx", usx);
                 const docId = pk5.gqlQuerySync('{documents { id } }').data.documents[0].id;
                 // console.log(pk5.gqlQuerySync(`{ document(id: "${docId}") { mainSequence { blocks { dump } } } }`).data.document.mainSequence);
-                const cl = new PerfRenderFromProskomma({proskomma: pk5, actions: identityActions, debugLevel: 0});
+                const cl = new PerfRenderFromProskomma({proskomma: pk5, actions: transforms.perf2perf.identityActions, debugLevel: 0});
                 const output = {};
                 t.doesNotThrow(
                     () => {

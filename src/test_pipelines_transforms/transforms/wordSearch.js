@@ -259,4 +259,5 @@ const wordSearch = {
     ],
     code: wordSearchCode
 }
-export default wordSearch;
+
+module.exports = { wordSearch };

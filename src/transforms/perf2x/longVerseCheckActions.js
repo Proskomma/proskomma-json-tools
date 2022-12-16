@@ -59,4 +59,4 @@ const longVerseCheckActions = {
     ]
 };
 
-module.exports = longVerseCheckActions;
+module.exports = { longVerseCheckActions };

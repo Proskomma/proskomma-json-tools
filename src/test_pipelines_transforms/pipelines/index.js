@@ -1,5 +1,5 @@
 import wordSearchPipeline from './wordSearchPipeline.json';
 
-export default {
+module.exports = {
     wordSearchPipeline,
 };

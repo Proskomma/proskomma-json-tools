@@ -98,4 +98,4 @@ const calculateUsfmChapterPositions = {
     code: calculateUsfmChapterPositionsCode
 }
 
-export default calculateUsfmChapterPositions;
+module.exports = { calculateUsfmChapterPositions };

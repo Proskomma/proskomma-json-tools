@@ -33,4 +33,4 @@ const usfm2perf = {
     code: usfm2perfCode
 }
 
-module.exports = usfm2perf;
+module.exports = { usfm2perf };

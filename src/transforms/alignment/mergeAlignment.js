@@ -1,6 +1,6 @@
 import PerfRenderFromJson from '../../PerfRenderFromJson';
 import mergeActions from '../../mergeActions';
-import transforms from '..';
+const { identityActions } = require('../perf2perf/identityActions');
 import xre from "xregexp";
 
 const lexingRegexes = [
@@ -184,7 +184,7 @@ const mergeAlignmentCode = function ({
         srcJson: perf,
         actions: mergeActions([
             localMergeAlignmentActions,
-            transforms.perf2perf.identityActions,
+            identityActions,
         ]),
     });
     const output = {};
@@ -228,4 +228,4 @@ const mergeAlignment = {
     ],
     code: mergeAlignmentCode,
 };
-export default mergeAlignment;
+module.exports = { mergeAlignment };

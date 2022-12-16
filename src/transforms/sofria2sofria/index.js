@@ -1,5 +1,5 @@
-import identityActions from './identityActions';
+const {identityActions } = require('./identityActions');
 
-export default {
+module.exports = {
     identityActions,
 };
