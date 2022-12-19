@@ -1,7 +1,9 @@
 import PerfRenderFromJson from '../../PerfRenderFromJson';
 import mergeActions from '../../mergeActions';
-import transforms from '..';
-import longVerseCheckActions from './longVerseCheckActions';
+// import transforms from '..';
+const { longVerseCheckActions } = require('./longVerseCheckActions');
+const { identityActions } = require('../perf2perf/identityActions');
+// const transforms = require('../index');
 
 const longVerseCheckCode = function ({perf}) {
     const cl = new PerfRenderFromJson(
@@ -10,7 +12,7 @@ const longVerseCheckCode = function ({perf}) {
             actions: mergeActions(
                 [
                     longVerseCheckActions,
-                    transforms.perf2perf.identityActions,
+                    identityActions,
                 ]
             )
         }
@@ -40,4 +42,7 @@ const longVerseCheck = {
     ],
     code: longVerseCheckCode
 }
-export default longVerseCheck;
+module.exports = {
+    longVerseCheck,
+    longVerseCheckActions,
+};

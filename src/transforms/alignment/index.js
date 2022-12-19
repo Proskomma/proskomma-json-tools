@@ -1,9 +1,9 @@
-import verseWords from "./verseWords";
-import stripAlignment from "./stripAlignment";
-import mergePerfText from "./mergePerfText";
-import mergeAlignment from "./mergeAlignment";
+const {verseWords} = require('./verseWords');
+const {stripAlignment} = require('./stripAlignment');
+const {mergePerfText} = require('./mergePerfText');
+const {mergeAlignment} = require('./mergeAlignment');
 
-export default {
+module.exports = {
     verseWords,
     stripAlignment,
     mergePerfText,

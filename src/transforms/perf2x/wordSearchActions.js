@@ -50,4 +50,4 @@ const wordSearchActions = {
     ],
 };
 
-module.exports = wordSearchActions;
+module.exports = { wordSearchActions };

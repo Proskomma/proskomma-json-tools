@@ -1,12 +1,10 @@
 const { PipelineHandler, testPipelines, testTransforms } = require('../../dist/index');
-// const { testPipelines, testTransforms } = require('../../dist/test_pipelines_transforms');
 const test = require('tape');
 const { Proskomma } = require('proskomma');
 const fse = require('fs-extra');
 const path = require('path');
 
 const testGroup = 'wordSearch';
-
 
 const pipelineH = new PipelineHandler({
     pipelines: testPipelines,

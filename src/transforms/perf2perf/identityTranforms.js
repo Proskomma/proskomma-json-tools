@@ -1,4 +1,5 @@
-import identityActions from "./identityActions";
+// import identityActions from "./identityActions";
+const { identityActions } = require('./identityActions');
 
 const identityActionsCode = function ({ perf }) {
     const cl = new PerfRenderFromJson(
@@ -32,4 +33,7 @@ const identityTransforms = {
     code: identityActionsCode
 }
 
-export default identityTransforms;
+module.exports = {
+    identityTransforms,
+    identityActions
+};

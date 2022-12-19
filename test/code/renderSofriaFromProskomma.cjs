@@ -3,6 +3,7 @@ import test from 'tape';
 import path from 'path';
 import fse from 'fs-extra';
 import SofriaRenderFromProskomma from '../../dist/SofriaRenderFromProskomma';
+import SofriaRenderFromJson from '../../dist/SofriaRenderFromJson';
 import identityActions from '../../dist/transforms/sofria2sofria/identityActions';
 import {Proskomma} from 'proskomma';
 import {Validator} from '../../dist/';
@@ -274,6 +275,39 @@ test(
                 t.ok(sofriaString.includes('alt_verse'));
                 t.ok(sofriaString.includes('pub_verse'));
             }
+        } catch (err) {
+            console.log(err);
+        }
+    },
+);
+
+test(
+    `Render francl SOFRIA via identity actions (${testGroup})`,
+    async function (t) {
+        try {
+            t.plan(4);
+            const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'usfms','eng_francl_mrk.usfm'))).toString();
+            pk.importDocument({'lang': 'eng', 'abbr': 'francl'}, 'usfm', usfm);
+            const docId = pk.gqlQuerySync('{documents { id } }').data.documents[0].id;
+            const cl = new SofriaRenderFromProskomma({proskomma: pk, actions: identityActions});
+            const output = {};
+            t.doesNotThrow(
+                () => cl.renderDocument(
+                    {docId, config: {}, output}
+                )
+            );
+            const validator = new Validator();
+            const validation = validator.validate(
+                'constraint',
+                'sofriaDocument',
+                '0.2.1',
+                output.sofria
+            );
+            t.ok(validation.isValid);
+            t.equal(validation.errors, null);
+            const cl2 = new SofriaRenderFromJson({srcJson: output.sofria, actions: identityActions});
+            const output2 = {};
+            t.doesNotThrow(() => cl2.renderDocument({docId: "", config: {}, output: output2}));
         } catch (err) {
             console.log(err);
         }

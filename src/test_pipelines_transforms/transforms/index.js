@@ -1,5 +1,5 @@
-import wordSearch from './wordSearch';
+const { wordSearch } = require('./wordSearch');
 
-export default {
+module.exports = {
     wordSearch,
 };

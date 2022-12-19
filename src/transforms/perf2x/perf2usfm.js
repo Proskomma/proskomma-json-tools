@@ -278,4 +278,4 @@ const perf2usfm = {
     ],
     code: perf2usfmCode
 }
-export default perf2usfm;
+module.exports = { perf2usfm };

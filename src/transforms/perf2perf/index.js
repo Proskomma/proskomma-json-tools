@@ -1,8 +1,6 @@
-import identityTransforms from './identityTranforms';
-import identityActions from './identityActions';
+const { identityTransforms, identityActions } = require('./identityTranforms');
 
-
-export default {
+module.exports = {
     identityActions,
     identityTransforms,
 };

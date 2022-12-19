@@ -1,6 +1,8 @@
 import PerfRenderFromJson from '../../PerfRenderFromJson';
 import mergeActions from '../../mergeActions';
-import transforms from '..';
+
+const { identityActions } = require('../perf2perf/identityActions');
+// const transforms = require('../../transforms');
 
 const localJustTheBibleActions = {
     startMilestone: [
@@ -68,7 +70,7 @@ const justTheBibleCode = function ({perf}) {
             actions: mergeActions(
                     [
                         localJustTheBibleActions,
-                        transforms.perf2perf.identityActions
+                        identityActions
                     ]
                 )
             }
@@ -98,4 +100,4 @@ const justTheBible = {
     ],
     code: justTheBibleCode
 }
-export default justTheBible;
+module.exports = { justTheBible };

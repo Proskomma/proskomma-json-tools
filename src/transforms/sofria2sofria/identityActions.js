@@ -249,4 +249,4 @@ const identityActions = {
     ]
 };
 
-export default identityActions;
+module.exports = identityActions;

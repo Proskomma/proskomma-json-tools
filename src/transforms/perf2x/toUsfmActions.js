@@ -223,4 +223,4 @@ const toUsfmActions = {
         }
     ],
 };
-module.exports = toUsfmActions;
+module.exports = { toUsfmActions };

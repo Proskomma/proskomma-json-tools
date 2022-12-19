@@ -36,4 +36,4 @@ const wordCountActions = {
     ],
 };
 
-module.exports = wordCountActions;
+module.exports = { wordCountActions };

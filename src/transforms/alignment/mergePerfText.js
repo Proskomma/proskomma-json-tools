@@ -62,4 +62,4 @@ const mergePerfText = {
     code: mergePerfTextCode
 }
 
-export default mergePerfText;
+module.exports = { mergePerfText };

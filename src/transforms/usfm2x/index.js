@@ -1,5 +1,5 @@
-import usfm2perf from "./usfm2perf";
+const {usfm2perf } = require('./usfm2perf');
 
-export default {
+module.exports = {
     usfm2perf,
 }

@@ -81,4 +81,4 @@ const verseWords = {
     ],
     code: verseWordsCode
 }
-export default verseWords;
+module.exports = { verseWords };
