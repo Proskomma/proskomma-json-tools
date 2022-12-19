@@ -3,7 +3,7 @@ const officialPipelines = require('../pipelines');
 
 class PipelineHandler {
     /**
-     * 
+     *
      * @param {Proskomma} proskomma - a proskomma instance
      * @param {JSON[]} pipelines - a list of the pipelines
      * @param {JSON[]} transforms - a list of the transforms
@@ -15,7 +15,7 @@ class PipelineHandler {
             this.proskomma = proskomma;
             const query = '{ id }';
             const content = proskomma.gqlQuerySync(query) || {};
-    
+
             if (!content || !content.data.id) {
                 throw new Error('Provided Proskomma instance does not have any ID');
             }
@@ -48,15 +48,15 @@ class PipelineHandler {
     }
 
     listPipelinesNames() {
-        console.log(Object.keys(this.pipelines).join('\n'));
+        return Object.keys(this.pipelines).join('\n');
     }
 
     listTransformsNames() {
-        console.log(Object.keys(this.transforms).join('\n'));
+        return Object.keys(this.transforms).join('\n');
     }
 
     listNamespacesNames() {
-        console.log(Object.keys(this.namespaces).join('\n'));
+        return Object.keys(this.namespaces).join('\n');
     }
 
     /**
