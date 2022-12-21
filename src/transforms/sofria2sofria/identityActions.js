@@ -249,4 +249,4 @@ const identityActions = {
     ]
 };
 
-module.exports = identityActions;
+module.exports = { identityActions };

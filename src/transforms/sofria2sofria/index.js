@@ -1,4 +1,4 @@
-const {identityActions } = require('./identityActions');
+const { identityActions } = require('./identityActions');
 
 module.exports = {
     identityActions,
