@@ -10,7 +10,6 @@ class PipelineHandler {
      * @param {boolean} verbose - print pipeline reading step by step
      */
     constructor({pipelines = null, transforms = null, proskomma = null, verbose=false}) {
-        // TODO add namespaces [usfm, perf, sofria]
         if (proskomma !== null) {
             this.proskomma = proskomma;
             const query = '{ id }';

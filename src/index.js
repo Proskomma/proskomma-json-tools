@@ -9,8 +9,6 @@ const SofriaRenderFromProskomma = require('./SofriaRenderFromProskomma');
 const mergeActions = require('./mergeActions');
 const pipelines = require('./pipelines');
 const transforms = require('./transforms');
-const testTransforms = require('./test_pipelines_transforms/transforms');
-const testPipelines = require('./test_pipelines_transforms/pipelines');
 
 module.exports = {
     Validator,
@@ -24,6 +22,4 @@ module.exports = {
     PipelineHandler,
     pipelines,
     transforms,
-    testPipelines,
-    testTransforms,
 };

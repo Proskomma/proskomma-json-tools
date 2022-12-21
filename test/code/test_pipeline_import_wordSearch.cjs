@@ -1,4 +1,5 @@
-const { PipelineHandler, testPipelines, testTransforms } = require('../../dist/index');
+const { PipelineHandler } = require('../../dist/index');
+const { testPipelines, testTransforms } = require('../test_pipelines_transforms');
 const test = require('tape');
 const { Proskomma } = require('proskomma');
 const fse = require('fs-extra');
