@@ -3,6 +3,7 @@ import test from 'tape';
 const fse = require('fs-extra');
 const transforms = require('../../dist/transforms');
 import PerfRenderFromProskomma from '../../dist/PerfRenderFromProskomma';
+import PerfRenderFromJson from '../../dist/PerfRenderFromJson';
 import {Proskomma} from 'proskomma';
 import {Validator} from "../../dist/";
 import path from "path";
@@ -155,3 +156,36 @@ test(
     },
 );
 
+test(
+    `Render francl PERF via identity actions (${testGroup})`,
+    async function (t) {
+        try {
+            t.plan(4);
+            const pk6 = new Proskomma();
+            const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'usfms','eng_francl_mrk.usfm'))).toString();
+            pk6.importDocument({'lang': 'eng', 'abbr': 'francl'}, 'usfm', usfm);
+            const docId = pk6.gqlQuerySync('{documents { id } }').data.documents[0].id;
+            const cl = new PerfRenderFromProskomma({proskomma: pk6, actions: transforms.perf2perf.identityActions});
+            const output = {};
+            t.doesNotThrow(
+                () => cl.renderDocument(
+                    {docId, config: {}, output}
+                )
+            );
+            const validator = new Validator();
+            const validation = validator.validate(
+                'constraint',
+                'perfDocument',
+                '0.3.0',
+                output.perf
+            );
+            t.ok(validation.isValid);
+            t.equal(validation.errors, null);
+            const cl2 = new PerfRenderFromJson({srcJson: output.perf, actions: transforms.perf2perf.identityActions});
+            const output2 = {};
+            t.doesNotThrow(() => cl2.renderDocument({docId: "", config: {}, output: output2}));
+        } catch (err) {
+            console.log(err);
+        }
+    },
+);

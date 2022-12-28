@@ -286,10 +286,11 @@ test(
     async function (t) {
         try {
             t.plan(4);
+            const pk6 = new Proskomma();
             const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'usfms','eng_francl_mrk.usfm'))).toString();
-            pk.importDocument({'lang': 'eng', 'abbr': 'francl'}, 'usfm', usfm);
-            const docId = pk.gqlQuerySync('{documents { id } }').data.documents[0].id;
-            const cl = new SofriaRenderFromProskomma({proskomma: pk, actions: identityActions});
+            pk6.importDocument({'lang': 'eng', 'abbr': 'francl'}, 'usfm', usfm);
+            const docId = pk6.gqlQuerySync('{documents { id } }').data.documents[0].id;
+            const cl = new SofriaRenderFromProskomma({proskomma: pk6, actions: identityActions});
             const output = {};
             t.doesNotThrow(
                 () => cl.renderDocument(

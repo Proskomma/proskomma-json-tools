@@ -24,6 +24,10 @@ class SofriaRenderFromProskomma extends ProskommaRender {
         this._container = null;
         this.cachedSequenceIds = [];
         this.sequences = null;
+        this.currentCV = {
+            chapter: null,
+            verses: null
+        }
     }
 
     renderDocument1({docId, config, context, workspace, output}) {
@@ -171,8 +175,56 @@ class SofriaRenderFromProskomma extends ProskommaRender {
             }
             this.renderEvent('startParagraph', environment);
             this._tokens = [];
+            if (sequence.type === "main" && this.currentCV.chapter) {
+                const wrapper = {
+                    type: "wrapper",
+                    subType: 'chapter',
+                    atts: {
+                        number: this.currentCV.chapter
+                    }
+                };
+                environment.context.sequences[0].element = wrapper;
+                environment.context.sequences[0].block.wrappers.unshift(wrapper.subType);
+                this.renderEvent('startWrapper', environment);
+            }
+            if (sequence.type === "main" && this.currentCV.verses) {
+                const wrapper = {
+                    type: "wrapper",
+                    subType: 'verses',
+                    atts: {
+                        number: this.currentCV.verses
+                    }
+                };
+                environment.context.sequences[0].element = wrapper;
+                environment.context.sequences[0].block.wrappers.unshift(wrapper.subType);
+                this.renderEvent('startWrapper', environment);
+            }
             this.renderContent(blockResult.items, environment);
             this._tokens = [];
+            if (sequence.type === "main" && this.currentCV.verses) {
+                const wrapper = {
+                    type: "wrapper",
+                    subType: 'verses',
+                    atts: {
+                        number: this.currentCV.verses
+                    }
+                };
+                environment.context.sequences[0].element = wrapper;
+                environment.context.sequences[0].block.wrappers.shift();
+                this.renderEvent('endWrapper', environment);
+            }
+            if (sequence.type === "main" && this.currentCV.chapter) {
+                const wrapper = {
+                    type: "wrapper",
+                    subType: 'chapter',
+                    atts: {
+                        number: this.currentCV.chapter
+                    }
+                };
+                environment.context.sequences[0].element = wrapper;
+                environment.context.sequences[0].block.wrappers.shift();
+                this.renderEvent('endWrapper', environment);
+            }
             this.renderEvent('endParagraph', environment);
             delete context.sequences[0].block;
             outputBlockN++;
@@ -190,18 +242,22 @@ class SofriaRenderFromProskomma extends ProskommaRender {
 
     renderItem(item, environment) {
         if (item.type === 'scope' && item.payload.startsWith('attribute')) {
+            const scopeBits = item.payload.split('/');
             if (item.subType === "start") {
                 if (!this._container) {
-                    throw new Error(`Start attribute when no container set`);
+                    this._container = {
+                        direction: "start",
+                        subType: `usfm:w`,
+                        type: "wrapper",
+                        atts: {}
+                    };
                 }
-                const scopeBits = item.payload.split('/');
                 if (scopeBits[3] in this._container.atts) {
                     this._container.atts[scopeBits[3]].push(scopeBits[5]);
                 } else {
                     this._container.atts[scopeBits[3]] = [scopeBits[5]];
                 }
             } else {
-                const scopeBits = item.payload.split('/');
                 if (!this._container) {
                     this._container = {
                         direction: "end",
@@ -247,6 +303,7 @@ class SofriaRenderFromProskomma extends ProskommaRender {
                     };
                     environment.context.sequences[0].element = wrapper;
                     if (item.subType === 'start') {
+                        this.currentCV[scopeBits[0]] = scopeBits[1];
                         environment.context.sequences[0].block.wrappers.unshift(wrapper.subType);
                         this.renderEvent('startWrapper', environment);
                         const cvMark = {
@@ -263,6 +320,7 @@ class SofriaRenderFromProskomma extends ProskommaRender {
                         this.renderEvent('endWrapper', environment);
                         environment.context.sequences[0].block.wrappers.shift();
                         delete environment.context.sequences[0].element;
+                        this.currentCV[scopeBits[0]] = null;
                     }
                 } else if (["pubChapter", "pubVerse", "altChapter", "altVerse"].includes(scopeBits[0])) {
                     if (item.subType === 'start') {
