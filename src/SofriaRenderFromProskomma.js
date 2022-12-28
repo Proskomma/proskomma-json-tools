@@ -192,7 +192,12 @@ class SofriaRenderFromProskomma extends ProskommaRender {
         if (item.type === 'scope' && item.payload.startsWith('attribute')) {
             if (item.subType === "start") {
                 if (!this._container) {
-                    throw new Error(`Start attribute when no container set`);
+                    this._container = {
+                        direction: "start",
+                        subType: `usfm:w`,
+                        type: "wrapper",
+                        atts: {}
+                    };
                 }
                 const scopeBits = item.payload.split('/');
                 if (scopeBits[3] in this._container.atts) {

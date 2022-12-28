@@ -286,6 +286,7 @@ test(
     async function (t) {
         try {
             t.plan(4);
+            const pk = new Proskomma();
             const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'usfms','eng_francl_mrk.usfm'))).toString();
             pk.importDocument({'lang': 'eng', 'abbr': 'francl'}, 'usfm', usfm);
             const docId = pk.gqlQuerySync('{documents { id } }').data.documents[0].id;
