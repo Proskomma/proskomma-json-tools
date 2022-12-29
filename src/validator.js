@@ -292,8 +292,11 @@ class Validator {
     }
 
     validate(schemaType, schemaKey, schemaVersion, data) {
-        if (!(data)) {
-            throw new Error(`Usage: validate(schemaType, schemaKey, schemaVersion, data)`);
+        if (data === undefined) {
+            throw new Error(`data argument is missing. Usage: validate(schemaType, schemaKey, schemaVersion, data)`);
+        }
+        if (data === null) {
+            throw new Error(`Data argument is null`);
         }
         const knownSchemaTypes = Object.keys(this.schema);
         if (!knownSchemaTypes.includes(schemaType)) {
