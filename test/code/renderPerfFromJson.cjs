@@ -3,7 +3,7 @@ import test from 'tape';
 const fse = require('fs-extra');
 import path from 'path';
 import { PerfRenderFromJson } from '../../dist/index';
-const transforms = require('../../dist/transforms');
+const render = require('../../dist/render');
 
 import mergeActions from '../../dist/mergeActions';
 import equal from 'deep-equal';
@@ -109,7 +109,7 @@ test(
         try {
             t.plan(2);
             const perf = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'validation', 'valid_flat_document.json')));
-            const cl = new PerfRenderFromJson({srcJson: perf, actions: transforms.perf2perf.identityActions});
+            const cl = new PerfRenderFromJson({srcJson: perf, actions: render.x2perf.renderActions.identityActions});
             const output = {};
             t.doesNotThrow(() => cl.renderDocument({docId: "", config: {}, output}));
             // console.log(JSON.stringify(output.perf, null, 2));
@@ -139,7 +139,7 @@ test(
                             }
                         ]
                     },
-                    transforms.perf2perf.identityActions
+                    render.x2perf.renderActions.identityActions
                 ])
             });
             const output = {};
@@ -159,7 +159,7 @@ test(
             const perf = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'perfs', 'missing_graft_perf.json')));
             const cl = new PerfRenderFromJson({
                 srcJson: perf,
-                actions: transforms.perf2perf.identityActions
+                actions: render.x2perf.renderActions.identityActions
             });
             const output = {};
             t.throws(() => cl.renderDocument({docId: "", config: {}, output}), /No action for unresolved.*fix your data/);
@@ -175,7 +175,7 @@ test(
         try {
             t.plan(1);
             const perf = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'perfs', 'fra_lsg_mrk_perf_doc.json')));
-            const cl = new PerfRenderFromJson({srcJson: perf, actions: transforms.perf2x.wordCountActions});
+            const cl = new PerfRenderFromJson({srcJson: perf, actions: render.perf2x.renderActions.wordCountActions});
             const output = {};
             t.doesNotThrow(() => cl.renderDocument({docId: "", config: {}, output}));
         } catch (err) {
@@ -190,7 +190,7 @@ test(
         try {
             t.plan(1);
             const perf = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'perfs', 'fra_lsg_mrk_perf_doc.json')));
-            const cl = new PerfRenderFromJson({srcJson: perf, actions: transforms.perf2x.wordSearchActions});
+            const cl = new PerfRenderFromJson({srcJson: perf, actions: render.perf2x.renderActions.wordSearchActions});
             const output = {};
             t.doesNotThrow(() => cl.renderDocument({docId: "", config: {toSearch: "foule"}, output}));
         } catch (err) {
@@ -210,8 +210,8 @@ test(
                     srcJson: perf,
                     actions: mergeActions(
                         [
-                            transforms.perf2x.longVerseCheckActions,
-                            transforms.perf2perf.identityActions,
+                            render.perf2x.renderActions.longVerseCheckActions,
+                            render.x2perf.renderActions.identityActions,
                         ]
                     )
                 }

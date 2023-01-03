@@ -1,7 +1,7 @@
 import test from 'tape';
 
 const fse = require('fs-extra');
-const transforms = require('../../dist/transforms');
+const render = require('../../dist/render');
 import PerfRenderFromProskomma from '../../dist/PerfRenderFromProskomma';
 import PerfRenderFromJson from '../../dist/PerfRenderFromJson';
 import {Proskomma} from 'proskomma';
@@ -32,7 +32,7 @@ test(
             // await thaw(pk, nt_ebible_4book);
             const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'usfms', 'webbe_mrk.usfm'))).toString();
             pk.importDocument({'lang': 'eng', 'abbr': "web"}, "usfm", usfm);
-            const cl = new PerfRenderFromProskomma({proskomma: pk, actions: transforms.perf2perf.identityActions});
+            const cl = new PerfRenderFromProskomma({proskomma: pk, actions: render.x2perf.renderActions.identityActions});
             const docId = pk.gqlQuerySync('{documents { id } }').data.documents[0].id;
             const output = {};
             t.doesNotThrow(() => cl.renderDocument({docId, config: {}, output}));
@@ -62,7 +62,7 @@ test(
             const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'usfms', 'webbe_mrk.usfm'))).toString();
             pk2.importDocument({'lang': 'eng', 'abbr': "web"}, "usfm", usfm);
             const docId = pk2.gqlQuerySync('{documents { id } }').data.documents[0].id;
-            const cl = new PerfRenderFromProskomma({proskomma: pk2, actions: transforms.perf2perf.identityActions});
+            const cl = new PerfRenderFromProskomma({proskomma: pk2, actions: render.x2perf.renderActions.identityActions});
             const output = {};
             t.doesNotThrow(() => cl.renderDocument({docId, config: {}, output}));
             const validator = new Validator();
@@ -89,7 +89,7 @@ test(
             const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'usfms', 'webbe_mrk.usfm'))).toString();
             pk3.importDocument({'lang': 'eng', 'abbr': "web"}, "usfm", usfm);
             const docId = pk3.gqlQuerySync('{documents { id } }').data.documents[0].id;
-            const cl = new PerfRenderFromProskomma({proskomma: pk3, actions: transforms.perf2perf.identityActions});
+            const cl = new PerfRenderFromProskomma({proskomma: pk3, actions: render.x2perf.renderActions.identityActions});
             const output = {};
             t.doesNotThrow(
                 () => cl.renderDocument(
@@ -126,7 +126,7 @@ test(
                 pk5.importDocument({'lang': 'eng', 'abbr': "foo"}, "usx", usx);
                 const docId = pk5.gqlQuerySync('{documents { id } }').data.documents[0].id;
                 // console.log(pk5.gqlQuerySync(`{ document(id: "${docId}") { mainSequence { blocks { dump } } } }`).data.document.mainSequence);
-                const cl = new PerfRenderFromProskomma({proskomma: pk5, actions: transforms.perf2perf.identityActions, debugLevel: 0});
+                const cl = new PerfRenderFromProskomma({proskomma: pk5, actions: render.x2perf.renderActions.identityActions, debugLevel: 0});
                 const output = {};
                 t.doesNotThrow(
                     () => {
@@ -165,7 +165,7 @@ test(
             const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'usfms','eng_francl_mrk.usfm'))).toString();
             pk6.importDocument({'lang': 'eng', 'abbr': 'francl'}, 'usfm', usfm);
             const docId = pk6.gqlQuerySync('{documents { id } }').data.documents[0].id;
-            const cl = new PerfRenderFromProskomma({proskomma: pk6, actions: transforms.perf2perf.identityActions});
+            const cl = new PerfRenderFromProskomma({proskomma: pk6, actions: render.x2perf.renderActions.identityActions});
             const output = {};
             t.doesNotThrow(
                 () => cl.renderDocument(
@@ -181,7 +181,7 @@ test(
             );
             t.ok(validation.isValid);
             t.equal(validation.errors, null);
-            const cl2 = new PerfRenderFromJson({srcJson: output.perf, actions: transforms.perf2perf.identityActions});
+            const cl2 = new PerfRenderFromJson({srcJson: output.perf, actions: render.x2perf.renderActions.identityActions});
             const output2 = {};
             t.doesNotThrow(() => cl2.renderDocument({docId: "", config: {}, output: output2}));
         } catch (err) {

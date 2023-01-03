@@ -8,7 +8,7 @@ const SofriaRenderFromJson = require('./SofriaRenderFromJson');
 const SofriaRenderFromProskomma = require('./SofriaRenderFromProskomma');
 const mergeActions = require('./mergeActions');
 const pipelines = require('./pipelines');
-const transforms = require('./transforms');
+const render = require('./render');
 
 module.exports = {
     Validator,
@@ -21,5 +21,5 @@ module.exports = {
     mergeActions,
     PipelineHandler,
     pipelines,
-    transforms,
+    render,
 };

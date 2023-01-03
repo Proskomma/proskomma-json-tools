@@ -1,11 +1,11 @@
 // import identityActions from "./identityActions";
-const { identityActions } = require('./identityActions');
+const { identityActions } = require('../renderActions/identity');
 
 const identityActionsCode = function ({ perf }) {
     const cl = new PerfRenderFromJson(
         {
             srcJson: perf,
-            actions: identityActions
+            actions: identityAction
         }
     );
     const output = {};
@@ -13,8 +13,8 @@ const identityActionsCode = function ({ perf }) {
     return { verseWords: output.cv };
 }
 
-const identityTransforms = {
-    name: "identityTransforms",
+const identity = {
+    name: "identity",
     type: "Transform",
     description: "identity operation",
     inputs: [
@@ -34,6 +34,5 @@ const identityTransforms = {
 }
 
 module.exports = {
-    identityTransforms,
-    identityActions
+    identity,
 };

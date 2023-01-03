@@ -4,9 +4,9 @@ Tools for working with Proskomma-derived JSON formats such as PERF and SOFRIA
 ## Usage
 ```
 npm install proskomma-json-tools
-import {perf2usfm} from 'proskomma-json-tools';
+import {perfToUsfm} from 'proskomma-json-tools';
 // ...
-const usfm = perf2usfm(perf);
+const usfm = perfToUsfm(perf);
 ```
 ## Generate Schema Documentation
 Using the Python json schema generator https://github.com/coveooss/json-schema-for-humans :

@@ -14,13 +14,13 @@ test(`perf=>usfm (${testGroup})`, (t) => {
     t.plan(1);
     try {
         t.doesNotThrow(async () => {
-            let output = await pipelineH.runPipeline('perf2usfmPipeline', {
+            let output = await pipelineH.runPipeline('perfToUsfmPipeline', {
                 perf: perfContent
             });
             // await saveFile(output.usfm);
         })
     } catch (err) {
         console.log(err);
-        t.fail('perf2usfmPipeline throws on valid perf');
+        t.fail('perfToUsfmPipeline throws on valid perf');
     }
 });

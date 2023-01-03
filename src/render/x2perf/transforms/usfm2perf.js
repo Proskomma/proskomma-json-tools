@@ -1,4 +1,4 @@
-const usfm2perfCode = function ({usfm, selectors, proskomma}) {
+const usfm2perfFunction = function ({usfm, selectors, proskomma}) {
     proskomma.importDocuments(selectors, 'usfm', [usfm]);
     const perfResultDocument = proskomma.gqlQuerySync('{documents {id docSetId perf} }').data.documents[0];
     const docId = perfResultDocument.id;
@@ -30,7 +30,10 @@ const usfm2perf = {
             type: "json",
         }
     ],
-    code: usfm2perfCode
+    code: usfm2perfFunction
 }
 
-module.exports = { usfm2perf };
+module.exports = {
+    usfm2perf,
+    usfm2perfFunction,
+};

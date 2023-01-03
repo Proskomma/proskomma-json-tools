@@ -1,4 +1,4 @@
-import usfmHelps from '../../usfmHelps';
+import usfmHelps from '../../../usfmHelps';
 
 const initNestedLevel = (workspace,level) => {
     workspace.nestInx=level

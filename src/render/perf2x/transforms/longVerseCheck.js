@@ -1,8 +1,8 @@
-import PerfRenderFromJson from '../../PerfRenderFromJson';
-import mergeActions from '../../mergeActions';
+import PerfRenderFromJson from '../../../PerfRenderFromJson';
+import mergeActions from '../../../mergeActions';
 // import transforms from '..';
-const { longVerseCheckActions } = require('./longVerseCheckActions');
-const { identityActions } = require('../perf2perf/identityActions');
+const { longVerseCheckActions } = require('../renderActions/longVerseCheck');
+const { identityActions } = require('../../x2perf/renderActions/identity');
 // const transforms = require('../index');
 
 const longVerseCheckCode = function ({perf}) {
@@ -42,7 +42,4 @@ const longVerseCheck = {
     ],
     code: longVerseCheckCode
 }
-module.exports = {
-    longVerseCheck,
-    longVerseCheckActions,
-};
+module.exports = { longVerseCheck };

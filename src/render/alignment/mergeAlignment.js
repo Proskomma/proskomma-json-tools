@@ -1,6 +1,6 @@
 import PerfRenderFromJson from '../../PerfRenderFromJson';
 import mergeActions from '../../mergeActions';
-const { identityActions } = require('../perf2perf/identityActions');
+const { identityActions } = require('../x2perf/renderActions/identity');
 import xre from "xregexp";
 
 const lexingRegexes = [

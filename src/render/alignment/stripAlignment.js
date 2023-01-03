@@ -1,7 +1,7 @@
 import PerfRenderFromJson from '../../PerfRenderFromJson';
 import mergeActions from '../../mergeActions';
 import xre from "xregexp";
-const { identityActions } = require('../perf2perf/identityActions');
+const { identityActions } = require('../x2perf/renderActions/identity');
 
 const localStripMarkupActions = {
     startDocument: [
