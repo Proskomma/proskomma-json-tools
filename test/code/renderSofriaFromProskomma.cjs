@@ -4,7 +4,7 @@ import path from 'path';
 import fse from 'fs-extra';
 import SofriaRenderFromProskomma from '../../dist/SofriaRenderFromProskomma';
 import SofriaRenderFromJson from '../../dist/SofriaRenderFromJson';
-import {identityActions} from '../../dist/render/sofria2sofria/renderActions/identity';
+import {identityActions} from '../../dist/render/sofriaToSofria/renderActions/identity';
 import {Proskomma} from 'proskomma';
 import {Validator} from '../../dist/';
 

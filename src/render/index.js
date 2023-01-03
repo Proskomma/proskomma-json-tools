@@ -1,11 +1,13 @@
 const alignment = require('./alignment');
-const x2perf = require('./x2perf');
-const sofria2sofria = require('./sofria2sofria');
-const perf2x = require('./perf2x');
+const xToPerf = require('./xToperf');
+const sofriaToSofria = require('./sofriaToSofria');
+const perfToX = require('./perfToX');
+const perfToPerf = require('./perfToPerf');
 
 module.exports = {
-    x2perf,
-    perf2x,
-    sofria2sofria,
+    xToPerf,
+    perfToX,
+    sofriaToSofria,
     alignment,
+    perfToPerf,
 };

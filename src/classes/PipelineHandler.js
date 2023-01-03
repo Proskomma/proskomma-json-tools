@@ -107,7 +107,7 @@ class PipelineHandler {
         if(namespace === 'sofria') {
             let entries = null;
             for(const [key, tr] of Object.entries(this.namespaces)) {
-                if(key === 'sofria2sofria') {
+                if(key === 'sofriaToSofria') {
                     if(tr.transforms) {
                         entries = Object.entries(tr.transforms);
                     } else {
@@ -123,7 +123,7 @@ class PipelineHandler {
         } else {
             let entries = null;
             for(const [key, tr] of Object.entries(this.namespaces)) {
-                if(key !== 'sofria2sofria') {
+                if(key !== 'sofriaToSofria') {
                     if(tr.transforms) {
                         entries = Object.entries(tr.transforms);
                     } else {
