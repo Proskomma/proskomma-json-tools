@@ -1,6 +1,6 @@
 const ProskommaRender = require('./ProskommaRender');
 
-const camelCase2snakeCase = s => {
+const camelCaseToSnakeCase = s => {
     const ret = [];
     for (const c of s.split("")) {
         if (c.toUpperCase() === c && c.toLowerCase() !== c) {
@@ -108,7 +108,7 @@ class SofriaRenderFromProskomma extends ProskommaRender {
     sequenceContext(sequence, sequenceId) {
         return {
             id: sequenceId,
-            type: camelCase2snakeCase(sequence.type),
+            type: camelCaseToSnakeCase(sequence.type),
             nBlocks: sequence.nBlocks,
             milestones: new Set([]),
         }
@@ -156,7 +156,7 @@ class SofriaRenderFromProskomma extends ProskommaRender {
             for (const blockGraft of blockResult.bg) {
                 context.sequences[0].block = {
                     type: "graft",
-                    subType: camelCase2snakeCase(blockGraft.subType),
+                    subType: camelCaseToSnakeCase(blockGraft.subType),
                     blockN: outputBlockN,
                     sequence: this.sequences[blockGraft.payload]
                 }
@@ -261,7 +261,7 @@ class SofriaRenderFromProskomma extends ProskommaRender {
                 if (!this._container) {
                     this._container = {
                         direction: "end",
-                        subType: `usfm:${camelCase2snakeCase(scopeBits[2])}`,
+                        subType: `usfm:${camelCaseToSnakeCase(scopeBits[2])}`,
                     };
                     if(scopeBits[1] === 'milestone') {
                         this._container.type = "end_milestone";
@@ -282,7 +282,7 @@ class SofriaRenderFromProskomma extends ProskommaRender {
                 this.maybeRenderText(environment);
                 const graft = {
                     type: "graft",
-                    subType: camelCase2snakeCase(item.subType),
+                    subType: camelCaseToSnakeCase(item.subType),
                     sequence: this.sequences[item.payload],
                 };
                 environment.context.sequences[0].element = graft;
@@ -296,7 +296,7 @@ class SofriaRenderFromProskomma extends ProskommaRender {
                 if (["chapter", "verses"].includes(scopeBits[0])) {
                     const wrapper = {
                         type: "wrapper",
-                        subType: camelCase2snakeCase(scopeBits[0]),
+                        subType: camelCaseToSnakeCase(scopeBits[0]),
                         atts: {
                             number: scopeBits[1]
                         }
@@ -326,7 +326,7 @@ class SofriaRenderFromProskomma extends ProskommaRender {
                     if (item.subType === 'start') {
                         const mark = {
                             type: "mark",
-                            subType: camelCase2snakeCase(scopeBits[0]),
+                            subType: camelCaseToSnakeCase(scopeBits[0]),
                             atts: {
                                 number: scopeBits[1]
                             }
@@ -363,7 +363,7 @@ class SofriaRenderFromProskomma extends ProskommaRender {
                     if (scopeBits[1] === 'ts') {
                         const mark = {
                             type: "mark",
-                            subType: `usfm:${camelCase2snakeCase(scopeBits[1])}`,
+                            subType: `usfm:${camelCaseToSnakeCase(scopeBits[1])}`,
                             atts: {}
                         };
                         environment.context.sequences[0].element = mark;
@@ -372,7 +372,7 @@ class SofriaRenderFromProskomma extends ProskommaRender {
                     } else {
                         this._container = {
                             type: "start_milestone",
-                            subType: `usfm:${camelCase2snakeCase(scopeBits[1])}`,
+                            subType: `usfm:${camelCaseToSnakeCase(scopeBits[1])}`,
                             atts: {}
                         }
                     }
