@@ -30,6 +30,6 @@ test(`Validate the output perf (${testGroup})`, async (t) => {
         // await saveFile(JSON.stringify(output.perf, null, 2));
     } catch (err) {
         console.log(err);
-        t.fail('perf2usfmPipeline throws on valid perf');
+        t.fail('justTheBiblePipeline throws on valid perf');
     }
 });

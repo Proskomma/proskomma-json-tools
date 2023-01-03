@@ -38,6 +38,6 @@ test(`returns output with valid args (${testGroup})`, (t) => {
         })
     } catch (err) {
         console.log(err);
-        t.fail('perf2usfmPipeline throws on valid perf');
+        t.fail('wordSearchPipeline throws on valid perf');
     }
 });

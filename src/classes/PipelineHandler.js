@@ -1,4 +1,4 @@
-const namespaceTransforms = require('../transforms');
+const namespaceTransforms = require('../render');
 const officialPipelines = require('../pipelines');
 
 class PipelineHandler {
@@ -104,10 +104,32 @@ class PipelineHandler {
             throw new Error(`No Transform steps found in report steps`);
         }
         var names = Object.keys(transformSteps).map(val => transformSteps[val]['name']);
-        if(namespace==='perf' || namespace ==='usfm') {
+        if(namespace === 'sofria') {
+            let entries = null;
             for(const [key, tr] of Object.entries(this.namespaces)) {
-                if(key !== 'sofria2sofria') {
-                    for(const [k, t] of Object.entries(tr)) {
+                if(key === 'sofriaToSofria') {
+                    if(tr.transforms) {
+                        entries = Object.entries(tr.transforms);
+                    } else {
+                        entries = Object.entries(tr);
+                    }
+                    for(const [k, t] of entries) {
+                        if(names.includes(k)) {
+                            this.transforms[k] = t;
+                        }
+                    }
+                }
+            }
+        } else {
+            let entries = null;
+            for(const [key, tr] of Object.entries(this.namespaces)) {
+                if(key !== 'sofriaToSofria') {
+                    if(tr.transforms) {
+                        entries = Object.entries(tr.transforms);
+                    } else {
+                        entries = Object.entries(tr);
+                    }
+                    for(const [k, t] of entries) {
                         if(names.includes(k)) {
                             this.transforms[k] = t;
                         }
