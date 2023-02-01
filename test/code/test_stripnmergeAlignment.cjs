@@ -88,12 +88,12 @@ test(`merge alignment (${testGroup})`, async (t) => {
 
 //TESTING GRAFT ERRORS:
 
-const usfmContent = fse.readFileSync(path.resolve(__dirname, "../data/usfms/dcs-en-rut.usfm")).toString();
+const usfmContent = fse.readFileSync(path.resolve(__dirname, "../test_data/usfms/dcs-en-rut.usfm")).toString();
 
 test(`Does not add wrappers to footnotes (${testGroup})`, async (t) => {
     try {
         t.plan(3);
-        let {perf} = await pipelineH.runPipeline("usfm2perfPipeline", {
+        let {perf} = await pipelineH.runPipeline("usfmToPerfPipeline", {
             usfm: usfmContent,
             selectors: {org: "dcs", "lang": "en", "abbr": "ult"}
         });
