@@ -28,10 +28,11 @@ const mergeAlignmentActions = {
         {
             description: "setup",
             test: () => true,
-            action: ({ workspace }) => {
+            action: ({ workspace, output }) => {
                 workspace.chapter = null;
                 workspace.verses = null;
                 workspace.currentOccurrences = {};
+                output.unalignedWords = {};
                 return true;
             },
         },
@@ -42,6 +43,9 @@ const mergeAlignmentActions = {
             test: () => true,
             action: ({ config, context, workspace, output }) => {
                 try {
+                    const sequence = context.sequences[0];
+                    if (sequence.type !== 'main') return true;
+                    
                     const text = context.sequences[0].element.text;
                     const words = xre.match(text, re, "all");
                     const { chapter, verses } = workspace;
@@ -128,15 +132,23 @@ const mergeAlignmentActions = {
 
                         //TODO: Add as many endMilestones as there are opened in alignments.opened, and set the later to 0.
                         if (!beforeWord?.length) {
-                            console.log(`pushing unaligned WORD: ${word}`);
                             if (alignments.opened) {
                                 workspace.outputContentStack[0].push(endMilestone);
                                 alignments.opened = false;
                             }
                             pushOnHoldChars();
-                            workspace.outputContentStack[0].push(
-                                addWrappers({ subtype: "usfm:w", content: [word] })
-                            );
+                            output.unalignedWords[chapter] ??= {};
+                            output.unalignedWords[chapter][verses] ??= [];
+                            output.unalignedWords[workspace.chapter][workspace.verses].push({
+                                word,
+                                occurrence: workspace.currentOccurrences[word],
+                                totalOccurrences: totalOccurrences[chapter][verses][word],
+                            });
+                            const wrappedWord = addWrappers({
+                                subtype: "usfm:w",
+                                content: [word],
+                            });
+                            workspace.outputContentStack[0].push(wrappedWord);
                         }
                     }
                     pushOnHoldChars();

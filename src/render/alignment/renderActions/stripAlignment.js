@@ -5,7 +5,7 @@ const stripMarkupActions = {
         {
             description: "Set up",
             test: () => true,
-            action: ({ workspace, output, context }) => {
+            action: ({ workspace, output }) => {
                 workspace.chapter = null;
                 workspace.verses = null;
                 workspace.lastWord = "";
@@ -13,6 +13,7 @@ const stripMarkupActions = {
                 workspace.currentOccurrences = {};
                 workspace.PendingStartMilestones = [];
                 output.stripped = {};
+                output.unalignedWords = {};
                 return true;
             },
         },
@@ -28,7 +29,6 @@ const stripMarkupActions = {
                 delete payload.subType;
                 workspace.waitingMarkup.push(payload);
                 workspace.PendingStartMilestones.push(payload);
-
             },
         },
     ],
@@ -66,7 +66,6 @@ const stripMarkupActions = {
                         record,
                     ];
                 } else {
-
                     output.stripped[workspace.chapter][workspace.verses][
                         strippedKey
                     ].push(record);
@@ -101,7 +100,9 @@ const stripMarkupActions = {
             test: () => true,
             action: ({ context, workspace, output, config }) => {
                 try {
-                    const text = context.sequences[0].element.text;
+                    const sequence = context.sequences[0];
+                    if (sequence.type !== 'main') return true;
+                    const text = sequence.element.text;
                     const re = xre("([\\p{Letter}\\p{Number}\\p{Mark}\\u2060]{1,127})");
                     const words = xre.match(text, re, "all");
                     const { chapter, verses } = workspace;
@@ -109,6 +110,18 @@ const stripMarkupActions = {
                     for (const word of words) {
                         workspace.currentOccurrences[word] ??= 0;
                         workspace.currentOccurrences[word]++;
+                        if (
+                            !workspace.PendingStartMilestones.length &&
+                            workspace.waitingMarkup.length
+                        ) {
+                            output.unalignedWords[chapter] ??= {};
+                            output.unalignedWords[chapter][verses] ??= [];
+                            output.unalignedWords[chapter][verses].push({
+                                word,
+                                occurrence: workspace.currentOccurrences[word],
+                                totalOccurrences: totalOccurrences[chapter][verses][word],
+                            });
+                        }
                         while (workspace.waitingMarkup.length) {
                             const payload = workspace.waitingMarkup.shift();
                             const strippedKey = [
@@ -146,7 +159,8 @@ const stripMarkupActions = {
                         workspace.lastWord = word;
                     }
                 } catch (err) {
-                    throw new Error(err);
+                    console.error(err);
+                    throw err;
                 }
                 return true;
             },
@@ -173,7 +187,7 @@ const stripMarkupActions = {
                         output.stripped[workspace.chapter][workspace.verses] = {};
                     }
                 } catch (err) {
-                    throw new Error(err);
+                    console.error(err);
                     throw err;
                 }
                 return true;
