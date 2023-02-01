@@ -17,7 +17,11 @@ const stripMarkupCode = function ({ perf, verseWords }) {
     );
     const output = {};
     cl.renderDocument({ docId: "", config: { verseWords }, output });
-    return { perf: output.perf, strippedAlignment: output.stripped };
+    return {
+        perf: output.perf,
+        strippedAlignment: output.stripped,
+        unalignedWords: output.unalignedWords,
+    };
 }
 
 const stripAlignment = {
@@ -44,7 +48,11 @@ const stripAlignment = {
         {
             name: "strippedAlignment",
             type: "json",
-        }
+        },
+        {
+            name: "unalignedWords",
+            type: "json",
+        },
     ],
     code: stripMarkupCode
 }

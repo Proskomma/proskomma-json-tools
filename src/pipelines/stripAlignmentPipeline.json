@@ -8,7 +8,7 @@
   },
   {
     "id": 1,
-    "title": "Perf to versewords",
+    "title": "Count stripped perf words",
     "name": "verseWords",
     "type": "Transform",
     "transformName": "verseWords",
@@ -53,6 +53,10 @@
       {
         "name": "strippedAlignment",
         "type": "json"
+      },
+      {
+        "name": "unalignedWords",
+        "type": "json"
       }
     ],
     "description": "PERF=>PERF: Strips alignment markup"
@@ -91,6 +95,11 @@
         "name": "strippedAlignment",
         "type": "json",
         "source": "Transform 2 strippedAlignment"
+      },
+      {
+        "name": "unalignedWords",
+        "type": "json",
+        "source": "Transform 2 unalignedWords"
       }
     ]
   }

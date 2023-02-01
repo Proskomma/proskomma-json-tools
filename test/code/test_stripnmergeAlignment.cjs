@@ -84,3 +84,44 @@ test(`merge alignment (${testGroup})`, async (t) => {
         t.fail('mergeAlignmentPipeline throws on valid perf');
     }
 });
+
+
+//TESTING GRAFT ERRORS:
+
+const usfmContent = fse.readFileSync(path.resolve(__dirname, "../test_data/usfms/dcs-en-rut.usfm")).toString();
+
+test(`Does not add wrappers to footnotes (${testGroup})`, async (t) => {
+    try {
+        t.plan(3);
+        let {perf} = await pipelineH.runPipeline("usfmToPerfPipeline", {
+            usfm: usfmContent,
+            selectors: {org: "dcs", "lang": "en", "abbr": "ult"}
+        });
+        const validator = new Validator();
+        const validatorResult = validator.validate('constraint','perfDocument','0.2.1', perf);
+        if (!validatorResult.isValid) {
+            t.fail("usfm=>perf throws on valid usfm");
+            throw `usfm=>perf, PERF file is not valid. \n${JSON.stringify(validatorResult,null,2)}`;
+        } else {
+            t.ok(validatorResult.isValid);
+        }
+        const getFootnotes = (sequences) =>
+            Object.keys(sequences).filter(id => sequences[id].type === 'footnote').map(id => sequences[id]);
+
+        const footnotes = getFootnotes(perf.sequences);
+
+        const {perf: strippedPerf,strippedAlignment} = await pipelineH.runPipeline("stripAlignmentPipeline", {
+            perf
+        });
+        t.same(footnotes,getFootnotes(strippedPerf.sequences))
+        const {perf: mergedPerf} = await pipelineH.runPipeline("mergeAlignmentPipeline", {
+            perf: strippedPerf,
+            strippedAlignment,
+        });
+        t.same(footnotes,getFootnotes(mergedPerf.sequences))
+    } catch (err) {
+        console.log(err);
+        t.fail("usfm2perfPipeline throws on valid perf");
+    }
+    t.end()
+});

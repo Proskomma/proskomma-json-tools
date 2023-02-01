@@ -55,6 +55,10 @@
       {
         "name": "perf",
         "type": "json"
+      },
+      {
+        "name": "unalignedWords",
+        "type": "json"
       }
     ],
     "description": "PERF=>PERF adds report to verses"
@@ -88,6 +92,11 @@
         "name": "perf",
         "type": "json",
         "source": "Transform 3 perf"
+      },
+      {
+        "name": "unalignedWords",
+        "type": "json",
+        "source": "Transform 2 unalignedWords"
       }
     ]
   }

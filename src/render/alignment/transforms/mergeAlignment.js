@@ -25,7 +25,7 @@ const mergeAlignmentCode = function ({
         },
         output,
     });
-    return { perf: output.perf }; // identityActions currently put PERF directly in output
+    return { perf: output.perf, unalignedWords: output.unalignedWords }; // identityActions currently put PERF directly in output
 };
 
 const mergeAlignment = {
@@ -52,6 +52,10 @@ const mergeAlignment = {
     outputs: [
         {
             name: "perf",
+            type: "json",
+        },
+        {
+            name: "unalignedWords",
             type: "json",
         },
     ],
