@@ -1,12 +1,12 @@
-import test from 'tape';
+const test = require('tape');
 
-import path from 'path';
-import fse from 'fs-extra';
-import SofriaRenderFromProskomma from '../../dist/SofriaRenderFromProskomma';
-import SofriaRenderFromJson from '../../dist/SofriaRenderFromJson';
-import {identityActions} from '../../dist/render/sofriaToSofria/renderActions/identity';
-import {Proskomma} from 'proskomma';
-import {Validator} from '../../dist/';
+const path = require('path');
+const fse = require('fs-extra');
+const SofriaRenderFromProskomma = require('../../src/SofriaRenderFromProskomma');
+const SofriaRenderFromJson = require('../../src/SofriaRenderFromJson');
+const {identityActions} = require('../../src/render/sofriaToSofria/renderActions/identity');
+const {Proskomma} = require('proskomma');
+const {Validator} = require('../../src/');
 
 const testGroup = 'Render SOFRIA from Proskomma';
 

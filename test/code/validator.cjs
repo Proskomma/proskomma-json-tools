@@ -1,8 +1,8 @@
-import test from 'tape';
-import path from 'path';
-import fse from 'fs-extra';
-import {Validator} from '../../src';
-import {Proskomma} from 'proskomma';
+const test = require('tape');
+const path = require('path');
+const fse = require('fs-extra');
+const {Validator} = require('../../src');
+const {Proskomma} = require('proskomma');
 
 const testGroup = 'Validator';
 

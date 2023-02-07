@@ -1,5 +1,5 @@
-const { PipelineHandler } = require('../../dist/index');
-import { Validator } from '../../dist/';
+const { PipelineHandler } = require('../../src/index');
+const { Validator } = require('../../src/');
 const { Proskomma } = require('proskomma');
 const fse = require('fs-extra');
 const path = require('path');
@@ -53,7 +53,7 @@ test(`strip alignment (${testGroup})`, async (t) => {
         t.ok(outputStrip, 'perf alignment stripped');
         t.ok(reportStrip, 'perf report alignement');
         // await saveFile(JSON.stringify(output.perf, null, 2), 'test/outputs/STRIP_perf_titus_stripped_eng.json');
-        // await saveFile(JSON.stringify(output.strippedAlignment, null, 2), 'test/outputs/STRIP_strippedAlignment_stripped_eng.json');    
+        // await saveFile(JSON.stringify(output.strippedAlignment, null, 2), 'test/outputs/STRIP_strippedAlignment_stripped_eng.json');
     } catch (err) {
         console.log(err);
         t.fail('stripAlignmentPipeline throws on valid perf');

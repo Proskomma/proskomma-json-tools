@@ -1,12 +1,12 @@
-import test from 'tape';
+const test = require('tape');
 
 const fse = require('fs-extra');
-import path from 'path';
-import { PerfRenderFromJson } from '../../dist/index';
-const render = require('../../dist/render');
+const path = require('path');
+const { PerfRenderFromJson } = require('../../src/index');
+const render = require('../../src/render');
 
-import mergeActions from '../../dist/mergeActions';
-import equal from 'deep-equal';
+const mergeActions = require('../../src/mergeActions');
+const equal = require('deep-equal');
 
 const testGroup = 'Render PERF from JSON';
 

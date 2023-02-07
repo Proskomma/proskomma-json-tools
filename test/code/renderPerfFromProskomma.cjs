@@ -1,13 +1,13 @@
-import test from 'tape';
+const test = require('tape');
 
 const fse = require('fs-extra');
-const render = require('../../dist/render');
-import PerfRenderFromProskomma from '../../dist/PerfRenderFromProskomma';
-import PerfRenderFromJson from '../../dist/PerfRenderFromJson';
-import {Proskomma} from 'proskomma';
-import {Validator} from "../../dist/";
-import path from "path";
-const testGroup = 'Render PERF from Proskomma';
+const render = require('../../src/render');
+const PerfRenderFromProskomma = require('../../src/PerfRenderFromProskomma');
+const PerfRenderFromJson = require('../../src/PerfRenderFromJson');
+const {Proskomma} = require('proskomma');
+const {Validator} = require('../../src/');
+const path = require('path');
+const testGroup = ')Render PERF from Proskomma';
 
 const pk = new Proskomma();
 

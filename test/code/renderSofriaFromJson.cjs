@@ -1,10 +1,10 @@
-import test from 'tape';
+const test = require('tape');
 
 const fse = require('fs-extra');
-import path from 'path';
-import SofriaRenderFromJson from '../../dist/SofriaRenderFromJson';
-import {identityActions} from '../../dist/render/sofriaToSofria/renderActions/identity';
-import {Validator} from "../../dist";
+const path = require('path');
+const SofriaRenderFromJson = require('../../src/SofriaRenderFromJson');
+const {identityActions} = require('../../src/render/sofriaToSofria/renderActions/identity');
+const {Validator} = require("../../src");
 
 const testGroup = 'Render SOFRIA from JSON';
 

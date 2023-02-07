@@ -1,4 +1,4 @@
-const { PipelineHandler } = require('../../dist/index');
+const { PipelineHandler } = require('../../src/index');
 const test = require('tape');
 const { Proskomma } = require('proskomma');
 const fse = require('fs-extra');

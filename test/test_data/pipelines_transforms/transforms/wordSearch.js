@@ -1,4 +1,4 @@
-import PerfRenderFromJson from '../../../src/PerfRenderFromJson';
+import PerfRenderFromJson from '../../../../src/PerfRenderFromJson';
 import xre from "xregexp";
 const splitWords = xre('([\\p{Letter}\\p{Number}\\p{Mark}\\u2060]{1,127})');
 

@@ -1,5 +1,5 @@
-import test from 'tape';
-import usfmHelps from '../../src/usfmHelps.js';
+const test = require('tape');
+const usfmHelps = require('../../src/usfmHelps.js');
 
 const testGroup = 'usfmHelps';
 

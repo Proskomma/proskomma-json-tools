@@ -1,5 +1,5 @@
-import test from 'tape';
-import ProskommaRender from '../../src/ProskommaRender';
+const test = require('tape');
+const ProskommaRender = require('../../src/ProskommaRender');
 
 const testGroup = 'Render';
 
