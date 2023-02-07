@@ -1,4 +1,4 @@
-const { PipelineHandler } = require('../../src/index');
+const { PipelineHandler } = require('../../src');
 const { testPipelines, testTransforms } = require('../test_data/pipelines_transforms');
 const test = require('tape');
 const { Proskomma } = require('proskomma');

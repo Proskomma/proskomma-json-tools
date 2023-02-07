@@ -1,4 +1,4 @@
-import PerfRenderFromJson from '../../../PerfRenderFromJson';
+const PerfRenderFromJson = require('../../../PerfRenderFromJson');
 const { perfToUsfmActions } = require('../renderActions/perfToUsfm');
 
 const perfToUsfmCode = function ({perf, report}) {

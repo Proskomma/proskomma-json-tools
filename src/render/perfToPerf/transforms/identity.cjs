@@ -1,11 +1,10 @@
-import PerfRenderFromJson from '../../../PerfRenderFromJson';
-const { verseWordsActions } = require('../renderActions/verseWords');
+const { identityActions } = require('../renderActions/identity');
 
-const verseWordsCode = function ({ perf }) {
+const identityActionsCode = function ({ perf }) {
     const cl = new PerfRenderFromJson(
         {
             srcJson: perf,
-            actions: verseWordsActions
+            actions: identityActions
         }
     );
     const output = {};
@@ -13,10 +12,10 @@ const verseWordsCode = function ({ perf }) {
     return { verseWords: output.cv };
 }
 
-const verseWords = {
-    name: "verseWords",
+const identity = {
+    name: "identityTransform",
     type: "Transform",
-    description: "PERF=>JSON: Counts words occurrences",
+    description: "identity operation",
     inputs: [
         {
             name: "perf",
@@ -26,11 +25,13 @@ const verseWords = {
     ],
     outputs: [
         {
-            name: "verseWords",
+            name: "perf",
             type: "json",
         }
     ],
-    code: verseWordsCode
+    code: identityActionsCode
 }
 
-module.exports = { verseWords };
+module.exports = {
+    identity,
+};

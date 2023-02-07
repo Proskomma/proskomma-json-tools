@@ -1,4 +1,4 @@
-import deepCopy from 'deep-copy-all';
+const deepCopy = require('deep-copy-all');
 
 const doMerge1 = content => {
     let ret = [];

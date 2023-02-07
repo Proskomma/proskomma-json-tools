@@ -1,8 +1,8 @@
-import PerfRenderFromJson from '../../../PerfRenderFromJson';
-import mergeActions from '../../../mergeActions';
+const PerfRenderFromJson = require('../../../PerfRenderFromJson');
+const mergeActions = require('../../../mergeActions');
 
-const { identityActions } = require('../../perfToPerf/renderActions/identity');
-const { justTheBibleActions } = require('../../perfToPerf/renderActions/justTheBible');
+const { identityActions } = require('../renderActions/identity');
+const { justTheBibleActions } = require('../renderActions/justTheBible');
 
 const justTheBibleCode = function ({perf}) {
     const cl = new PerfRenderFromJson(

@@ -2,7 +2,7 @@ const test = require('tape');
 
 const fse = require('fs-extra');
 const path = require('path');
-const { PerfRenderFromJson } = require('../../src/index');
+const { PerfRenderFromJson } = require('../../src');
 const render = require('../../src/render');
 
 const mergeActions = require('../../src/mergeActions');

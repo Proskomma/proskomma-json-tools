@@ -1,5 +1,4 @@
-// import identityActions from "./identityActions";
-const { identityActions } = require('../../perfToPerf/renderActions/identity');
+const { identityActions } = require('../renderActions/identity');
 
 const identityActionsCode = function ({ perf }) {
     const cl = new PerfRenderFromJson(
@@ -14,7 +13,7 @@ const identityActionsCode = function ({ perf }) {
 }
 
 const identity = {
-    name: "identityTransform",
+    name: "identity",
     type: "Transform",
     description: "identity operation",
     inputs: [

@@ -1,5 +1,5 @@
 const test = require('tape');
-const usfmHelps = require('../../src/usfmHelps.js');
+const usfmHelps = require('../../src/usfmHelps.cjs');
 
 const testGroup = 'usfmHelps';
 
