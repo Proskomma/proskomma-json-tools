@@ -5,6 +5,7 @@ const identityActions = {
             test: () => true,
             action: ({config, context, workspace, output}) => {
                 output.sofria = {};
+                output.paras = [];
                 output.sofria.schema = context.document.schema;
                 output.sofria.metadata = context.document.metadata;
                 output.sofria.sequence = {};
@@ -29,6 +30,9 @@ const identityActions = {
             description: "identity",
             test: () => true,
             action: ({context, workspace}) => {
+                if(workspace.currentSequence == null){
+                    workspace.currentSequence = {}
+                }
                 workspace.currentSequence.type = context.sequences[0].type;
                 workspace.currentSequence.blocks = [];
             }
@@ -38,10 +42,23 @@ const identityActions = {
         {
             description: "identity",
             test: () => true,
-            action: ({workspace}) => {
+            action: ({workspace,output}) => {   
                 if (workspace.currentSequence.type === 'main') {
                     workspace.chapter = null;
                     workspace.verses = null;
+                }
+                
+                if(output.paras == null){
+                    output.paras = workspace.currentSequence.blocks;
+                }
+                else
+                {
+                    if(workspace.currentSequence.type === 'main'){
+                        
+                        output.paras = output.paras.concat(workspace.currentSequence.blocks);
+                        
+                    
+                    }
                 }
                 workspace.currentSequence = null;
             }

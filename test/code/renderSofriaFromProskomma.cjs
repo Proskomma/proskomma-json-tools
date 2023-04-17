@@ -4,9 +4,9 @@ import path from 'path';
 import fse from 'fs-extra';
 import SofriaRenderFromProskomma from '../../dist/SofriaRenderFromProskomma';
 import SofriaRenderFromJson from '../../dist/SofriaRenderFromJson';
-import {identityActions} from '../../dist/render/sofriaToSofria/renderActions/identity';
-import {Proskomma} from 'proskomma';
-import {Validator} from '../../dist/';
+import { identityActions } from '../../dist/render/sofriaToSofria/renderActions/identity';
+import { Proskomma } from 'proskomma';
+import { Validator } from '../../dist/';
 
 const testGroup = 'Render SOFRIA from Proskomma';
 
@@ -17,7 +17,7 @@ test(
     async function (t) {
         try {
             t.plan(1);
-            t.doesNotThrow(() => new SofriaRenderFromProskomma({proskomma: pk}));
+            t.doesNotThrow(() => new SofriaRenderFromProskomma({ proskomma: pk }));
         } catch (err) {
             console.log(err);
         }
@@ -28,17 +28,18 @@ test(
     `Render SOFRIA via identity actions (${testGroup})`,
     async function (t) {
         try {
-            t.plan(3);
-            const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'usfms','webbe_mrk.usfm'))).toString();
-            pk.importDocument({'lang': 'eng', 'abbr': 'web'}, 'usfm', usfm);
+            t.plan(4);
+            const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'usfms', 'webbe_mrk.usfm'))).toString();
+            pk.importDocument({ 'lang': 'eng', 'abbr': 'web' }, 'usfm', usfm);
             const docId = pk.gqlQuerySync('{documents { id } }').data.documents[0].id;
-            const cl = new SofriaRenderFromProskomma({proskomma: pk, actions: identityActions});
+            const cl = new SofriaRenderFromProskomma({ proskomma: pk, actions: identityActions });
             const output = {};
             t.doesNotThrow(
                 () => cl.renderDocument(
-                    {docId, config: {}, output}
+                    { docId, config: {}, output }
                 )
             );
+            
             // console.log(JSON.stringify(output, null, 2));
             const validator = new Validator();
             const validation = validator.validate(
@@ -47,8 +48,11 @@ test(
                 '0.2.1',
                 output.sofria
             );
+            
             t.ok(validation.isValid);
             t.equal(validation.errors, null);
+            t.equal(validation.errors, null);
+
         } catch (err) {
             console.log(err);
         }
@@ -61,11 +65,11 @@ test(
         try {
             t.plan(3);
             const docId = pk.gqlQuerySync('{documents { id } }').data.documents[0].id;
-            const cl = new SofriaRenderFromProskomma({proskomma: pk, actions: identityActions});
+            const cl = new SofriaRenderFromProskomma({ proskomma: pk, actions: identityActions });
             const output = {};
             t.doesNotThrow(
                 () => cl.renderDocument(
-                    {docId, config: {chapters: ['2']}, output}
+                    { docId, config: { chapters: ['2'] }, output }
                 )
             );
             // console.log(JSON.stringify(output, null, 2));
@@ -91,11 +95,11 @@ test(
             t.plan(3);
             const pk2 = new Proskomma();
             const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'usfms', 'ult_uw_mrk.usfm'))).toString();
-            pk2.importDocument({'lang': 'eng', 'abbr': 'ult'}, 'usfm', usfm);
+            pk2.importDocument({ 'lang': 'eng', 'abbr': 'ult' }, 'usfm', usfm);
             const docId = pk2.gqlQuerySync('{documents { id } }').data.documents[0].id;
-            const cl = new SofriaRenderFromProskomma({proskomma: pk2, actions: identityActions});
+            const cl = new SofriaRenderFromProskomma({ proskomma: pk2, actions: identityActions });
             const output = {};
-            t.doesNotThrow(() => cl.renderDocument({docId, config: {}, output}));
+            t.doesNotThrow(() => cl.renderDocument({ docId, config: {}, output }));
             // console.log(JSON.stringify(output, null, 2));
             const validator = new Validator();
             const validation = validator.validate(
@@ -119,13 +123,13 @@ test(
             t.plan(3);
             const pk3 = new Proskomma();
             const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'usfms', 'verse_over_para_boundary.usfm'))).toString();
-            pk3.importDocument({'lang': 'eng', 'abbr': 'web'}, 'usfm', usfm);
+            pk3.importDocument({ 'lang': 'eng', 'abbr': 'web' }, 'usfm', usfm);
             const docId = pk3.gqlQuerySync('{documents { id } }').data.documents[0].id;
-            const cl = new SofriaRenderFromProskomma({proskomma: pk3, actions: identityActions});
+            const cl = new SofriaRenderFromProskomma({ proskomma: pk3, actions: identityActions });
             const output = {};
             t.doesNotThrow(
                 () => cl.renderDocument(
-                    {docId, config: {}, output}
+                    { docId, config: {}, output }
                 )
             );
             // console.log(JSON.stringify(output, null, 2));
@@ -151,13 +155,13 @@ test(
             t.plan(5);
             const pk4 = new Proskomma();
             const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'usfms', 'webbe_mrk.usfm'))).toString();
-            pk4.importDocument({'lang': 'eng', 'abbr': 'web'}, 'usfm', usfm);
+            pk4.importDocument({ 'lang': 'eng', 'abbr': 'web' }, 'usfm', usfm);
             const docId = pk4.gqlQuerySync('{documents { id } }').data.documents[0].id;
-            const cl = new SofriaRenderFromProskomma({proskomma: pk4, actions: identityActions});
+            const cl = new SofriaRenderFromProskomma({ proskomma: pk4, actions: identityActions });
             const output = {};
             t.doesNotThrow(
                 () => cl.renderDocument(
-                    {docId, config: {}, output}
+                    { docId, config: {}, output }
                 )
             );
             // console.log(JSON.stringify(output.sofria, null, 2));
@@ -188,14 +192,14 @@ test(
             for (const usxLeaf of usxLeaves) {
                 const pk5 = new Proskomma();
                 const usx = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'sofria_export_usx', `${usxLeaf}.usx`))).toString();
-                pk5.importDocument({'lang': 'eng', 'abbr': 'foo'}, 'usx', usx);
+                pk5.importDocument({ 'lang': 'eng', 'abbr': 'foo' }, 'usx', usx);
                 const docId = pk5.gqlQuerySync('{documents { id } }').data.documents[0].id;
-                const cl = new SofriaRenderFromProskomma({proskomma: pk5, actions: identityActions, debugLevel: 0});
+                const cl = new SofriaRenderFromProskomma({ proskomma: pk5, actions: identityActions, debugLevel: 0 });
                 const output = {};
                 t.doesNotThrow(
                     () => {
                         cl.renderDocument(
-                            {docId, config: {}, output}
+                            { docId, config: {}, output }
                         );
                         // console.log(JSON.stringify(output.sofria, null, 2));
                     }
@@ -214,13 +218,13 @@ test(
             t.plan(3);
             const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'usfms', 'rems.usfm'))).toString();
             const pk6 = new Proskomma();
-            pk6.importDocument({'lang': 'eng', 'abbr': 'web'}, 'usfm', usfm);
+            pk6.importDocument({ 'lang': 'eng', 'abbr': 'web' }, 'usfm', usfm);
             const docId = pk6.gqlQuerySync('{documents { id } }').data.documents[0].id;
-            const cl = new SofriaRenderFromProskomma({proskomma: pk6, actions: identityActions});
+            const cl = new SofriaRenderFromProskomma({ proskomma: pk6, actions: identityActions });
             const output = {};
             t.doesNotThrow(
                 () => cl.renderDocument(
-                    {docId, config: {}, output}
+                    { docId, config: {}, output }
                 )
             );
             // console.log(JSON.stringify(output, null, 2));
@@ -248,15 +252,15 @@ test(
             for (const usxLeaf of usxLeaves) {
                 const pk5 = new Proskomma();
                 const usx = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'sofria_export_usx', `${usxLeaf}.usx`))).toString();
-                pk5.importDocument({'lang': 'eng', 'abbr': 'foo'}, 'usx', usx);
+                pk5.importDocument({ 'lang': 'eng', 'abbr': 'foo' }, 'usx', usx);
                 const docId = pk5.gqlQuerySync('{documents { id } }').data.documents[0].id;
                 // console.log(pk5.gqlQuerySync(`{ document(id: '${docId}') { mainSequence { blocks { dump } } } }`).data.document.mainSequence);
-                const cl = new SofriaRenderFromProskomma({proskomma: pk5, actions: identityActions, debugLevel: 0});
+                const cl = new SofriaRenderFromProskomma({ proskomma: pk5, actions: identityActions, debugLevel: 0 });
                 const output = {};
                 t.doesNotThrow(
                     () => {
                         cl.renderDocument(
-                            {docId, config: {}, output}
+                            { docId, config: {}, output }
                         );
                         // console.log(JSON.stringify(output.sofria, null, 2));
                     }
@@ -287,14 +291,14 @@ test(
         try {
             t.plan(4);
             const pk6 = new Proskomma();
-            const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'usfms','eng_francl_mrk.usfm'))).toString();
-            pk6.importDocument({'lang': 'eng', 'abbr': 'francl'}, 'usfm', usfm);
+            const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'usfms', 'eng_francl_mrk.usfm'))).toString();
+            pk6.importDocument({ 'lang': 'eng', 'abbr': 'francl' }, 'usfm', usfm);
             const docId = pk6.gqlQuerySync('{documents { id } }').data.documents[0].id;
-            const cl = new SofriaRenderFromProskomma({proskomma: pk6, actions: identityActions});
+            const cl = new SofriaRenderFromProskomma({ proskomma: pk6, actions: identityActions });
             const output = {};
             t.doesNotThrow(
                 () => cl.renderDocument(
-                    {docId, config: {}, output}
+                    { docId, config: {}, output }
                 )
             );
             const validator = new Validator();
@@ -306,11 +310,114 @@ test(
             );
             t.ok(validation.isValid);
             t.equal(validation.errors, null);
-            const cl2 = new SofriaRenderFromJson({srcJson: output.sofria, actions: identityActions});
+            const cl2 = new SofriaRenderFromJson({ srcJson: output.sofria, actions: identityActions });
             const output2 = {};
-            t.doesNotThrow(() => cl2.renderDocument({docId: "", config: {}, output: output2}));
+            t.doesNotThrow(() => cl2.renderDocument({ docId: "", config: {}, output: output2 }));
         } catch (err) {
             console.log(err);
         }
     },
+
+);
+test(`Getting only one blocks to render (${testGroup})`,
+    async function (t) {
+        try {
+            const docId = pk.gqlQuerySync('{documents { id }}').data.documents[0].id;
+            const renderer = new SofriaRenderFromProskomma({ proskomma: pk, actions: identityActions });
+            const output = {};
+            const context = {};
+            const workspace = {};
+            const numberBlocks = 1;
+            const state = 'begin';
+            const config = {
+                showWordAtts: false,
+                showTitles: true,
+                showHeadings: true,
+                showIntroductions: true,
+                showFootnotes: true,
+                showXrefs: true,
+                showParaStyles: true,
+                showCharacterMarkup: true,
+                showChapterLabels: true,
+                showVersesLabels: true,
+                selectedBcvNotes: [],
+                displayPartOfText: { numberBlocks, state },
+                bcvNotesCallback: (bcv) => {
+                    setBcvNoteRef(bcv);
+                },
+                
+            };
+            renderer.renderDocument1({
+                docId: docId,
+                config,
+                context,
+                workspace,
+                output,
+
+
+            });
+            
+
+            t.equal(output.paras.filter(b => b.type === 'paragraph').length,1,"The number of block paragraph render is 1 ");
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    
+);
+
+test(`Getting only multiple blocks to after one inital render (${testGroup})`,
+    async function (t) {
+        try {
+            const docId = pk.gqlQuerySync('{documents { id }}').data.documents[0].id;
+            const renderer = new SofriaRenderFromProskomma({ proskomma: pk, actions: identityActions });
+            const output = {};
+            const context = {};
+            const workspace = {};
+            const numberBlocks = 10;
+            let state = 'begin';
+            const config = {
+                showWordAtts: false,
+                showTitles: true,
+                showHeadings: true,
+                showIntroductions: true,
+                showFootnotes: true,
+                showXrefs: true,
+                showParaStyles: true,
+                showCharacterMarkup: true,
+                showChapterLabels: true,
+                showVersesLabels: true,
+                selectedBcvNotes: [],
+                displayPartOfText: { numberBlocks, state },
+                bcvNotesCallback: (bcv) => {
+                    setBcvNoteRef(bcv);
+                },
+                
+            };
+            renderer.renderDocument1({
+                docId: docId,
+                config,
+                context,
+                workspace,
+                output,
+            });
+
+
+            config.displayPartOfText.state = 'continue';
+            
+            renderer.renderDocument1({
+                docId: docId,
+                config,
+                context,
+                workspace,
+                output,
+            });
+            
+            t.equal(output.paras.filter(b => b.type === 'paragraph').length,20,"The number of block paragraph render is 20 ");
+        } catch (err) {
+            console.log(err)
+        }
+    }
+    
 );
