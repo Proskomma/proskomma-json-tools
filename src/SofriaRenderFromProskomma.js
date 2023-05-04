@@ -231,6 +231,7 @@ class SofriaRenderFromProskomma extends ProskommaRender {
             }
             
             const subTypeValues = blockResult.bs.payload.split('/');
+            let subTypeValue;
             if (subTypeValues[1] && subTypeValues[1] === "tr") {
                 subTypeValue = "row";
             } else if (subTypeValues[1]) {
