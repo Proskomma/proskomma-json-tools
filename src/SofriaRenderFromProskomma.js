@@ -166,14 +166,25 @@ class SofriaRenderFromProskomma extends ProskommaRender {
                 outputBlockN++;
             }
             const subTypeValues = blockResult.bs.payload.split('/');
-            let subTypeValue = subTypeValues[1]? `usfm:${subTypeValues[1]}` : subTypeValues[0];
+            let subTypeValue;
+            if (subTypeValues[1] && subTypeValues[1] === "tr") {
+                subTypeValue = "row";
+            } else if (subTypeValues[1]) {
+                subTypeValue = `usfm:${subTypeValues[1]}`;
+            } else {
+                subTypeValue = subTypeValues[0];
+            }
             context.sequences[0].block = {
-                type: "paragraph",
+                type: subTypeValue === "row" ? "row" : "paragraph",
                 subType: subTypeValue,
                 blockN: outputBlockN,
                 wrappers: []
             }
-            this.renderEvent('startParagraph', environment);
+            if (subTypeValue === "row") {
+                this.renderEvent('startRow', environment);
+            } else {
+                this.renderEvent('startParagraph', environment);
+            }
             this._tokens = [];
             if (sequence.type === "main" && this.currentCV.chapter) {
                 const wrapper = {
@@ -225,7 +236,11 @@ class SofriaRenderFromProskomma extends ProskommaRender {
                 environment.context.sequences[0].block.wrappers.shift();
                 this.renderEvent('endWrapper', environment);
             }
-            this.renderEvent('endParagraph', environment);
+            if (subTypeValue === "row") {
+                this.renderEvent('endRow', environment);
+            } else {
+                this.renderEvent('endParagraph', environment);
+            }
             delete context.sequences[0].block;
             outputBlockN++;
         }
@@ -263,7 +278,7 @@ class SofriaRenderFromProskomma extends ProskommaRender {
                         direction: "end",
                         subType: `usfm:${camelCaseToSnakeCase(scopeBits[2])}`,
                     };
-                    if(scopeBits[1] === 'milestone') {
+                    if (scopeBits[1] === 'milestone') {
                         this._container.type = "end_milestone";
                     } else {
                         this._container.type = "wrapper";
@@ -359,6 +374,26 @@ class SofriaRenderFromProskomma extends ProskommaRender {
                             atts: {}
                         };
                     }
+                } else if (scopeBits[0] === 'cell') {
+                    const wrapper = {
+                        direction: "start",
+                        type: "wrapper",
+                        subType: scopeBits[0],
+                        atts: {
+                            role: scopeBits[1],
+                            alignment: scopeBits[2],
+                            nCols: parseInt(scopeBits[3])
+                        }
+                    };
+                    environment.context.sequences[0].element = wrapper;
+                    if (item.subType === 'start') {
+                        environment.context.sequences[0].block.wrappers.unshift(wrapper.subType);
+                        this.renderEvent('startWrapper', environment);
+                    } else {
+                        this.renderEvent('endWrapper', environment);
+                        environment.context.sequences[0].block.wrappers.shift();
+                    }
+                    delete environment.context.sequences[0].element;
                 } else if (scopeBits[0] === 'milestone' && item.subType === "start") {
                     if (scopeBits[1] === 'ts') {
                         const mark = {
