@@ -124,6 +124,45 @@ const identityActions = {
             action: ({workspace}) => {}
         },
     ],
+    startRow: [
+        {
+            description: "identity",
+            test: () => true,
+            action: ({context, workspace}) => {
+                const currentBlock = context.sequences[0].block;
+                const paraRecord = {
+                    type: currentBlock.type,
+                    subtype: currentBlock.subType,
+                    content: []
+                };
+                workspace.currentSequence.blocks.push(paraRecord);
+                workspace.currentContent = paraRecord.content;
+                workspace.outputBlock = workspace.currentSequence.blocks[workspace.currentSequence.blocks.length - 1];
+                workspace.outputContentStack = [workspace.outputBlock.content];
+                if (workspace.currentSequence.type === "main") {
+                    for (const cv of ['chapter', 'verses']) {
+                        if (workspace[cv]) {
+                            const wrapperRecord = {
+                                type: 'wrapper',
+                                subtype: cv,
+                                content: [],
+                                atts: {number: workspace[cv]}
+                            };
+                            workspace.outputContentStack[0].push(wrapperRecord);
+                            workspace.outputContentStack.unshift(wrapperRecord.content);
+                        }
+                    }
+                }
+            }
+        },
+    ],
+    endRow: [
+        {
+            description: "identity",
+            test: () => true,
+            action: ({workspace}) => {}
+        },
+    ],
     metaContent: [
         {
             description: "identity",
