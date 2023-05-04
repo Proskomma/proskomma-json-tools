@@ -229,17 +229,28 @@ class SofriaRenderFromProskomma extends ProskommaRender {
                 this.cachedSequenceIds.shift();
                 outputBlockN++;
             }
+            
             const subTypeValues = blockResult.bs.payload.split('/');
-            let subTypeValue = subTypeValues[1] ? `usfm:${subTypeValues[1]}` : subTypeValues[0];
+            if (subTypeValues[1] && subTypeValues[1] === "tr") {
+                subTypeValue = "row";
+            } else if (subTypeValues[1]) {
+                subTypeValue = `usfm:${subTypeValues[1]}`;
+            } else {
+                subTypeValue = subTypeValues[0];
+            }
             context.sequences[0].block = {
-                type: "paragraph",
+                type: subTypeValue === "row" ? "row" : "paragraph",
                 subType: subTypeValue,
                 blockN: outputBlockN,
                 wrappers: []
             }
-            this.renderEvent('startParagraph', environment);
+            if (subTypeValue === "row") {
+                this.renderEvent('startRow', environment);
+            } else {
+                this.renderEvent('startParagraph', environment);
+            }
             this._tokens = [];
-            if (sequenceType === "main" && this.currentCV.chapter) {
+            if (sequence.type === "main" && this.currentCV.chapter) {
                 const wrapper = {
                     type: "wrapper",
                     subType: 'chapter',
@@ -251,7 +262,7 @@ class SofriaRenderFromProskomma extends ProskommaRender {
                 environment.context.sequences[0].block.wrappers.unshift(wrapper.subType);
                 this.renderEvent('startWrapper', environment);
             }
-            if (sequenceType === "main" && this.currentCV.verses) {
+            if (sequence.type === "main" && this.currentCV.verses) {
                 const wrapper = {
                     type: "wrapper",
                     subType: 'verses',
@@ -265,7 +276,7 @@ class SofriaRenderFromProskomma extends ProskommaRender {
             }
             this.renderContent(blockResult.items, environment);
             this._tokens = [];
-            if (sequenceType === "main" && this.currentCV.verses) {
+            if (sequence.type === "main" && this.currentCV.verses) {
                 const wrapper = {
                     type: "wrapper",
                     subType: 'verses',
@@ -277,7 +288,7 @@ class SofriaRenderFromProskomma extends ProskommaRender {
                 environment.context.sequences[0].block.wrappers.shift();
                 this.renderEvent('endWrapper', environment);
             }
-            if (sequenceType === "main" && this.currentCV.chapter) {
+            if (sequence.type === "main" && this.currentCV.chapter) {
                 const wrapper = {
                     type: "wrapper",
                     subType: 'chapter',
@@ -289,7 +300,11 @@ class SofriaRenderFromProskomma extends ProskommaRender {
                 environment.context.sequences[0].block.wrappers.shift();
                 this.renderEvent('endWrapper', environment);
             }
-            this.renderEvent('endParagraph', environment);
+            if (subTypeValue === "row") {
+                this.renderEvent('endRow', environment);
+            } else {
+                this.renderEvent('endParagraph', environment);
+            }
             delete context.sequences[0].block;
             outputBlockN++;
         }
