@@ -134,44 +134,54 @@ class SofriaRenderFromProskomma extends ProskommaRender {
     }
 
     renderSequence(environment) {
-        let useBlockNumber = false;
-        let fromBlockNumber = 0;
-        let toBlockNumber = 0;
-        if (environment.config.displayPartOfText != null) {
-            if (environment.config.displayPartOfText.state === 'begin') {
-                useBlockNumber = true;
-                fromBlockNumber = 0;
-                toBlockNumber = environment.config.displayPartOfText.numberBlocks;
-            }
-            if (environment.config.displayPartOfText.state === 'continue') {
-                useBlockNumber = true;
-                fromBlockNumber = environment.output.paras.length;
-                toBlockNumber = environment.output.paras.length + environment.config.displayPartOfText.numberBlocks;
-            }
 
-        }
         const context = environment.context;
         const sequenceId = this.cachedSequenceIds[0];
         const sequenceType = this.pk.gqlQuerySync(`{document(id: "${context.document.id}") {sequence(id:"${sequenceId}") {type} } }`).data.document.sequence.type;
         let documentResult = {};
-        if (useBlockNumber) {
-            if (sequenceType === 'main') {
-                let myList = [];
-                for (let i = fromBlockNumber; i < toBlockNumber - fromBlockNumber; i++) {
-                    myList += [`${i} ,`];
+        let currentChapter = null
+        let currentChapterContext = null
+        let blocksIdsToRender = []
+        if (sequenceType === 'main') {
+            if (environment.config.chapters) {
+                while (environment.config.chapters.length != 0) {
+                    currentChapter = environment.config.chapters.pop();
+
+                    if (currentChapter) {
+                        currentChapterContext = this.pk.gqlQuerySync(`{document(id: "${context.document.id}") {cIndex(chapter: ${currentChapter}) {
+                startBlock
+                endBlock
+              }}}`)
+
+                    }
+
+                    if (currentChapter && currentChapterContext) {
+                        for (let i = currentChapterContext.data.document.cIndex.startBlock; i < currentChapterContext.data.document.cIndex.endBlock + 1; i++) {
+                            blocksIdsToRender.push(i);
+
+                        }
+
+                    }
                 }
-
-
-                documentResult = this.pk.gqlQuerySync(`{document(id: "${context.document.id}") {id sequence(id:"${sequenceId}") {id type nBlocks blocks(positions: [${myList}]){ os {payload} is {payload} } } } }`);
             }
             else {
-                documentResult = this.pk.gqlQuerySync(`{document(id: "${context.document.id}") {sequence(id:"${sequenceId}") {id type nBlocks blocks { os {payload} is {payload} } } } }`);
-
+                for (let i = 0; i < this.pk.gqlQuerySync(`{document(id: "${context.document.id}") {sequence(id:"${sequenceId}") {nBlocks} }}`).data.document.sequence.nBlocks; i++) {
+                    blocksIdsToRender.push(i);
+                }
+            }
+            blocksIdsToRender.sort((a,b)=>(b-a));
+        }
+        else{
+            for (let i = 0; i < this.pk.gqlQuerySync(`{document(id: "${context.document.id}") {sequence(id:"${sequenceId}") {nBlocks} }}`).data.document.sequence.nBlocks; i++) {
+                blocksIdsToRender.push(i);
             }
         }
-        else {
-            documentResult = this.pk.gqlQuerySync(`{document(id: "${context.document.id}") {sequence(id:"${sequenceId}") {id type nBlocks blocks { os {payload} is {payload} } } } }`);
-        }
+
+
+
+
+
+        documentResult = this.pk.gqlQuerySync(`{document(id: "${context.document.id}") {id sequence(id:"${sequenceId}") {id type nBlocks blocks(positions: [${blocksIdsToRender}]){ os {payload} is {payload} } } } }`);
         const sequence = documentResult.data.document.sequence;
 
         if (!sequence) {
@@ -182,43 +192,17 @@ class SofriaRenderFromProskomma extends ProskommaRender {
                 context.sequences.unshift(this.sequenceContext(sequence, sequenceId));
             }
         }
-        else{
+        else {
             context.sequences.unshift(this.sequenceContext(sequence, sequenceId));
         }
 
 
         this.renderEvent('startSequence', environment);
         let outputBlockN = 0;
-        let nbForLoop = 0;
-        let initBlockNumber = 0;
-        if (useBlockNumber) {
-            if (sequence.type === 'main') {
-                nbForLoop = toBlockNumber;
-                initBlockNumber = fromBlockNumber;
-            }
-            else {
-                nbForLoop = sequence.nBlocks
-            }
-        }
-        else {
-            nbForLoop = sequence.nBlocks
-        }
 
-        for (let inputBlockN = initBlockNumber; inputBlockN < nbForLoop; inputBlockN++) {
-            if (environment.config.chapters && sequence.type === "main") {
-                const chapterScopes = [
-                    ...sequence.blocks[inputBlockN].os.map(s => s.payload),
-                    ...sequence.blocks[inputBlockN].is.map(s => s.payload)
-                ].filter(
-                    s => ['chapter'].includes(s.split('/')[0])
-                ).map(
-                    s => s.split('/')[1]
-                );
-                if (chapterScopes.length === 0 || !environment.config.chapters.includes(chapterScopes[0])) {
-                    continue;
-                }
-            }
 
+        while (blocksIdsToRender.length != 0) {
+            let inputBlockN = blocksIdsToRender.pop();
             const blocksResult = this.pk.gqlQuerySync(
                 `{
                document(id: "${context.document.id}") {
@@ -255,7 +239,7 @@ class SofriaRenderFromProskomma extends ProskommaRender {
             }
             this.renderEvent('startParagraph', environment);
             this._tokens = [];
-            if (sequence.type === "main" && this.currentCV.chapter) {
+            if (sequenceType === "main" && this.currentCV.chapter) {
                 const wrapper = {
                     type: "wrapper",
                     subType: 'chapter',
@@ -267,7 +251,7 @@ class SofriaRenderFromProskomma extends ProskommaRender {
                 environment.context.sequences[0].block.wrappers.unshift(wrapper.subType);
                 this.renderEvent('startWrapper', environment);
             }
-            if (sequence.type === "main" && this.currentCV.verses) {
+            if (sequenceType === "main" && this.currentCV.verses) {
                 const wrapper = {
                     type: "wrapper",
                     subType: 'verses',
@@ -281,7 +265,7 @@ class SofriaRenderFromProskomma extends ProskommaRender {
             }
             this.renderContent(blockResult.items, environment);
             this._tokens = [];
-            if (sequence.type === "main" && this.currentCV.verses) {
+            if (sequenceType === "main" && this.currentCV.verses) {
                 const wrapper = {
                     type: "wrapper",
                     subType: 'verses',
@@ -293,7 +277,7 @@ class SofriaRenderFromProskomma extends ProskommaRender {
                 environment.context.sequences[0].block.wrappers.shift();
                 this.renderEvent('endWrapper', environment);
             }
-            if (sequence.type === "main" && this.currentCV.chapter) {
+            if (sequenceType === "main" && this.currentCV.chapter) {
                 const wrapper = {
                     type: "wrapper",
                     subType: 'chapter',

@@ -319,15 +319,18 @@ test(
     },
 
 );
-test(`Getting only one blocks to render (${testGroup})`,
+test(`Getting only one Chapter to render (${testGroup})`,
     async function (t) {
         try {
             const docId = pk.gqlQuerySync('{documents { id }}').data.documents[0].id;
+            let currentChapterContext = pk.gqlQuerySync(`{document(id: "${docId}") {cIndex(chapter: 1) {
+                startBlock
+                endBlock
+              }}}`)
             const renderer = new SofriaRenderFromProskomma({ proskomma: pk, actions: identityActions });
             const output = {};
             const context = {};
             const workspace = {};
-            const numberBlocks = 1;
             const state = 'begin';
             const config = {
                 showWordAtts: false,
@@ -341,7 +344,8 @@ test(`Getting only one blocks to render (${testGroup})`,
                 showChapterLabels: true,
                 showVersesLabels: true,
                 selectedBcvNotes: [],
-                displayPartOfText: { numberBlocks, state },
+                chapters:['1'],
+                displayPartOfText: { state },
                 bcvNotesCallback: (bcv) => {
                     setBcvNoteRef(bcv);
                 },
@@ -358,7 +362,7 @@ test(`Getting only one blocks to render (${testGroup})`,
             });
             
 
-            t.equal(output.paras.filter(b => b.type === 'paragraph').length,1,"The number of block paragraph render is 1 ");
+            t.equal(output.paras.filter(b => b.type === 'paragraph').length,currentChapterContext.data.document.cIndex.endBlock +1,"The number of block paragraph render is 1 ");
         } catch (err) {
             console.log(err)
         }
@@ -367,7 +371,7 @@ test(`Getting only one blocks to render (${testGroup})`,
     
 );
 
-test(`Getting only multiple blocks to after one inital render (${testGroup})`,
+test(`Getting only multiple Chapter to render (${testGroup})`,
     async function (t) {
         try {
             const docId = pk.gqlQuerySync('{documents { id }}').data.documents[0].id;
@@ -376,6 +380,17 @@ test(`Getting only multiple blocks to after one inital render (${testGroup})`,
             const context = {};
             const workspace = {};
             const numberBlocks = 10;
+            let numberOfBlocks = 0
+            let currentChapterContext = pk.gqlQuerySync(`{document(id: "${docId}") {cIndex(chapter: 1) {
+                startBlock
+                endBlock
+              }}}`)
+            numberOfBlocks += currentChapterContext.data.document.cIndex.endBlock - currentChapterContext.data.document.cIndex.startBlock +1 
+            currentChapterContext = pk.gqlQuerySync(`{document(id: "${docId}") {cIndex(chapter: 3) {
+                startBlock
+                endBlock
+              }}}`)
+            numberOfBlocks += currentChapterContext.data.document.cIndex.endBlock - currentChapterContext.data.document.cIndex.startBlock +1 
             let state = 'begin';
             const config = {
                 showWordAtts: false,
@@ -389,6 +404,7 @@ test(`Getting only multiple blocks to after one inital render (${testGroup})`,
                 showChapterLabels: true,
                 showVersesLabels: true,
                 selectedBcvNotes: [],
+                chapters:[`1`,'3'],
                 displayPartOfText: { numberBlocks, state },
                 bcvNotesCallback: (bcv) => {
                     setBcvNoteRef(bcv);
@@ -414,7 +430,7 @@ test(`Getting only multiple blocks to after one inital render (${testGroup})`,
                 output,
             });
             
-            t.equal(output.paras.filter(b => b.type === 'paragraph').length,20,"The number of block paragraph render is 20 ");
+            t.equal(output.paras.filter(b => b.type === 'paragraph').length,numberOfBlocks,"The number of block paragraph render is 20 ");
         } catch (err) {
             console.log(err)
         }
