@@ -437,3 +437,36 @@ test(`Getting only multiple Chapter to render (${testGroup})`,
     }
     
 );
+test(
+    `Render tr/tc/th via SOFRIA (${testGroup})`,
+    async function (t) {
+        try {
+            t.plan(1);
+            const pk = new Proskomma();
+            const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'usfms','table.usfm'))).toString();
+            pk.importDocument({'lang': 'eng', 'abbr': 'web'}, 'usfm', usfm);
+            const docId = pk.gqlQuerySync('{documents { id } }').data.documents[0].id;
+            const cl = new SofriaRenderFromProskomma({proskomma: pk, actions: identityActions});
+            const output = {};
+            t.doesNotThrow(
+                () => cl.renderDocument(
+                    {docId, config: {}, output}
+                )
+            );
+            console.log(JSON.stringify(output, null, 2));
+            return;
+            const validator = new Validator();
+            const validation = validator.validate(
+                'constraint',
+                'sofriaDocument',
+                '0.2.1',
+                output.sofria
+            );
+            t.ok(validation.isValid);
+            t.equal(validation.errors, null);
+        } catch (err) {
+            console.log(err);
+        }
+    },
+);
+
