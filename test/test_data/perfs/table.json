@@ -1,0 +1,414 @@
+{
+      "schema": {
+        "structure": "nested",
+        "structure_version": "0.2.1",
+        "constraints": [
+          {
+            "name": "sofria",
+            "version": "0.2.1"
+          }
+        ]
+      },
+      "metadata": {
+        "translation": {
+          "id": "eng_web",
+          "selectors": {
+            "lang": "eng",
+            "abbr": "web"
+          },
+          "properties": {},
+          "tags": []
+        },
+        "document": {
+          "id": "1CH table example by Mark",
+          "bookCode": "1CH",
+          "toc": "1 Chronicles",
+          "properties": {},
+          "tags": []
+        }
+      },
+      "sequence": {
+        "type": "main",
+        "blocks": [
+          {
+            "type": "graft",
+            "sequence": {
+              "type": "title",
+              "blocks": [
+                {
+                  "type": "paragraph",
+                  "subtype": "usfm:mt",
+                  "content": [
+                    "1 Chronicles"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "type": "paragraph",
+            "subtype": "usfm:p",
+            "content": [
+              {
+                "type": "wrapper",
+                "subtype": "chapter",
+                "content": [
+                  {
+                    "type": "mark",
+                    "subtype": "chapter_label",
+                    "atts": {
+                      "number": "1"
+                    }
+                  },
+                  "Regardless of their age or status, they cast lots to decide who did what."
+                ],
+                "atts": {
+                  "number": "1"
+                }
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "subtype": "row",
+            "content": [
+              {
+                "type": "wrapper",
+                "subtype": "chapter",
+                "content": [
+                  {
+                    "type": "wrapper",
+                    "subtype": "cell",
+                    "content": [
+                      "Joseph won the first lot, which was for Asaph,"
+                    ],
+                    "atts": {
+                      "role": "body",
+                      "alignment": "left",
+                      "nCols": 2
+                    }
+                  }
+                ],
+                "atts": {
+                  "number": "1"
+                }
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "subtype": "row",
+            "content": [
+              {
+                "type": "wrapper",
+                "subtype": "chapter",
+                "content": [
+                  {
+                    "type": "wrapper",
+                    "subtype": "cell",
+                    "content": [
+                      "his sons and relatives"
+                    ],
+                    "atts": {
+                      "role": "body",
+                      "alignment": "left",
+                      "nCols": 1
+                    }
+                  },
+                  " ",
+                  {
+                    "type": "wrapper",
+                    "subtype": "cell",
+                    "content": [
+                      "12"
+                    ],
+                    "atts": {
+                      "role": "body",
+                      "alignment": "right",
+                      "nCols": 1
+                    }
+                  }
+                ],
+                "atts": {
+                  "number": "1"
+                }
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "subtype": "row",
+            "content": [
+              {
+                "type": "wrapper",
+                "subtype": "chapter",
+                "content": [
+                  {
+                    "type": "wrapper",
+                    "subtype": "cell",
+                    "content": [
+                      "Gedaliah won the second lot,"
+                    ],
+                    "atts": {
+                      "role": "body",
+                      "alignment": "left",
+                      "nCols": 2
+                    }
+                  }
+                ],
+                "atts": {
+                  "number": "1"
+                }
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "subtype": "row",
+            "content": [
+              {
+                "type": "wrapper",
+                "subtype": "chapter",
+                "content": [
+                  {
+                    "type": "wrapper",
+                    "subtype": "cell",
+                    "content": [
+                      "for him and his relatives and sons"
+                    ],
+                    "atts": {
+                      "role": "body",
+                      "alignment": "left",
+                      "nCols": 1
+                    }
+                  },
+                  " ",
+                  {
+                    "type": "wrapper",
+                    "subtype": "cell",
+                    "content": [
+                      "12"
+                    ],
+                    "atts": {
+                      "role": "body",
+                      "alignment": "right",
+                      "nCols": 1
+                    }
+                  }
+                ],
+                "atts": {
+                  "number": "1"
+                }
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "subtype": "usfm:p",
+            "content": [
+              {
+                "type": "wrapper",
+                "subtype": "chapter",
+                "content": [
+                  "Etc..."
+                ],
+                "atts": {
+                  "number": "1"
+                }
+              }
+            ]
+          }
+        ]
+      },
+    "paras": [
+      {
+        "type": "graft",
+        "sequence": {
+          "type": "title",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "subtype": "usfm:mt",
+              "content": [
+                "1 Chronicles"
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "type": "paragraph",
+        "subtype": "usfm:p",
+        "content": [
+          {
+            "type": "wrapper",
+            "subtype": "chapter",
+            "content": [
+              {
+                "type": "mark",
+                "subtype": "chapter_label",
+                "atts": {
+                  "number": "1"
+                }
+              },
+              "Regardless of their age or status, they cast lots to decide who did what."
+            ],
+            "atts": {
+              "number": "1"
+            }
+          }
+        ]
+      },
+      {
+        "type": "row",
+        "subtype": "row",
+        "content": [
+          {
+            "type": "wrapper",
+            "subtype": "chapter",
+            "content": [
+              {
+                "type": "wrapper",
+                "subtype": "cell",
+                "content": [
+                  "Joseph won the first lot, which was for Asaph,"
+                ],
+                "atts": {
+                  "role": "body",
+                  "alignment": "left",
+                  "nCols": 2
+                }
+              }
+            ],
+            "atts": {
+              "number": "1"
+            }
+          }
+        ]
+      },
+      {
+        "type": "row",
+        "subtype": "row",
+        "content": [
+          {
+            "type": "wrapper",
+            "subtype": "chapter",
+            "content": [
+              {
+                "type": "wrapper",
+                "subtype": "cell",
+                "content": [
+                  "his sons and relatives"
+                ],
+                "atts": {
+                  "role": "body",
+                  "alignment": "left",
+                  "nCols": 1
+                }
+              },
+              " ",
+              {
+                "type": "wrapper",
+                "subtype": "cell",
+                "content": [
+                  "12"
+                ],
+                "atts": {
+                  "role": "body",
+                  "alignment": "right",
+                  "nCols": 1
+                }
+              }
+            ],
+            "atts": {
+              "number": "1"
+            }
+          }
+        ]
+      },
+      {
+        "type": "row",
+        "subtype": "row",
+        "content": [
+          {
+            "type": "wrapper",
+            "subtype": "chapter",
+            "content": [
+              {
+                "type": "wrapper",
+                "subtype": "cell",
+                "content": [
+                  "Gedaliah won the second lot,"
+                ],
+                "atts": {
+                  "role": "body",
+                  "alignment": "left",
+                  "nCols": 2
+                }
+              }
+            ],
+            "atts": {
+              "number": "1"
+            }
+          }
+        ]
+      },
+      {
+        "type": "row",
+        "subtype": "row",
+        "content": [
+          {
+            "type": "wrapper",
+            "subtype": "chapter",
+            "content": [
+              {
+                "type": "wrapper",
+                "subtype": "cell",
+                "content": [
+                  "for him and his relatives and sons"
+                ],
+                "atts": {
+                  "role": "body",
+                  "alignment": "left",
+                  "nCols": 1
+                }
+              },
+              " ",
+              {
+                "type": "wrapper",
+                "subtype": "cell",
+                "content": [
+                  "12"
+                ],
+                "atts": {
+                  "role": "body",
+                  "alignment": "right",
+                  "nCols": 1
+                }
+              }
+            ],
+            "atts": {
+              "number": "1"
+            }
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "subtype": "usfm:p",
+        "content": [
+          {
+            "type": "wrapper",
+            "subtype": "chapter",
+            "content": [
+              "Etc..."
+            ],
+            "atts": {
+              "number": "1"
+            }
+          }
+        ]
+      }
+    ]
+  }
+  

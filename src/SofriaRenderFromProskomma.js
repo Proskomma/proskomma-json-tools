@@ -440,6 +440,26 @@ class SofriaRenderFromProskomma extends ProskommaRender {
                             atts: {}
                         };
                     }
+                } else if (scopeBits[0] === 'cell') {
+                    const wrapper = {
+                        direction: "start",
+                        type: "wrapper",
+                        subType: scopeBits[0],
+                        atts: {
+                            role: scopeBits[1],
+                            alignment: scopeBits[2],
+                            nCols: parseInt(scopeBits[3])
+                        }
+                    };
+                    environment.context.sequences[0].element = wrapper;
+                    if (item.subType === 'start') {
+                        environment.context.sequences[0].block.wrappers.unshift(wrapper.subType);
+                        this.renderEvent('startWrapper', environment);
+                    } else {
+                        this.renderEvent('endWrapper', environment);
+                        environment.context.sequences[0].block.wrappers.shift();
+                    }
+                    delete environment.context.sequences[0].element;
                 } else if (scopeBits[0] === 'milestone' && item.subType === "start") {
                     if (scopeBits[1] === 'ts') {
                         const mark = {

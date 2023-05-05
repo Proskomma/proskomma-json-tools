@@ -21,6 +21,7 @@ class SofriaRenderFromJson extends ProskommaRender {
         };
         context.sequences = [];
         this.renderEvent('startDocument', environment);
+        console.log(this.srcJson)
         this.renderSequence(environment, this.srcJson.sequence);
         this.renderEvent('endDocument', environment);
     }
@@ -36,6 +37,7 @@ class SofriaRenderFromJson extends ProskommaRender {
     renderSequence(environment, providedSequence) {
         let sequence;
         if (!providedSequence) {
+            console.log(providedSequence)
             if (this.cachedSequences.length === 0) {
                 throw new Error("No sequence provided and no sequences cached");
             }
@@ -90,6 +92,7 @@ class SofriaRenderFromJson extends ProskommaRender {
         };
         if (element.subtype) {
             elementContext.subType = element.subtype;
+            console.log( elementContext.subType )
         }
         if (element.atts) {
             elementContext.atts = element.atts;
@@ -129,6 +132,7 @@ class SofriaRenderFromJson extends ProskommaRender {
             this.renderEvent('endWrapper', environment);
             context.sequences[0].block.wrappers.shift();
         } else {
+            console.log(`here`)
             throw new Error(`Unexpected element type '${elementContext.type}`);
         }
         delete context.sequences[0].element;

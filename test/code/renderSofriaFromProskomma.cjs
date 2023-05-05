@@ -441,7 +441,7 @@ test(
     `Render tr/tc/th via SOFRIA (${testGroup})`,
     async function (t) {
         try {
-            t.plan(2);
+            t.plan(3);
             const pk = new Proskomma();
             const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'usfms','table.usfm'))).toString();
             pk.importDocument({'lang': 'eng', 'abbr': 'web'}, 'usfm', usfm);
@@ -456,7 +456,9 @@ test(
             console.log(JSON.stringify(output, null, 2));
 
             const numberOfRows = 4;
-            t.equal(output.paras.filter(b => b.type === 'row').length,numberOfRows,"The number of block paragraph render is 20 ");
+            const numberOfCells = 2;
+            t.equal(output.paras.filter(b => b.type === 'row').length,numberOfRows,`The number of row is not ${numberOfRows}`);
+            t.equal(output.paras.filter(b => b.type === 'row')[1].content[0].content.filter(c => c.subtype === 'cell').length,numberOfCells,`The number of cells render in the 2th row is not ${numberOfCells} `);
 
             return;
 

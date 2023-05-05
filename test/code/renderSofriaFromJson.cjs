@@ -127,3 +127,24 @@ test(
         }
     },
 );
+test(   
+`Render SOFRIA with identity action on a WiSOFRIA with identity actionsth Json containing Row/Cells(${testGroup})`,
+async function (t) {
+    try {
+        t.plan(1);
+        const sofria = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'perfs', 'table.json')));
+        
+        const cl = new SofriaRenderFromJson({srcJson: sofria});
+        console.log(sofria)
+        const output = {};
+        
+        t.doesNotThrow(() => cl.renderDocument({docId: "", config: {}, output: {}}));
+
+        // console.log(JSON.stringify(output, null, 2));
+        // console.log(validation)
+        return
+    } catch (err) {
+        console.log(err);
+    }
+},
+);
