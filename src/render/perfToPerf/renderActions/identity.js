@@ -149,6 +149,31 @@ const identityActions = {
             }
         },
     ],
+    startRow: [
+        {
+            description: "identity",
+            test: () => true,
+            action: ({context, workspace}) => {
+                const currentBlock = context.sequences[0].block;
+                const paraRecord = {
+                    type: currentBlock.type,
+                    subtype: currentBlock.subType,
+                    content: []
+                };
+                workspace.outputSequence.blocks.push(paraRecord);
+                workspace.currentContent = paraRecord.content;
+                workspace.outputBlock = workspace.outputSequence.blocks[workspace.outputSequence.blocks.length - 1];
+                workspace.outputContentStack = [workspace.outputBlock.content];
+            }           
+        },
+    ],
+    endRow: [
+        {
+            description: "identity",
+            test: () => true,
+            action: ({workspace}) => {}
+        },
+    ],
     startWrapper: [
         {
             description: "identity",

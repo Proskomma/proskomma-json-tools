@@ -453,24 +453,11 @@ test(
                     {docId, config: {}, output}
                 )
             );
-            console.log(JSON.stringify(output, null, 2));
-
             const numberOfRows = 4;
             const numberOfCells = 2;
             t.equal(output.paras.filter(b => b.type === 'row').length,numberOfRows,`The number of row is not ${numberOfRows}`);
             t.equal(output.paras.filter(b => b.type === 'row')[1].content[0].content.filter(c => c.subtype === 'cell').length,numberOfCells,`The number of cells render in the 2th row is not ${numberOfCells} `);
-
             return;
-
-            const validator = new Validator();
-            const validation = validator.validate(
-                'constraint',
-                'sofriaDocument',
-                '0.2.1',
-                output.sofria
-            );
-            t.ok(validation.isValid);
-            t.equal(validation.errors, null);
         } catch (err) {
             console.log(err);
         }

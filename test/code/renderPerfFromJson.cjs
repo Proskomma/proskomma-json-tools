@@ -198,3 +198,24 @@ test(
         }
     },
 );
+test(   
+    `Render Perf with identity action on identity actions Json containing Row/Cells(${testGroup})`,
+    async function (t) {
+        try {
+            t.plan(3);
+            const perf = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'perfs', 'table_perf.json')));
+            const cl = new PerfRenderFromJson({srcJson: perf, actions: render.perfToPerf.renderActions.identityActions});
+            const output = {};
+            t.doesNotThrow(() => cl.renderDocument({docId: "", config: {}, output}));
+            const mainSequenceId = output.perf.main_sequence_id;
+            const numberOfRows = 4;
+            const numberOfCells = 2;
+            t.equal(output.perf.sequences[mainSequenceId].blocks.filter(b => b.type === 'row').length,numberOfRows,`The number of row is ${numberOfRows}`);
+            t.equal(output.perf.sequences[mainSequenceId].blocks.filter(b => b.type === 'row')[1].content[0].content.filter(c => c.subtype === 'cell').length,numberOfCells,`The number of cells render in the 2th row is ${numberOfCells} `);
+            return;
+            
+        } catch (err) {
+            console.log(err);
+        }
+    },
+    );

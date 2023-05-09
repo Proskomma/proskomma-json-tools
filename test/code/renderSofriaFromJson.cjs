@@ -128,20 +128,18 @@ test(
     },
 );
 test(   
-`Render SOFRIA with identity action on a WiSOFRIA with identity actionsth Json containing Row/Cells(${testGroup})`,
+`Render SOFRIA with identity actions with a Json containing Row/Cells(${testGroup})`,
 async function (t) {
     try {
-        t.plan(1);
-        const sofria = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'perfs', 'table.json')));
-        
-        const cl = new SofriaRenderFromJson({srcJson: sofria});
-        console.log(sofria)
+        t.plan(3);
+        const sofria = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'perfs', 'tableJson.json')));
+        const cl = new SofriaRenderFromJson({srcJson: sofria, actions: identityActions});
         const output = {};
-        
-        t.doesNotThrow(() => cl.renderDocument({docId: "", config: {}, output: {}}));
-
-        // console.log(JSON.stringify(output, null, 2));
-        // console.log(validation)
+        t.doesNotThrow(() => cl.renderDocument({docId: "", config: {}, output}));
+        const numberOfRows = 4;
+        const numberOfCells = 2;
+        t.equal(output.paras.filter(b => b.type === 'row').length,numberOfRows,`The number of row is ${numberOfRows}`);
+        t.equal(output.paras.filter(b => b.type === 'row')[1].content[0].content.filter(c => c.subtype === 'cell').length,numberOfCells,`The number of cells render in the 2th row is ${numberOfCells} `);
         return
     } catch (err) {
         console.log(err);

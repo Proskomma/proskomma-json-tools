@@ -9,6 +9,7 @@
           }
         ]
       },
+      "main_sequence_id": "mainSequence",
       "metadata": {
         "translation": {
           "id": "eng_web",
@@ -411,4 +412,5 @@
       }
     ]
   }
+  
   

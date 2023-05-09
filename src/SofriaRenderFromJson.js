@@ -21,7 +21,6 @@ class SofriaRenderFromJson extends ProskommaRender {
         };
         context.sequences = [];
         this.renderEvent('startDocument', environment);
-        console.log(this.srcJson)
         this.renderSequence(environment, this.srcJson.sequence);
         this.renderEvent('endDocument', environment);
     }
@@ -37,7 +36,6 @@ class SofriaRenderFromJson extends ProskommaRender {
     renderSequence(environment, providedSequence) {
         let sequence;
         if (!providedSequence) {
-            console.log(providedSequence)
             if (this.cachedSequences.length === 0) {
                 throw new Error("No sequence provided and no sequences cached");
             }
@@ -51,15 +49,22 @@ class SofriaRenderFromJson extends ProskommaRender {
         for (const [blockN, block] of sequence.blocks.entries()) {
             context.sequences[0].block = {
                 type: block.type,
+                subType: block.type,
                 blockN,
                 wrappers: []
             }
+            
             if (block.type === 'graft') {
                 context.sequences[0].block.sequence = this.sequenceContext(block.sequence);
                 this.cachedSequences.unshift(block.sequence);
                 this.renderEvent('blockGraft', environment);
                 this.cachedSequences.shift();
-            } else {
+            } else if(block.type === 'row') {
+                this.renderEvent('startRow', environment);
+                this.renderContent(block.content, environment);
+                this.renderEvent('endRow', environment);
+            }
+            else{   
                 this.renderEvent('startParagraph', environment);
                 this.renderContent(block.content, environment);
                 this.renderEvent('endParagraph', environment);
@@ -78,7 +83,6 @@ class SofriaRenderFromJson extends ProskommaRender {
     }
 
     renderElement(element, environment) {
-
         const maybeRenderMetaContent = (elementContext) => {
             if (element.meta_content) {
                 elementContext.metaContent = element.meta_content;
@@ -90,9 +94,10 @@ class SofriaRenderFromJson extends ProskommaRender {
         const elementContext = {
             type: element.type || 'text'
         };
+
+
         if (element.subtype) {
             elementContext.subType = element.subtype;
-            console.log( elementContext.subType )
         }
         if (element.atts) {
             elementContext.atts = element.atts;
@@ -132,7 +137,6 @@ class SofriaRenderFromJson extends ProskommaRender {
             this.renderEvent('endWrapper', environment);
             context.sequences[0].block.wrappers.shift();
         } else {
-            console.log(`here`)
             throw new Error(`Unexpected element type '${elementContext.type}`);
         }
         delete context.sequences[0].element;

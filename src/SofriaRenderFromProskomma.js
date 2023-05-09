@@ -22,7 +22,7 @@ class SofriaRenderFromProskomma extends ProskommaRender {
         this.pk = spec.proskomma;
         this._tokens = [];
         this._container = null;
-        this.cachedSequenceIds = [];
+        this.cachedSequenceIds = []; 
         this.sequences = null;
         this.currentCV = {
             chapter: null,
@@ -53,6 +53,9 @@ class SofriaRenderFromProskomma extends ProskommaRender {
         const mainId = documentResult.data.document.mainSequence.id;
         const nSequences = documentResult.data.document.nSequences;
         this.sequences = {};
+        if (!environment.config.block) {
+            environment.config.block = { nb: 200 };
+        }
         for (const seq of documentResult.data.document.sequences) {
             this.sequences[seq.id] = seq;
         }
@@ -143,10 +146,17 @@ class SofriaRenderFromProskomma extends ProskommaRender {
         let currentChapterContext = null
         let blocksIdsToRender = []
         if (sequenceType === 'main') {
+            if (environment.config.block.blocks) {
+                blocksIdsToRender = environment.config.block.blocks
+
+            }
+        }
+
+        let numberBlockTorender = 0
+        if (sequenceType === 'main') {
             if (environment.config.chapters) {
                 while (environment.config.chapters.length != 0) {
                     currentChapter = environment.config.chapters.pop();
-
                     if (currentChapter) {
                         currentChapterContext = this.pk.gqlQuerySync(`{document(id: "${context.document.id}") {cIndex(chapter: ${currentChapter}) {
                 startBlock
@@ -162,6 +172,7 @@ class SofriaRenderFromProskomma extends ProskommaRender {
                         }
 
                     }
+                    environment.config.block.blocks = blocksIdsToRender;
                 }
             }
             else {
@@ -169,7 +180,18 @@ class SofriaRenderFromProskomma extends ProskommaRender {
                     blocksIdsToRender.push(i);
                 }
             }
-            blocksIdsToRender.sort((a,b)=>(b-a));
+            blocksIdsToRender.sort((a, b) => (b - a));
+
+            if (!environment.config.block) {
+                environment.config.block = {}
+            }
+
+
+            if (!environment.config.block.nb) {
+
+                environment.config.block.nb = blocksIdsToRender.length;
+            }
+
         }
         else{
             for (let i = 0; i < this.pk.gqlQuerySync(`{document(id: "${context.document.id}") {sequence(id:"${sequenceId}") {nBlocks} }}`).data.document.sequence.nBlocks; i++) {
@@ -177,10 +199,12 @@ class SofriaRenderFromProskomma extends ProskommaRender {
             }
         }
 
-
-
-
-
+        if (sequenceType === 'main') {
+            numberBlockTorender = environment.config.block.nb;
+        }
+        else {
+            numberBlockTorender = blocksIdsToRender.length;
+        }
         documentResult = this.pk.gqlQuerySync(`{document(id: "${context.document.id}") {id sequence(id:"${sequenceId}") {id type nBlocks blocks(positions: [${blocksIdsToRender}]){ os {payload} is {payload} } } } }`);
         const sequence = documentResult.data.document.sequence;
 
@@ -200,11 +224,19 @@ class SofriaRenderFromProskomma extends ProskommaRender {
         this.renderEvent('startSequence', environment);
         let outputBlockN = 0;
 
+        for (let i = 0; i < numberBlockTorender; i++) {
 
-        while (blocksIdsToRender.length != 0) {
-            let inputBlockN = blocksIdsToRender.pop();
-            const blocksResult = this.pk.gqlQuerySync(
-                `{
+            if (blocksIdsToRender.length != 0) {
+                let inputBlockN = {}
+                if (sequenceType === 'main') {
+                    inputBlockN = blocksIdsToRender.pop();
+                }
+                else {
+                    inputBlockN = blocksIdsToRender.pop();
+
+                }
+                const blocksResult = this.pk.gqlQuerySync(
+                    `{
                document(id: "${context.document.id}") {
                  sequence(id:"${sequenceId}") {
                    blocks(positions:${inputBlockN}) {
@@ -215,101 +247,108 @@ class SofriaRenderFromProskomma extends ProskommaRender {
                  }
                }
              }`
-            );
-            const blockResult = blocksResult.data.document.sequence.blocks[0];
-            for (const blockGraft of blockResult.bg) {
-                context.sequences[0].block = {
-                    type: "graft",
-                    subType: camelCaseToSnakeCase(blockGraft.subType),
-                    blockN: outputBlockN,
-                    sequence: this.sequences[blockGraft.payload]
+                );
+                const blockResult = blocksResult.data.document.sequence.blocks[0];
+                for (const blockGraft of blockResult.bg) {
+                    context.sequences[0].block = {
+                        type: "graft",
+                        subType: camelCaseToSnakeCase(blockGraft.subType),
+                        blockN: outputBlockN,
+                        sequence: this.sequences[blockGraft.payload]
+                    }
+                    this.cachedSequenceIds.unshift(blockGraft.payload);
+                    this.renderEvent('blockGraft', environment);
+                    this.cachedSequenceIds.shift();
+                    outputBlockN++;
                 }
-                this.cachedSequenceIds.unshift(blockGraft.payload);
-                this.renderEvent('blockGraft', environment);
-                this.cachedSequenceIds.shift();
+
+                const subTypeValues = blockResult.bs.payload.split('/');
+                let subTypeValue;
+                if (subTypeValues[1] && subTypeValues[1] === "tr") {
+                    subTypeValue = "row";
+                } else if (subTypeValues[1]) {
+                    subTypeValue = `usfm:${subTypeValues[1]}`;
+                } else {
+                    subTypeValue = subTypeValues[0];
+                }
+                context.sequences[0].block = {
+                    type: subTypeValue === "row" ? "row" : "paragraph",
+                    subType: subTypeValue,
+                    blockN: outputBlockN,
+                    wrappers: []
+                }
+                if (subTypeValue === "row") {
+                    this.renderEvent('startRow', environment);
+                } else {
+                    this.renderEvent('startParagraph', environment);
+                }
+                this._tokens = [];
+                if (sequenceType === "main" && this.currentCV.chapter) {
+                    const wrapper = {
+                        type: "wrapper",
+                        subType: 'chapter',
+                        atts: {
+                            number: this.currentCV.chapter
+                        }
+                    };
+                    environment.context.sequences[0].element = wrapper;
+                    environment.context.sequences[0].block.wrappers.unshift(wrapper.subType);
+                    this.renderEvent('startWrapper', environment);
+                }
+                if (sequenceType === "main" && this.currentCV.verses) {
+                    const wrapper = {
+                        type: "wrapper",
+                        subType: 'verses',
+                        atts: {
+                            number: this.currentCV.verses
+                        }
+                    };
+                    environment.context.sequences[0].element = wrapper;
+                    environment.context.sequences[0].block.wrappers.unshift(wrapper.subType);
+                    this.renderEvent('startWrapper', environment);
+                }
+                this.renderContent(blockResult.items, environment);
+                this._tokens = [];
+                if (sequenceType === "main" && this.currentCV.verses) {
+                    const wrapper = {
+                        type: "wrapper",
+                        subType: 'verses',
+                        atts: {
+                            number: this.currentCV.verses
+                        }
+                    };
+                    environment.context.sequences[0].element = wrapper;
+                    environment.context.sequences[0].block.wrappers.shift();
+                    this.renderEvent('endWrapper', environment);
+                }
+                if (sequenceType === "main" && this.currentCV.chapter) {
+                    const wrapper = {
+                        type: "wrapper",
+                        subType: 'chapter',
+                        atts: {
+                            number: this.currentCV.chapter
+                        }
+                    };
+                    environment.context.sequences[0].element = wrapper;
+                    environment.context.sequences[0].block.wrappers.shift();
+                    this.renderEvent('endWrapper', environment);
+                }
+                if (subTypeValue === "row") {
+                    this.renderEvent('endRow', environment);
+                } else {
+                    this.renderEvent('endParagraph', environment);
+                }
+                delete context.sequences[0].block;
                 outputBlockN++;
             }
-            
-            const subTypeValues = blockResult.bs.payload.split('/');
-            let subTypeValue;
-            if (subTypeValues[1] && subTypeValues[1] === "tr") {
-                subTypeValue = "row";
-            } else if (subTypeValues[1]) {
-                subTypeValue = `usfm:${subTypeValues[1]}`;
-            } else {
-                subTypeValue = subTypeValues[0];
-            }
-            context.sequences[0].block = {
-                type: subTypeValue === "row" ? "row" : "paragraph",
-                subType: subTypeValue,
-                blockN: outputBlockN,
-                wrappers: []
-            }
-            if (subTypeValue === "row") {
-                this.renderEvent('startRow', environment);
-            } else {
-                this.renderEvent('startParagraph', environment);
-            }
-            this._tokens = [];
-            if (sequence.type === "main" && this.currentCV.chapter) {
-                const wrapper = {
-                    type: "wrapper",
-                    subType: 'chapter',
-                    atts: {
-                        number: this.currentCV.chapter
-                    }
-                };
-                environment.context.sequences[0].element = wrapper;
-                environment.context.sequences[0].block.wrappers.unshift(wrapper.subType);
-                this.renderEvent('startWrapper', environment);
-            }
-            if (sequence.type === "main" && this.currentCV.verses) {
-                const wrapper = {
-                    type: "wrapper",
-                    subType: 'verses',
-                    atts: {
-                        number: this.currentCV.verses
-                    }
-                };
-                environment.context.sequences[0].element = wrapper;
-                environment.context.sequences[0].block.wrappers.unshift(wrapper.subType);
-                this.renderEvent('startWrapper', environment);
-            }
-            this.renderContent(blockResult.items, environment);
-            this._tokens = [];
-            if (sequence.type === "main" && this.currentCV.verses) {
-                const wrapper = {
-                    type: "wrapper",
-                    subType: 'verses',
-                    atts: {
-                        number: this.currentCV.verses
-                    }
-                };
-                environment.context.sequences[0].element = wrapper;
-                environment.context.sequences[0].block.wrappers.shift();
-                this.renderEvent('endWrapper', environment);
-            }
-            if (sequence.type === "main" && this.currentCV.chapter) {
-                const wrapper = {
-                    type: "wrapper",
-                    subType: 'chapter',
-                    atts: {
-                        number: this.currentCV.chapter
-                    }
-                };
-                environment.context.sequences[0].element = wrapper;
-                environment.context.sequences[0].block.wrappers.shift();
-                this.renderEvent('endWrapper', environment);
-            }
-            if (subTypeValue === "row") {
-                this.renderEvent('endRow', environment);
-            } else {
-                this.renderEvent('endParagraph', environment);
-            }
-            delete context.sequences[0].block;
-            outputBlockN++;
         }
         this.renderEvent('endSequence', environment);
+        if (sequenceType != 'main') {
+            this.renderEvent('endDocument', environment);
+        }
+        else {
+            environment.config.block.blocks = blocksIdsToRender
+        }
         context.sequences.shift();
 
     }
