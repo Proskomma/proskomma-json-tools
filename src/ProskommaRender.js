@@ -18,6 +18,10 @@ class ProskommaRender {
             "blockGraft",
             "startParagraph",
             "endParagraph",
+            "startRow",
+            "endRow",
+            "startCell",
+            "endCell",
             "metaContent",
             "mark",
             "unresolvedInlineGraft",
@@ -26,7 +30,7 @@ class ProskommaRender {
             "endWrapper",
             "startMilestone",
             "endMilestone",
-            "text"
+            "text",
         ]) {
             if (actions[event]) {
                 this.actions[event] = actions[event].map(a => new ProskommaRenderAction(a));

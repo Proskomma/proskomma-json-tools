@@ -5,6 +5,7 @@ const identityActions = {
             test: () => true,
             action: ({config, context, workspace, output}) => {
                 output.sofria = {};
+                output.paras = [];
                 output.sofria.schema = context.document.schema;
                 output.sofria.metadata = context.document.metadata;
                 output.sofria.sequence = {};
@@ -29,6 +30,9 @@ const identityActions = {
             description: "identity",
             test: () => true,
             action: ({context, workspace}) => {
+                if(workspace.currentSequence == null){
+                    workspace.currentSequence = {}
+                }
                 workspace.currentSequence.type = context.sequences[0].type;
                 workspace.currentSequence.blocks = [];
             }
@@ -38,10 +42,23 @@ const identityActions = {
         {
             description: "identity",
             test: () => true,
-            action: ({workspace}) => {
+            action: ({workspace,output}) => {   
                 if (workspace.currentSequence.type === 'main') {
                     workspace.chapter = null;
                     workspace.verses = null;
+                }
+                
+                if(output.paras == null){
+                    output.paras = workspace.currentSequence.blocks;
+                }
+                else
+                {
+                    if(workspace.currentSequence.type === 'main'){
+                        
+                        output.paras = output.paras.concat(workspace.currentSequence.blocks);
+                        
+                    
+                    }
                 }
                 workspace.currentSequence = null;
             }
@@ -101,6 +118,45 @@ const identityActions = {
         },
     ],
     endParagraph: [
+        {
+            description: "identity",
+            test: () => true,
+            action: ({workspace}) => {}
+        },
+    ],
+    startRow: [
+        {
+            description: "identity",
+            test: () => true,
+            action: ({context, workspace}) => {
+                const currentBlock = context.sequences[0].block;
+                const paraRecord = {
+                    type: currentBlock.type,
+                    subtype: currentBlock.subType,
+                    content: []
+                };
+                workspace.currentSequence.blocks.push(paraRecord);
+                workspace.currentContent = paraRecord.content;
+                workspace.outputBlock = workspace.currentSequence.blocks[workspace.currentSequence.blocks.length - 1];
+                workspace.outputContentStack = [workspace.outputBlock.content];
+                if (workspace.currentSequence.type === "main") {
+                    for (const cv of ['chapter', 'verses']) {
+                        if (workspace[cv]) {
+                            const wrapperRecord = {
+                                type: 'wrapper',
+                                subtype: cv,
+                                content: [],
+                                atts: {number: workspace[cv]}
+                            };
+                            workspace.outputContentStack[0].push(wrapperRecord);
+                            workspace.outputContentStack.unshift(wrapperRecord.content);
+                        }
+                    }
+                }
+            }
+        },
+    ],
+    endRow: [
         {
             description: "identity",
             test: () => true,
@@ -167,7 +223,6 @@ const identityActions = {
             test: () => true,
             action: ({context, workspace}) => {
                 const element = context.sequences[0].element;
-                // console.log(element)
                 if (element.subType === "chapter") {
                     workspace.chapter = element.atts.number;
                     workspace.cachedChapter = workspace.chapter;

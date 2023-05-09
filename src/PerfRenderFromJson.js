@@ -13,6 +13,7 @@ class PerfRenderFromJson extends ProskommaRender {
     renderDocument1({docId, config, context, workspace, output}) {
         const environment = {config, context, workspace, output};
         context.renderer = this;
+        
         context.document = {
             id: docId,
             schema: this.srcJson.schema,
@@ -20,7 +21,9 @@ class PerfRenderFromJson extends ProskommaRender {
             mainSequenceId: this.srcJson.main_sequence_id,
             nSequences: Object.keys(this.srcJson.sequences).length,
         };
+
         context.sequences = [];
+
         this.renderEvent('startDocument', environment);
         this.renderSequenceId(environment, this.srcJson.main_sequence_id);
         this.renderEvent('endDocument', environment);
@@ -59,7 +62,12 @@ class PerfRenderFromJson extends ProskommaRender {
                     context.sequences[0].block.isNew = block.new || false;
                     this.renderEvent('blockGraft', environment);
                 }
-            } else {
+            } else if(block.type === 'row') {
+                this.renderEvent('startRow', environment);
+                this.renderContent(block.content, environment);
+                this.renderEvent('endRow', environment);
+            }
+            else{   
                 this.renderEvent('startParagraph', environment);
                 this.renderContent(block.content, environment);
                 this.renderEvent('endParagraph', environment);

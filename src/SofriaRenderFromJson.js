@@ -49,15 +49,22 @@ class SofriaRenderFromJson extends ProskommaRender {
         for (const [blockN, block] of sequence.blocks.entries()) {
             context.sequences[0].block = {
                 type: block.type,
+                subType: block.type,
                 blockN,
                 wrappers: []
             }
+            
             if (block.type === 'graft') {
                 context.sequences[0].block.sequence = this.sequenceContext(block.sequence);
                 this.cachedSequences.unshift(block.sequence);
                 this.renderEvent('blockGraft', environment);
                 this.cachedSequences.shift();
-            } else {
+            } else if(block.type === 'row') {
+                this.renderEvent('startRow', environment);
+                this.renderContent(block.content, environment);
+                this.renderEvent('endRow', environment);
+            }
+            else{   
                 this.renderEvent('startParagraph', environment);
                 this.renderContent(block.content, environment);
                 this.renderEvent('endParagraph', environment);
@@ -76,7 +83,6 @@ class SofriaRenderFromJson extends ProskommaRender {
     }
 
     renderElement(element, environment) {
-
         const maybeRenderMetaContent = (elementContext) => {
             if (element.meta_content) {
                 elementContext.metaContent = element.meta_content;
@@ -88,6 +94,8 @@ class SofriaRenderFromJson extends ProskommaRender {
         const elementContext = {
             type: element.type || 'text'
         };
+
+
         if (element.subtype) {
             elementContext.subType = element.subtype;
         }

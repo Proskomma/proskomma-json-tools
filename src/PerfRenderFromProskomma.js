@@ -24,8 +24,8 @@ class PerfRenderFromProskomma extends ProskommaRender {
         this._container = null;
     }
 
-    renderDocument1({docId, config, context, workspace, output}) {
-        const environment = {config, context, workspace, output};
+    renderDocument1({ docId, config, context, workspace, output }) {
+        const environment = { config, context, workspace, output };
         context.renderer = this;
         const documentResult = this.pk.gqlQuerySync(`{document(id: "${docId}") {docSetId mainSequence { id } nSequences sequences {id} headers { key value } } }`);
         const docSetId = documentResult.data.document.docSetId;
@@ -121,17 +121,35 @@ class PerfRenderFromProskomma extends ProskommaRender {
                 this.renderEvent('blockGraft', environment);
                 outputBlockN++;
             }
+            const subTypeValues = blockResult.bs.payload.split('/');
+            let subTypeValue;
+            if (subTypeValues[1] && subTypeValues[1] === "tr") {
+                subTypeValue = "row";
+            } else if (subTypeValues[1]) {
+                subTypeValue = `usfm:${subTypeValues[1]}`;
+            } else {
+                subTypeValue = subTypeValues[0];
+            }
+
             context.sequences[0].block = {
-                type: "paragraph",
-                subType: `usfm:${blockResult.bs.payload.split('/')[1]}`,
+                type: subTypeValue === "row" ? "row" : "paragraph",
+                subType: subTypeValue,
                 blockN: outputBlockN,
                 wrappers: []
             }
-            this.renderEvent('startParagraph', environment);
+            if (subTypeValue === "row") {
+                this.renderEvent('startRow', environment);
+            } else {
+                this.renderEvent('startParagraph', environment);
+            }
             this._tokens = [];
             this.renderContent(blockResult.items, environment);
             this._tokens = [];
-            this.renderEvent('endParagraph', environment);
+            if (subTypeValue === "row") {
+                this.renderEvent('endRow', environment);
+            } else {
+                this.renderEvent('endParagraph', environment);
+            }
             delete context.sequences[0].block;
             outputBlockN++;
         }
@@ -169,7 +187,7 @@ class PerfRenderFromProskomma extends ProskommaRender {
                         direction: "end",
                         subType: `usfm:${camelCaseToSnakeCase(scopeBits[2])}`,
                     };
-                    if(scopeBits[1] === 'milestone') {
+                    if (scopeBits[1] === 'milestone') {
                         this._container.type = "end_milestone";
                     } else {
                         this._container.type = "wrapper";
@@ -236,70 +254,91 @@ class PerfRenderFromProskomma extends ProskommaRender {
                                 atts: {}
                             };
                         }
-                    } else if (scopeBits[0] === 'milestone' && item.subType === "start") {
-                        if (scopeBits[1] === 'ts') {
-                            const mark = {
-                                type: "mark",
-                                subType: `usfm:${camelCaseToSnakeCase(scopeBits[1])}`,
-                                atts: {},
-                            };
-                            environment.context.sequences[0].element = mark;
-                            this.renderEvent('mark', environment);
-                            delete environment.context.sequences[0].element;
+                    } else if (scopeBits[0] === 'cell') {
+                        const wrapper = {
+                            direction: "start",
+                            type: "wrapper",
+                            subType: scopeBits[0],
+                            atts: {
+                                role: scopeBits[1],
+                                alignment: scopeBits[2],
+                                nCols: parseInt(scopeBits[3])
+                            }
+                        };
+                        environment.context.sequences[0].element = wrapper;
+                        if (item.subType === 'start') {
+                            environment.context.sequences[0].block.wrappers.unshift(wrapper.subType);
+                            this.renderEvent('startWrapper', environment);
                         } else {
-                            this._container = {
-                                type: "start_milestone",
-                                subType: `usfm:${camelCaseToSnakeCase(scopeBits[1])}`,
-                                atts: {},
+                            this.renderEvent('endWrapper', environment);
+                            environment.context.sequences[0].block.wrappers.shift();
+                        }
+                        delete environment.context.sequences[0].element;
+                    
+                    }else if (scopeBits[0] === 'milestone' && item.subType === "start") {
+                            if (scopeBits[1] === 'ts') {
+                                const mark = {
+                                    type: "mark",
+                                    subType: `usfm:${camelCaseToSnakeCase(scopeBits[1])}`,
+                                    atts: {},
+                                };
+                                environment.context.sequences[0].element = mark;
+                                this.renderEvent('mark', environment);
+                                delete environment.context.sequences[0].element;
+                            } else {
+                                this._container = {
+                                    type: "start_milestone",
+                                    subType: `usfm:${camelCaseToSnakeCase(scopeBits[1])}`,
+                                    atts: {},
+                                }
                             }
                         }
                     }
                 }
             }
         }
-    }
 
-    maybeRenderText(environment) {
-        if (this._tokens.length === 0) {
-            return;
+        maybeRenderText(environment) {
+            if (this._tokens.length === 0) {
+                return;
+            }
+            const elementContext = {
+                type: 'text',
+                text: this._tokens.join(''),
+            };
+            environment.context.sequences[0].element = elementContext;
+            this._tokens = [];
+            this.renderEvent('text', environment);
+            delete environment.context.sequences[0].element;
         }
-        const elementContext = {
-            type: 'text',
-            text: this._tokens.join(''),
-        };
-        environment.context.sequences[0].element = elementContext;
-        this._tokens = [];
-        this.renderEvent('text', environment);
-        delete environment.context.sequences[0].element;
-    }
 
-    renderContainer(environment) {
-        if (this._container.type === "wrapper") {
-            const direction = this._container.direction;
-            delete this._container.direction;
-            if (direction === 'start') {
+        renderContainer(environment) {
+            if (this._container.type === "wrapper") {
+                const direction = this._container.direction;
+                delete this._container.direction;
+                if (direction === 'start') {
+                    environment.context.sequences[0].element = this._container;
+                    environment.context.sequences[0].block.wrappers.unshift(this._container.subType);
+                    this.renderEvent('startWrapper', environment);
+                    delete environment.context.sequences[0].element;
+                } else {
+                    environment.context.sequences[0].element = this._container;
+                    this.renderEvent('endWrapper', environment);
+                    environment.context.sequences[0].block.wrappers.shift();
+                    delete environment.context.sequences[0].element;
+                }
+            } else if (this._container.type === "start_milestone") {
                 environment.context.sequences[0].element = this._container;
-                environment.context.sequences[0].block.wrappers.unshift(this._container.subType);
-                this.renderEvent('startWrapper', environment);
+                this.renderEvent('startMilestone', environment);
                 delete environment.context.sequences[0].element;
-            } else {
+            } else if (this._container.type === "end_milestone") {
                 environment.context.sequences[0].element = this._container;
-                this.renderEvent('endWrapper', environment);
-                environment.context.sequences[0].block.wrappers.shift();
+                this.renderEvent('endMilestone', environment);
                 delete environment.context.sequences[0].element;
             }
-        } else if (this._container.type === "start_milestone") {
-            environment.context.sequences[0].element = this._container;
-            this.renderEvent('startMilestone', environment);
-            delete environment.context.sequences[0].element;
-        } else if (this._container.type === "end_milestone") {
-            environment.context.sequences[0].element = this._container;
-            this.renderEvent('endMilestone', environment);
-            delete environment.context.sequences[0].element;
+            this._container = null;
         }
-        this._container = null;
-    }
 
-}
+    }
 
 module.exports = PerfRenderFromProskomma;
