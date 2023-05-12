@@ -41,7 +41,7 @@ test(
             const validation = validator.validate(
                 'constraint',
                 'perfDocument',
-                '0.2.1',
+                '0.4.0',
                 output.perf
             );
             t.ok(validation.isValid);
@@ -69,7 +69,7 @@ test(
             const validation = validator.validate(
                 'constraint',
                 'perfDocument',
-                '0.2.1',
+                '0.4.0',
                 output.perf
             );
             t.ok(validation.isValid);
@@ -101,7 +101,7 @@ test(
             const validation = validator.validate(
                 'constraint',
                 'perfDocument',
-                '0.2.1',
+                '0.4.0',
                 output.perf
             );
             t.ok(validation.isValid);
@@ -140,7 +140,7 @@ test(
                 const validation = validator.validate(
                     'constraint',
                     'perfDocument',
-                    '0.3.0',
+                    '0.4.0',
                     output.perf
                 );
                 t.ok(validation.isValid);
@@ -176,7 +176,7 @@ test(
             const validation = validator.validate(
                 'constraint',
                 'perfDocument',
-                '0.3.0',
+                '0.4.0',
                 output.perf
             );
             t.ok(validation.isValid);
@@ -193,7 +193,7 @@ test(
     `Render tr/tc/th via Proskomma (${testGroup})`,
     async function (t) {
         try {
-            t.plan(3);
+            t.plan(5);
             const pk = new Proskomma();
             const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'usfms','table.usfm'))).toString();
             pk.importDocument({'lang': 'eng', 'abbr': 'web'}, 'usfm', usfm);
@@ -211,7 +211,15 @@ test(
             const numberOfCells = 2;
             t.equal(output.perf.sequences[mainSequenceId].blocks.filter(b => b.type === 'row').length,numberOfRows,`The number of row is ${numberOfRows}`);
             t.equal(output.perf.sequences[mainSequenceId].blocks.filter(b => b.type === 'row')[1].content.filter(c => c.subtype === 'cell').length,numberOfCells,`The number of cells render in the 2th row is ${numberOfCells} `);
-            return;
+            const validator = new Validator();
+            const validation = validator.validate(
+                'constraint',
+                'sofriaDocument',
+                '0.4.0',
+                output.perf
+            );
+            t.ok(validation.isValid);
+            t.equal(validation.errors, null);
         } catch (err) {
             console.log(err);
         }
