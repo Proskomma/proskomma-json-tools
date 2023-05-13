@@ -79,7 +79,7 @@
       "properties": {
         "subtype": {
           "type": "string",
-          "enum": ["row"]
+          "enum": ["usfm:tr", "pk"]
         }
       }
     },
