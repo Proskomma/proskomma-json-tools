@@ -48,7 +48,6 @@ class SofriaRenderFromProskomma extends ProskommaRender {
             }
           } 
         }`);
-
         const docSetId = documentResult.data.document.docSetId;
         const mainId = documentResult.data.document.mainSequence.id;
         const nSequences = documentResult.data.document.nSequences;
@@ -461,6 +460,7 @@ class SofriaRenderFromProskomma extends ProskommaRender {
                         subType: `usfm:${scopeBits[1]}`,
                         atts: {}
                     };
+                    
                     environment.context.sequences[0].element = wrapper;
                     if (item.subType === 'start') {
                         environment.context.sequences[0].block.wrappers.unshift(wrapper.subType);

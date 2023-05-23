@@ -7,6 +7,8 @@ import SofriaRenderFromJson from '../../dist/SofriaRenderFromJson';
 import { identityActions } from '../../dist/render/sofriaToSofria/renderActions/identity';
 import { Proskomma } from 'proskomma';
 import { Validator } from '../../dist/';
+import sofria2WebActions from '../../src/render/sofria2web/renderActions/sofria2web';
+import { renderers } from '../../src/render/sofria2web/sofria2html';
 
 const testGroup = 'Render SOFRIA from Proskomma';
 
@@ -464,3 +466,43 @@ test(
     },
 );
 
+test(
+    `test View (${testGroup})`,
+    async function (t) {
+        try {
+            const config = {
+                showWordAtts: false,
+                showTitles: false,
+                showHeadings: true,
+                showIntroductions: true,
+                showFootnotes: true,
+                showXrefs: true,
+                showParaStyles: true,
+                showCharacterMarkup: true,
+                showChapterLabels: true,
+                showVersesLabels: true,
+                selectedBcvNotes: [],
+                bcvNotesCallback: (bcv) => {
+                    setBcvNoteRef(bcv);
+                },
+                renderers,
+            };
+            t.plan(1);
+            const pk = new Proskomma();
+            const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'usfms', 'titus.usfm'))).toString();
+            pk.importDocument({ 'lang': 'eng', 'abbr': 'web' }, 'usfm', usfm);
+            const docId = pk.gqlQuerySync('{documents { id } }').data.documents[0].id;
+            const cl = new SofriaRenderFromProskomma({ proskomma: pk, actions: sofria2WebActions });
+            const output = {};
+            t.doesNotThrow(
+                () => cl.renderDocument(
+                    { docId, config, output }
+                )
+            );
+            console.log(output)
+            return;
+        } catch (err) {
+            console.log(err);
+        }
+    },
+);

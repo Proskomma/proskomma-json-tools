@@ -35,6 +35,7 @@ class SofriaRenderFromJson extends ProskommaRender {
 
     renderSequence(environment, providedSequence) {
         let sequence;
+
         if (!providedSequence) {
             if (this.cachedSequences.length === 0) {
                 throw new Error("No sequence provided and no sequences cached");

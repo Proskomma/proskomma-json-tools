@@ -266,7 +266,7 @@
         "content": [
           {
             "type": "wrapper",
-            "subtype": "chapter",
+            "subtype": "chapte2r",
             "content": [
               {
                 "type": "wrapper",
@@ -307,7 +307,6 @@
                   "nCols": 1
                 }
               },
-              " ",
               {
                 "type": "wrapper",
                 "subtype": "cell",
@@ -374,7 +373,6 @@
                   "nCols": 1
                 }
               },
-              " ",
               {
                 "type": "wrapper",
                 "subtype": "cell",

@@ -82,17 +82,20 @@ class ProskommaRender {
 
     // renderEnvironment => {config, context, workspace, output}
     renderEvent(event, renderEnvironment) {
+
         const context = renderEnvironment.context;
         if (this.debugLevel > 1) {
             console.log(`${"    ".repeat(context.sequences.length)}EVENT ${event}`);
         }
         if (!this.actions[event]) {
             throw new Error(`Unknown event '${event}`);
+            
         }
         let found = false;
         for (const actionOb of this.actions[event]) {
             let testResult = false;
             try {
+                
                 testResult = actionOb.test(renderEnvironment);
             } catch (err) {
                 const msg = `Exception from test of action '${actionOb.description}' for event ${event} in ${context.sequences.length > 0 ? context.sequences[0].type : "no"} sequence: ${err}`;
@@ -114,6 +117,7 @@ class ProskommaRender {
                 }
             }
         }
+        
         if (['unresolvedBlockGraft', 'unresolvedInlineGraft'].includes(event) && this.actions[event].length === 0) {
             throw new Error(`No action for ${event} graft event in ${context.sequences.length > 0 ? context.sequences[0].type : "no"} sequence: add an action or fix your data!`)
         }
