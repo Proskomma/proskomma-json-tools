@@ -44,7 +44,7 @@ const testGroup = 'HTML';
 
 
 test(`Table is render in  (${testGroup})`, (t) => {
-  t.plan(3);
+  t.plan(4);
   try {
     const pk6 = new Proskomma();
     const usfm = fse.readFileSync(path.resolve(path.join('./', 'test', 'test_data', 'usfms', 'table.usfm'))).toString();
@@ -57,7 +57,8 @@ test(`Table is render in  (${testGroup})`, (t) => {
     });
     t.equal(output.paras.includes('<table'), true)
     t.equal(output.paras.includes('</table>'), true)
-
+    t.equal(output.paras.includes('<td colspan=2'), true)
+    console.log(output.paras)
   } catch (err) {
     console.log(err);
   }
