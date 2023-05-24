@@ -1,4 +1,4 @@
-const renderStyles = {
+const styles = {
     paras: {
       default: {
         fontSize: "medium",
@@ -408,4 +408,4 @@ const renderStyles = {
     return copyStyleSheet;
   }
 
-export { renderStyles, StyleAsCSS, ConvertCssToReactNativeStyle };
+  module.exports ={ styles, StyleAsCSS, ConvertCssToReactNativeStyle };

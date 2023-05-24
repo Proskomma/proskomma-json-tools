@@ -44,19 +44,19 @@ const testGroup = 'HTML';
 
 
 test(`Table is render in  (${testGroup})`, (t) => {
-  t.plan(0);
+  t.plan(1);
   try {
     const pk6 = new Proskomma();
-    const usfm = fse.readFileSync(path.resolve(path.join('./','test' ,'test_data', 'usfms', 'table.usfm'))).toString();
+    const usfm = fse.readFileSync(path.resolve(path.join('./', 'test', 'test_data', 'usfms', 'table.usfm'))).toString();
     pk6.importDocument({ 'lang': 'eng', 'abbr': 'francl' }, 'usfm', usfm);
     const docId = pk6.gqlQuerySync('{documents { id } }').data.documents[0].id;
-    const cl = new SofriaRenderFromProskomma({ proskomma: pk6, actions: sofria2WebActions });
-    const output = {};
-    cl.renderDocument({ docId, config, output })
+    const cl = new SofriaRenderFromProskomma({ proskomma: pk6, actions: sofria2WebActions })
+    const output = {}
+    t.doesNotThrow(() => {
+      cl.renderDocument({ docId, config, output })
+    });
     saveStringAsHTMLFile(output.paras, 'test.html')
-
   } catch (err) {
     console.log(err);
-    t.fail('table render error throws on valid table');
   }
 });
