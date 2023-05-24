@@ -1,0 +1,266 @@
+<style>
+  /* paras CSS format : */
+  .paras_default {
+    font-size: 16;
+    margin-top: 0.5;
+    margin-bottom: 0.5;
+  }
+  .paras_usfm_b {
+  }
+  .paras_usfm_d {
+    font-style: italic;
+  }
+  .paras_usfm_f {
+    font-size: 13.333;
+  }
+  .paras_usfm_hanging_graft {
+  }
+  .paras_usfm_imt {
+    font-weight: bold;
+    font-style: italic;
+    font-size: 32;
+    text-align: center;
+  }
+  .paras_usfm_imt2 {
+    font-weight: bold;
+    font-style: italic;
+    font-size: 24;
+    text-align: center;
+  }
+  .paras_usfm_imt3 {
+    font-weight: bold;
+    font-style: italic;
+    font-size: 18;
+    text-align: center;
+  }
+  .paras_usfm_ip {
+    margin-left: 24;
+  }
+  .paras_usfm_ipi {
+    padding-left: 24;
+    margin-left: 24;
+  }
+  .paras_usfm_io {
+    padding-left: 24;
+  }
+  .paras_usfm_iot {
+    font-weight: bold;
+    font-size: 18;
+  }
+  .paras_usfm_is {
+    font-style: italic;
+    font-size: 32;
+  }
+  .paras_usfm_is2 {
+    font-style: italic;
+    font-size: 24;
+  }
+  .paras_usfm_is3 {
+    font-style: italic;
+    font-size: 18;
+  }
+  .paras_usfm_li {
+    list-style-type: disc;
+    list-style-type: disc;
+    padding-left: 48;
+    margin-left: -24;
+  }
+  .paras_usfm_li2 {
+    list-style-type: disc;
+    list-style-type: disc;
+    padding-left: 72;
+    margin-left: -24;
+  }
+  .paras_usfm_li3 {
+    list-style-type: disc;
+    list-style-type: disc;
+    padding-left: 96;
+    margin-left: -24;
+  }
+  .paras_usfm_m {
+  }
+  .paras_usfm_mi {
+    padding-left: 24;
+  }
+  .paras_usfm_mr {
+    font-size: 18;
+    font-style: italic;
+  }
+  .paras_usfm_ms {
+    font-size: 18;
+    font-weight: bold;
+  }
+  .paras_usfm_ms2 {
+    font-weight: bold;
+  }
+  .paras_usfm_mt {
+    font-weight: bold;
+    font-style: italic;
+    font-size: 32;
+    text-align: center;
+  }
+  .paras_usfm_mt2 {
+    font-weight: bold;
+    font-style: italic;
+    font-size: 24;
+    text-align: center;
+  }
+  .paras_usfm_mt3 {
+    font-weight: bold;
+    font-style: italic;
+    font-size: 18;
+    text-align: center;
+  }
+  .paras_usfm_nb {
+  }
+  .paras_usfm_p {
+    margin-left: 24;
+  }
+  .paras_usfm_pc {
+    text-align: center;
+  }
+  .paras_usfm_pi {
+    padding-left: 24;
+    margin-left: 24;
+  }
+  .paras_usfm_pi2 {
+    padding-left: 48;
+    margin-left: 24;
+  }
+  .paras_usfm_pi3 {
+    padding-left: 72;
+    margin-left: 24;
+  }
+  .paras_usfm_q {
+    padding-left: 24;
+    margin-top: 0.5;
+    margin-bottom: 0.5;
+  }
+  .paras_usfm_q2 {
+    padding-left: 48;
+    margin-top: 0.5;
+    margin-bottom: 0.5;
+  }
+  .paras_usfm_q3 {
+    padding-left: 72;
+    margin-top: 0.5;
+    margin-bottom: 0.5;
+  }
+  .paras_usfm_q4 {
+    padding-left: 96;
+    margin-top: 0.5;
+    margin-bottom: 0.5;
+  }
+  .paras_usfm_qa {
+    font-weight: bold;
+    font-size: 24;
+  }
+  .paras_usfm_qr {
+    text-align: right;
+  }
+  .paras_usfm_r {
+    font-weight: bold;
+  }
+  .paras_usfm_s {
+    font-style: italic;
+    font-size: 32;
+  }
+  .paras_usfm_s2 {
+    font-style: italic;
+    font-size: 24;
+  }
+  .paras_usfm_s3 {
+    font-style: italic;
+    font-size: 18;
+  }
+  .paras_usfm_sr {
+    font-size: 18;
+  }
+  .paras_usfm_tr {
+  }
+  .paras_usfm_x {
+    font-size: 13.333;
+  }
+
+  /* marks CSS format : */
+  .marks_default {
+  }
+  .marks_chapter_label {
+    font-size: 32;
+    margin-right: 8;
+    text-align: left;
+  }
+  .marks_verses_label {
+    font-weight: bold;
+    font-size: 13.333;
+    vertical-align: top;
+    margin-right: 8;
+  }
+
+  /* wrappers CSS format : */
+  .wrappers_default {
+  }
+  .wrappers_usfm_add {
+    font-style: italic;
+  }
+  .wrappers_usfm_bd {
+    font-weight: bold;
+  }
+  .wrappers_usfm_bdit {
+    font-weight: bold;
+    font-style: italic;
+  }
+  .wrappers_usfm_bk {
+    font-weight: bold;
+  }
+  .wrappers_chapter {
+  }
+  .wrappers_usfm_fl {
+  }
+  .wrappers_usfm_fm {
+  }
+  .wrappers_usfm_fq {
+    font-style: italic;
+  }
+  .wrappers_usfm_fqa {
+    font-style: italic;
+  }
+  .wrappers_usfm_fr {
+    font-weight: bold;
+  }
+  .wrappers_usfm_ft {
+  }
+  .wrappers_usfm_it {
+    font-style: italic;
+  }
+  .wrappers_usfm_nd {
+    font-weight: bold;
+    font-size: smaller;
+    text-transform: uppercase;
+  }
+  .wrappers_usfm_qs {
+    font-style: italic;
+  }
+  .wrappers_usfm_sc {
+    font-size: smaller;
+    text-transform: uppercase;
+  }
+  .wrappers_usfm_tl {
+    font-style: italic;
+  }
+  .wrappers_verses {
+  }
+  .wrappers_usfm_wj {
+  }
+  .wrappers_usfm_xk {
+  }
+  .wrappers_usfm_xo {
+    font-weight: bold;
+  }
+  .wrappers_usfm_xt {
+  }
+</style>
+
+<div class="marks_chapter_label">
+  <p>test html script</p>
+</div>

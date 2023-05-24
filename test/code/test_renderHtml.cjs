@@ -6,7 +6,7 @@ const { Proskomma } = require('proskomma');
 const { sofria2WebActions } = require('../../dist/render/sofria2web/renderActions/sofria2web');
 const { renderers } = require('../../dist/render/sofria2web/sofria2html');
 const SofriaRenderFromProskomma = require('../../dist/SofriaRenderFromProskomma');
-
+const cheerio = require('cheerio')
 
 
 
@@ -44,7 +44,7 @@ const testGroup = 'HTML';
 
 
 test(`Table is render in  (${testGroup})`, (t) => {
-  t.plan(1);
+  t.plan(3);
   try {
     const pk6 = new Proskomma();
     const usfm = fse.readFileSync(path.resolve(path.join('./', 'test', 'test_data', 'usfms', 'table.usfm'))).toString();
@@ -55,8 +55,29 @@ test(`Table is render in  (${testGroup})`, (t) => {
     t.doesNotThrow(() => {
       cl.renderDocument({ docId, config, output })
     });
-    saveStringAsHTMLFile(output.paras, 'test.html')
+    t.equal(output.paras.includes('<table'), true)
+    t.equal(output.paras.includes('</table>'), true)
+
   } catch (err) {
     console.log(err);
+  }
+});
+test(`Classes exist in  (${testGroup})`, (t) => {
+  t.plan(1);
+  try {
+    const htmlPath = path.resolve("./test/test_data/html/test.html");
+    const htmlContent = fs.readFileSync(htmlPath, "utf8");
+
+    // Charger le contenu HTML avec cheerio
+    const $ = cheerio.load(htmlContent);
+
+    // Vérifier si la classe existe dans le code HTML
+    const className = "marks_chapter_label";
+    const elementsWithClass = $(`.${className}`);
+    const classExists = elementsWithClass.length > 0;
+    t.ok(classExists, `La classe "${className}" existe dans le code HTML.`);
+  } catch (err) {
+    console.log(err);
+    t.fail("No class exists in Html");
   }
 });
