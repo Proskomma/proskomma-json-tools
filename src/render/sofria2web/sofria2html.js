@@ -1,4 +1,4 @@
-const {styles} = require('./renderStyles');
+const { styles } = require('./renderStyles');
 
 const camelToKebabCase = (str) =>
     str.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`);
@@ -11,16 +11,16 @@ const getStyles = (type, subType) => {
         console.log(`No styles for ${type}/${subType}`)
         return styles[type].default;
     }
-    const retObj = {...styles[type].default, ...styles[type][subType]};
+    const retObj = { ...styles[type].default, ...styles[type][subType] };
     let retArr = []
-    Object.entries(retObj).forEach( ([key,value]) => {
+    Object.entries(retObj).forEach(([key, value]) => {
         retArr.push(`${camelToKebabCase(key)}: ${value}`)
     })
     return retArr.join("; ");
 }
 
 function InlineElement(props) {
-        return `<span
+    return `<span
             style={{
                 ...props.style,
                 paddingLeft: "0.5em",
@@ -33,23 +33,23 @@ function InlineElement(props) {
         >
             ${props.children}
         </span>`
-/* if not display
-    } else {
-        return `<span
-            style={{
-                verticalAlign: "super",
-                fontSize: "x-small",
-                fontWeight: "bold",
-                marginRight: "0.25em",
-                padding: "2px",
-                backgroundColor: "#CCC"
-            }}
-            onClick={toggleDisplay}
-        >
-        ${props.linkText}
-    </span>`
-    }
-*/
+    /* if not display
+        } else {
+            return `<span
+                style={{
+                    verticalAlign: "super",
+                    fontSize: "x-small",
+                    fontWeight: "bold",
+                    marginRight: "0.25em",
+                    padding: "2px",
+                    backgroundColor: "#CCC"
+                }}
+                onClick={toggleDisplay}
+            >
+            ${props.linkText}
+        </span>`
+        }
+    */
 }
 
 const renderers = {
@@ -64,12 +64,12 @@ const renderers = {
                 children: content.join("")
             })
             : `<p style="${getStyles('paras', subType)}">${content.join("")}</p>`,
-    wrapper: (atts,subType, content) => subType==='cell'?  
+    wrapper: (atts, subType, content) => subType === 'cell' ?
 
-        atts.role === 'body'?
-            `<td colspan=${atts.nCols} style="text-align:${atts.alignment}">${content}</td>` 
+        atts.role === 'body' ?
+            `<td colspan=${atts.nCols} style="text-align:${atts.alignment}">${content.join("")}</td>`
             :
-            `<th colspan=${atts.nCols} style="text-align:${atts.alignment}">${content}</th>`
+            `<th colspan=${atts.nCols} style="text-align:${atts.alignment}">${content.join("")}</th>`
         :
 
         `<span style="${getStyles('wrappers', subType)}">${content}</span>`,
@@ -83,10 +83,9 @@ const renderers = {
             }}
         >
         <div>${content}</div>
-            ${
-                Object.entries(atts).map(
-                    a =>
-                        `<div
+            ${Object.entries(atts).map(
+            a =>
+                `<div
                             style={{
                                 fontSize: "xx-small",
                                 fontWeight: "bold"
@@ -94,11 +93,16 @@ const renderers = {
                         >
                         {${a[0]} = ${a[1]}} 
                         </div>`
-                )
-            }
+        )
+        }
         </span>`,
     mergeParas: paras => paras.join('\n'),
-    row : (atts, content) => `<tr>${content}</tr>`,
+    row: (atts, content) => {
+        return (`<tr>${content.join("")}</tr>`)
+    },
+    table: (content) => {
+        return (`<table border>${content.join(" ")}</table>`)
+    }
 }
 
 module.exports = { renderers };

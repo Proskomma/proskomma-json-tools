@@ -56,8 +56,7 @@ const sofria2WebActions = {
             action: ({ context, workspace }) => {
                 if (context.inTable) {
                     context.inTable = false
-                    workspace.paraContentStack[0].content.push(`</table>`)
-                    workspace.webParas.push(workspace.paraContentStack[0].content.join(" "))
+                    workspace.webParas.push(config.renderers.table(workspace.paraContentStack[0].content))
                 }
                 if (workspace.currentSequence.type === 'footnote') {
                     workspace.footnoteNo++;
@@ -105,7 +104,7 @@ const sofria2WebActions = {
                 const popped = workspace.paraContentStack.shift();
                 workspace.paraContentStack[0].content.push(config.renderers.row(
                     (workspace.settings.showWordAtts ? popped.atts : {}),
-                    popped.content.join("")
+                    popped.content
                 ));
             }
         },
@@ -149,8 +148,7 @@ const sofria2WebActions = {
             action: (environment) => {
                 if (context.inTable) {
                     context.inTable = false
-                    workspace.paraContentStack[0].content.push(`</table>`)
-                    workspace.webParas.push(workspace.paraContentStack[0].content.join(" "))
+                    workspace.webParas.push(config.renderers.table(workspace.paraContentStack[0].content))
                 }
                 const element = environment.context.sequences[0].element;
 
@@ -180,11 +178,10 @@ const sofria2WebActions = {
         {
             description: "Initialise content stack",
             test: () => true,
-            action: ({ context, workspace }) => {
+            action: ({ config, context, workspace }) => {
                 if (context.inTable) {
                     context.inTable = false
-                    workspace.paraContentStack[0].content.push(`</table>`)
-                    workspace.webParas.push(workspace.paraContentStack[0].content.join(" "))
+                    workspace.webParas.push(config.renderers.table(workspace.paraContentStack[0].content))
                 }
                 const block = context.sequences[0].block;
                 workspace.paraContentStack = [
@@ -223,7 +220,7 @@ const sofria2WebActions = {
             description: "Handle standard w attributes",
             test: ({ context }) => context.sequences[0].element.subType === "usfm:w",
             action: ({ context, workspace }) => {
-   
+
                 const atts = context.sequences[0].element.atts;
                 const standardAtts = {};
                 for (const [key, value] of Object.entries(atts)) {
@@ -248,11 +245,11 @@ const sofria2WebActions = {
                     subType: context.sequences[0].element.subType,
                     content: []
                 };
-                if(context.sequences[0].element.subType === 'cell'){
-                    pushed.atts= context.sequences[0].element.atts
-                    };
-                
-                
+                if (context.sequences[0].element.subType === 'cell') {
+                    pushed.atts = context.sequences[0].element.atts
+                };
+
+
                 workspace.paraContentStack.unshift(
                     pushed
                 );
@@ -270,7 +267,7 @@ const sofria2WebActions = {
             test: ({ context }) => context.sequences[0].element.subType === "usfm:w",
             action: ({ config, workspace }) => {
                 const popped = workspace.paraContentStack.shift();
-                
+
                 workspace.paraContentStack[0].content.push(config.renderers.wWrapper(
                     (workspace.settings.showWordAtts ? popped.atts : {}),
                     popped.content
@@ -281,41 +278,40 @@ const sofria2WebActions = {
         {
             description: "Collapse one level of paraContent Stack",
             test: ({ context, workspace }) => {
-                
-                return (!["chapter", "verses"].includes(context.sequences[0].element.subType) && workspace.settings.showCharacterMarkup)
-            
-        },
-        action: ({ config, workspace }) => {
 
-            const popped = workspace.paraContentStack.shift();
-            popped.content = popped.content.join("")
-            workspace.paraContentStack[0].content.push(config.renderers.wrapper(popped.subType==='cell'?popped.atts:{},popped.subType, popped.content));
-        }
+                return (!["chapter", "verses"].includes(context.sequences[0].element.subType) && workspace.settings.showCharacterMarkup)
+
+            },
+            action: ({ config, workspace }) => {
+
+                const popped = workspace.paraContentStack.shift();
+                workspace.paraContentStack[0].content.push(config.renderers.wrapper(popped.subType === 'cell' ? popped.atts : {}, popped.subType, popped.content));
+            }
         },
     ],
-startMilestone: [
-    {
-        description: "Handle zaln word-like atts",
-        test: ({ context }) => context.sequences[0].element.subType === "usfm:zaln",
-        action: ({ context, workspace }) => {
+    startMilestone: [
+        {
+            description: "Handle zaln word-like atts",
+            test: ({ context }) => context.sequences[0].element.subType === "usfm:zaln",
+            action: ({ context, workspace }) => {
 
-            const atts = context.sequences[0].element.atts;
-            const standardAtts = {};
-            for (const [key, value] of Object.entries(atts)) {
-                if (["x-strong", "x-lemma", "x-morph", "x-content"].includes(key)) {
-                    standardAtts[key.split('-')[1]] = value;
+                const atts = context.sequences[0].element.atts;
+                const standardAtts = {};
+                for (const [key, value] of Object.entries(atts)) {
+                    if (["x-strong", "x-lemma", "x-morph", "x-content"].includes(key)) {
+                        standardAtts[key.split('-')[1]] = value;
+                    }
                 }
+                workspace.paraContentStack.unshift(
+                    {
+                        atts: standardAtts,
+                        content: []
+                    }
+                );
+                return false;
             }
-            workspace.paraContentStack.unshift(
-                {
-                    atts: standardAtts,
-                    content: []
-                }
-            );
-            return false;
-        }
-    },
-],
+        },
+    ],
     endMilestone: [
         {
             description: "Handle zaln word-like atts",
@@ -330,53 +326,53 @@ startMilestone: [
             }
         },
     ],
-        text: [
-            {
-                description: "Push text to para",
-                test: () => true,
-                action: ({ config, context, workspace }) => {
-                    
-                    const element = context.sequences[0].element;
-                    //const renderedText = config.renderers.text(element.text);
-                    //workspace.paraContentStack[0].content.push(renderedText);
-                    element.text.split(" ").map((w, id) => {
+    text: [
+        {
+            description: "Push text to para",
+            test: () => true,
+            action: ({ config, context, workspace }) => {
 
-                        const renderedText = config.renderers.text((id === element.text.split(" ") - 1) ? w : w + " ")
-                        workspace.paraContentStack[0].content.push(renderedText);
-                    })
+                const element = context.sequences[0].element;
+                //const renderedText = config.renderers.text(element.text);
+                //workspace.paraContentStack[0].content.push(renderedText);
+                element.text.split(" ").map((w, id) => {
 
+                    const renderedText = config.renderers.text((id === element.text.split(" ") - 1) ? w : w + " ")
+                    workspace.paraContentStack[0].content.push(renderedText);
+                })
+
+            }
+        },
+    ],
+    mark: [
+        {
+            description: "Show chapter/verse markers",
+            test: () => true,
+            action: ({ config, context, workspace }) => {
+                const element = context.sequences[0].element;
+                if (element.subType === "chapter_label" && workspace.settings.showChapterLabels) {
+                    workspace.chapter = element.atts.number;
+                    workspace.paraContentStack[0].content.push(config.renderers.chapter_label(element.atts.number));
+                } else if (element.subType === "verses_label" && workspace.settings.showVersesLabels) {
+                    let bcv = [];
+                    if (config.selectedBcvNotes.length > 0) {
+                        bcv = [workspace.bookCode, workspace.chapter, element.atts.number]
+                    }
+                    workspace.paraContentStack[0].content.push(config.renderers.verses_label(element.atts.number, bcv, config.bcvNotesCallback));
                 }
-            },
-        ],
-            mark: [
-                {
-                    description: "Show chapter/verse markers",
-                    test: () => true,
-                    action: ({ config, context, workspace }) => {
-                        const element = context.sequences[0].element;
-                        if (element.subType === "chapter_label" && workspace.settings.showChapterLabels) {
-                            workspace.chapter = element.atts.number;
-                            workspace.paraContentStack[0].content.push(config.renderers.chapter_label(element.atts.number));
-                        } else if (element.subType === "verses_label" && workspace.settings.showVersesLabels) {
-                            let bcv = [];
-                            if (config.selectedBcvNotes.length > 0) {
-                                bcv = [workspace.bookCode, workspace.chapter, element.atts.number]
-                            }
-                            workspace.paraContentStack[0].content.push(config.renderers.verses_label(element.atts.number, bcv, config.bcvNotesCallback));
-                        }
-                    }
-                },
-            ],
-                endDocument: [
-                    {
-                        description: "Build JSX",
-                        test: () => true,
-                        action: ({ config, workspace, output }) => {
+            }
+        },
+    ],
+    endDocument: [
+        {
+            description: "Build JSX",
+            test: () => true,
+            action: ({ config, workspace, output }) => {
 
-                            output.paras = config.renderers.mergeParas(workspace.webParas);
-                        }
-                    }
-                ],
+                output.paras = config.renderers.mergeParas(workspace.webParas);
+            }
+        }
+    ],
 };
 
 module.exports = { sofria2WebActions };
