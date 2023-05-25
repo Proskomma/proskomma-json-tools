@@ -209,10 +209,10 @@ test(
             );
             const mainSequenceId = output.perf.main_sequence_id;
 
-            const numberOfRows = 4;
+            const numberOfRows = 5;
             const numberOfCells = 2;
             t.equal(output.perf.sequences[mainSequenceId].blocks.filter(b => b.type === 'row').length, numberOfRows, `The number of row is ${numberOfRows}`);
-            t.equal(output.perf.sequences[mainSequenceId].blocks.filter(b => b.type === 'row')[1].content.filter(c => c.subtype === 'cell').length, numberOfCells, `The number of cells render in the 2th row is ${numberOfCells} `);
+            t.equal(output.perf.sequences[mainSequenceId].blocks.filter(b => b.type === 'row')[2].content.filter(c => c.subtype === 'cell').length, numberOfCells, `The number of cells render in the 2th row is ${numberOfCells} `);
             return;
         } catch (err) {
             console.log(err);

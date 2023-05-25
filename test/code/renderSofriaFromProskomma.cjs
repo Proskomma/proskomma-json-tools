@@ -41,7 +41,7 @@ test(
                     { docId, config: {}, output }
                 )
             );
-            
+
             // console.log(JSON.stringify(output, null, 2));
             const validator = new Validator();
             const validation = validator.validate(
@@ -50,7 +50,7 @@ test(
                 '0.2.1',
                 output.sofria
             );
-            
+
             t.ok(validation.isValid);
             t.equal(validation.errors, null);
             t.equal(validation.errors, null);
@@ -346,12 +346,12 @@ test(`Getting only one Chapter to render (${testGroup})`,
                 showChapterLabels: true,
                 showVersesLabels: true,
                 selectedBcvNotes: [],
-                chapters:['1'],
+                chapters: ['1'],
                 displayPartOfText: { state },
                 bcvNotesCallback: (bcv) => {
                     setBcvNoteRef(bcv);
                 },
-                
+
             };
             renderer.renderDocument1({
                 docId: docId,
@@ -362,15 +362,15 @@ test(`Getting only one Chapter to render (${testGroup})`,
 
 
             });
-            
 
-            t.equal(output.paras.filter(b => b.type === 'paragraph').length,currentChapterContext.data.document.cIndex.endBlock +1,"The number of block paragraph render is 1 ");
+
+            t.equal(output.paras.filter(b => b.type === 'paragraph').length, currentChapterContext.data.document.cIndex.endBlock + 1, "The number of block paragraph render is 1 ");
         } catch (err) {
             console.log(err)
         }
     }
 
-    
+
 );
 
 test(`Getting only multiple Chapter to render (${testGroup})`,
@@ -387,12 +387,12 @@ test(`Getting only multiple Chapter to render (${testGroup})`,
                 startBlock
                 endBlock
               }}}`)
-            numberOfBlocks += currentChapterContext.data.document.cIndex.endBlock - currentChapterContext.data.document.cIndex.startBlock +1 
+            numberOfBlocks += currentChapterContext.data.document.cIndex.endBlock - currentChapterContext.data.document.cIndex.startBlock + 1
             currentChapterContext = pk.gqlQuerySync(`{document(id: "${docId}") {cIndex(chapter: 3) {
                 startBlock
                 endBlock
               }}}`)
-            numberOfBlocks += currentChapterContext.data.document.cIndex.endBlock - currentChapterContext.data.document.cIndex.startBlock +1 
+            numberOfBlocks += currentChapterContext.data.document.cIndex.endBlock - currentChapterContext.data.document.cIndex.startBlock + 1
             let state = 'begin';
             const config = {
                 showWordAtts: false,
@@ -406,12 +406,12 @@ test(`Getting only multiple Chapter to render (${testGroup})`,
                 showChapterLabels: true,
                 showVersesLabels: true,
                 selectedBcvNotes: [],
-                chapters:[`1`,'3'],
+                chapters: [`1`, '3'],
                 displayPartOfText: { numberBlocks, state },
                 bcvNotesCallback: (bcv) => {
                     setBcvNoteRef(bcv);
                 },
-                
+
             };
             renderer.renderDocument1({
                 docId: docId,
@@ -423,7 +423,7 @@ test(`Getting only multiple Chapter to render (${testGroup})`,
 
 
             config.displayPartOfText.state = 'continue';
-            
+
             renderer.renderDocument1({
                 docId: docId,
                 config,
@@ -431,13 +431,13 @@ test(`Getting only multiple Chapter to render (${testGroup})`,
                 workspace,
                 output,
             });
-            
-            t.equal(output.paras.filter(b => b.type === 'paragraph').length,numberOfBlocks,"The number of block paragraph render is 20 ");
+
+            t.equal(output.paras.filter(b => b.type === 'paragraph').length, numberOfBlocks, "The number of block paragraph render is 20 ");
         } catch (err) {
             console.log(err)
         }
     }
-    
+
 );
 test(
     `Render tr/tc/th via SOFRIA (${testGroup})`,
@@ -445,20 +445,20 @@ test(
         try {
             t.plan(3);
             const pk = new Proskomma();
-            const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'usfms','table.usfm'))).toString();
-            pk.importDocument({'lang': 'eng', 'abbr': 'web'}, 'usfm', usfm);
+            const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'usfms', 'table.usfm'))).toString();
+            pk.importDocument({ 'lang': 'eng', 'abbr': 'web' }, 'usfm', usfm);
             const docId = pk.gqlQuerySync('{documents { id } }').data.documents[0].id;
-            const cl = new SofriaRenderFromProskomma({proskomma: pk, actions: identityActions});
+            const cl = new SofriaRenderFromProskomma({ proskomma: pk, actions: identityActions });
             const output = {};
             t.doesNotThrow(
                 () => cl.renderDocument(
-                    {docId, config: {}, output}
+                    { docId, config: {}, output }
                 )
             );
-            const numberOfRows = 4;
+            const numberOfRows = 5;
             const numberOfCells = 2;
-            t.equal(output.paras.filter(b => b.type === 'row').length,numberOfRows,`The number of row is not ${numberOfRows}`);
-            t.equal(output.paras.filter(b => b.type === 'row')[1].content[0].content.filter(c => c.subtype === 'cell').length,numberOfCells,`The number of cells render in the 2th row is not ${numberOfCells} `);
+            t.equal(output.paras.filter(b => b.type === 'row').length, numberOfRows, `The number of row is not ${numberOfRows}`);
+            t.equal(output.paras.filter(b => b.type === 'row')[2].content[0].content.filter(c => c.subtype === 'cell').length, numberOfCells, `The number of cells render in the 2th row is not ${numberOfCells} `);
             return;
         } catch (err) {
             console.log(err);
@@ -499,7 +499,6 @@ test(
                     { docId, config, output }
                 )
             );
-            console.log(output)
             return;
         } catch (err) {
             console.log(err);

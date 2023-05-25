@@ -15,7 +15,7 @@ test(
     async function (t) {
         try {
             t.plan(1);
-            t.doesNotThrow(() => new PerfRenderFromJson({srcJson: {}}));
+            t.doesNotThrow(() => new PerfRenderFromJson({ srcJson: {} }));
         } catch (err) {
             console.log(err);
         }
@@ -28,8 +28,8 @@ test(
         try {
             t.plan(1);
             const perf = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'validation', 'valid_flat_document.json')));
-            const cl = new PerfRenderFromJson({srcJson: perf});
-            t.doesNotThrow(() => cl.renderDocument({docId: "", config: {}, output: {}}));
+            const cl = new PerfRenderFromJson({ srcJson: perf });
+            t.doesNotThrow(() => cl.renderDocument({ docId: "", config: {}, output: {} }));
         } catch (err) {
             console.log(err);
         }
@@ -42,7 +42,7 @@ test(
         try {
             t.plan(1);
             const perf = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'perfs', 'fra_lsg_mrk_perf_doc.json')));
-            const cl = new PerfRenderFromJson({srcJson: perf});
+            const cl = new PerfRenderFromJson({ srcJson: perf });
             cl.debugLevel = 0;
             cl.addRenderAction(
                 'blockGraft',
@@ -70,7 +70,7 @@ test(
                     }
                 }
             );
-            t.doesNotThrow(() => cl.renderDocument({docId: "", config: {}, output: {}}));
+            t.doesNotThrow(() => cl.renderDocument({ docId: "", config: {}, output: {} }));
         } catch (err) {
             console.log(err);
         }
@@ -83,7 +83,7 @@ test(
         try {
             t.plan(1);
             const perf = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'validation', 'valid_flat_document.json')));
-            const cl = new PerfRenderFromJson({srcJson: perf});
+            const cl = new PerfRenderFromJson({ srcJson: perf });
             cl.debugLevel = 0;
             cl.addRenderAction(
                 'metaContent',
@@ -96,7 +96,7 @@ test(
                     }
                 }
             );
-            t.doesNotThrow(() => cl.renderDocument({docId: "", config: {}, output: {}}));
+            t.doesNotThrow(() => cl.renderDocument({ docId: "", config: {}, output: {} }));
         } catch (err) {
             console.log(err);
         }
@@ -109,9 +109,9 @@ test(
         try {
             t.plan(2);
             const perf = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'validation', 'valid_flat_document.json')));
-            const cl = new PerfRenderFromJson({srcJson: perf, actions: render.perfToPerf.renderActions.identityActions});
+            const cl = new PerfRenderFromJson({ srcJson: perf, actions: render.perfToPerf.renderActions.identityActions });
             const output = {};
-            t.doesNotThrow(() => cl.renderDocument({docId: "", config: {}, output}));
+            t.doesNotThrow(() => cl.renderDocument({ docId: "", config: {}, output }));
             // console.log(JSON.stringify(output.perf, null, 2));
             t.ok(equal(perf, output.perf));
         } catch (err) {
@@ -135,7 +135,7 @@ test(
                             {
                                 description: "Ignore unresolved block grafts",
                                 test: () => false,
-                                action: () => {}
+                                action: () => { }
                             }
                         ]
                     },
@@ -143,7 +143,7 @@ test(
                 ])
             });
             const output = {};
-            t.doesNotThrow(() => cl.renderDocument({docId: "", config: {}, output}));
+            t.doesNotThrow(() => cl.renderDocument({ docId: "", config: {}, output }));
             // console.log(JSON.stringify(output, null, 2));
         } catch (err) {
             console.log(err);
@@ -162,7 +162,7 @@ test(
                 actions: render.perfToPerf.renderActions.identityActions
             });
             const output = {};
-            t.throws(() => cl.renderDocument({docId: "", config: {}, output}), /No action for unresolved.*fix your data/);
+            t.throws(() => cl.renderDocument({ docId: "", config: {}, output }), /No action for unresolved.*fix your data/);
         } catch (err) {
             console.log(err);
         }
@@ -175,9 +175,9 @@ test(
         try {
             t.plan(1);
             const perf = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'perfs', 'fra_lsg_mrk_perf_doc.json')));
-            const cl = new PerfRenderFromJson({srcJson: perf, actions: render.perfToX.renderActions.wordCountActions});
+            const cl = new PerfRenderFromJson({ srcJson: perf, actions: render.perfToX.renderActions.wordCountActions });
             const output = {};
-            t.doesNotThrow(() => cl.renderDocument({docId: "", config: {}, output}));
+            t.doesNotThrow(() => cl.renderDocument({ docId: "", config: {}, output }));
         } catch (err) {
             console.log(err);
         }
@@ -190,32 +190,32 @@ test(
         try {
             t.plan(1);
             const perf = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'perfs', 'fra_lsg_mrk_perf_doc.json')));
-            const cl = new PerfRenderFromJson({srcJson: perf, actions: render.perfToX.renderActions.wordSearchActions});
+            const cl = new PerfRenderFromJson({ srcJson: perf, actions: render.perfToX.renderActions.wordSearchActions });
             const output = {};
-            t.doesNotThrow(() => cl.renderDocument({docId: "", config: {toSearch: "foule"}, output}));
+            t.doesNotThrow(() => cl.renderDocument({ docId: "", config: { toSearch: "foule" }, output }));
         } catch (err) {
             console.log(err);
         }
     },
 );
-test(   
+test(
     `Render Perf with identity action on identity actions Json containing Row/Cells(${testGroup})`,
     async function (t) {
         try {
             t.plan(3);
             const perf = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'perfs', 'table_perf.json')));
-            const cl = new PerfRenderFromJson({srcJson: perf, actions: render.perfToPerf.renderActions.identityActions});
+            const cl = new PerfRenderFromJson({ srcJson: perf, actions: render.perfToPerf.renderActions.identityActions });
             const output = {};
-            t.doesNotThrow(() => cl.renderDocument({docId: "", config: {}, output}));
+            t.doesNotThrow(() => cl.renderDocument({ docId: "", config: {}, output }));
             const mainSequenceId = output.perf.main_sequence_id;
             const numberOfRows = 4;
             const numberOfCells = 2;
-            t.equal(output.perf.sequences[mainSequenceId].blocks.filter(b => b.type === 'row').length,numberOfRows,`The number of row is ${numberOfRows}`);
-            t.equal(output.perf.sequences[mainSequenceId].blocks.filter(b => b.type === 'row')[1].content[0].content.filter(c => c.subtype === 'cell').length,numberOfCells,`The number of cells render in the 2th row is ${numberOfCells} `);
+            t.equal(output.perf.sequences[mainSequenceId].blocks.filter(b => b.type === 'row').length, numberOfRows, `The number of row is ${numberOfRows}`);
+            t.equal(output.perf.sequences[mainSequenceId].blocks.filter(b => b.type === 'row')[1].content[0].content.filter(c => c.subtype === 'cell').length, numberOfCells, `The number of cells render in the 2th row is ${numberOfCells} `);
             return;
-            
+
         } catch (err) {
             console.log(err);
         }
     },
-    );
+);

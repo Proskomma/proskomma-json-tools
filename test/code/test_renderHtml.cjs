@@ -58,7 +58,6 @@ test(`Table is render in  (${testGroup})`, (t) => {
     t.equal(output.paras.includes('<table'), true)
     t.equal(output.paras.includes('</table>'), true)
     t.equal(output.paras.includes('<td colspan=2'), true)
-    console.log(output.paras)
   } catch (err) {
     console.log(err);
   }
