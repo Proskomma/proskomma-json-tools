@@ -7,6 +7,8 @@ const { sofria2WebActions } = require('../../dist/render/sofria2web/renderAction
 const { renderers } = require('../../dist/render/sofria2web/sofria2html');
 const SofriaRenderFromProskomma = require('../../dist/SofriaRenderFromProskomma');
 const cheerio = require('cheerio')
+import { identityActions } from '../../dist/render/sofriaToSofria/renderActions/identity';
+import { Validator } from '../../dist/';
 
 
 
@@ -28,17 +30,6 @@ const config = {
   renderers,
 };
 
-
-
-function saveStringAsHTMLFile(stringContent, fileName) {
-  fs.writeFile(fileName, stringContent, (err) => {
-    if (err) {
-      console.error(err);
-    } else {
-      console.log('File saved successfully.');
-    }
-  });
-}
 
 const testGroup = 'HTML';
 
@@ -81,3 +72,21 @@ test(`Classes exist in  (${testGroup})`, (t) => {
     t.fail("No class exists in Html");
   }
 });
+test(`wrapper ends in (${testGroup})`, (t) => {
+  t.plan(1);
+  try {
+    const pk6 = new Proskomma();
+    const usfm = fse.readFileSync(path.resolve(path.join('./', 'test', 'test_data', 'usfms', 'abba.usfm'))).toString();
+    pk6.importDocument({ 'lang': 'eng', 'abbr': 'francl' }, 'usfm', usfm);
+    const docId = pk6.gqlQuerySync('{documents { id } }').data.documents[0].id;
+    const cl = new SofriaRenderFromProskomma({ proskomma: pk6, actions: sofria2WebActions })
+    const output = {}
+    t.doesNotThrow(() => {
+      cl.renderDocument({ docId, config, output })
+    });
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+

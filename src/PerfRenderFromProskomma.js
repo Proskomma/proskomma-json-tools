@@ -123,8 +123,8 @@ class PerfRenderFromProskomma extends ProskommaRender {
             }
             const subTypeValues = blockResult.bs.payload.split('/');
             let subTypeValue;
-            if (subTypeValues[1] && subTypeValues[1] === "tr") {
-                subTypeValue = "row";
+            if (subTypeValues[1] && ["tr", "zrow"].includes(subTypeValues[1])) {
+                subTypeValue = (subTypeValues[1] === "tr" ? "usfm:tr" : "pk");
             } else if (subTypeValues[1]) {
                 subTypeValue = `usfm:${subTypeValues[1]}`;
             } else {
@@ -132,7 +132,7 @@ class PerfRenderFromProskomma extends ProskommaRender {
             }
 
             context.sequences[0].block = {
-                type: subTypeValue === "row" ? "row" : "paragraph",
+                type: ["usfm:tr", "pk"].includes(subTypeValue) ? "row" : "paragraph",
                 subType: subTypeValue,
                 blockN: outputBlockN,
                 wrappers: []

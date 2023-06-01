@@ -5,7 +5,7 @@ const identityActionsCode = function ({ perf }) {
     const cl = new PerfRenderFromJson(
         {
             srcJson: perf,
-            actions: identityAction
+            actions: identityActions
         }
     );
     const output = {};

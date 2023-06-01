@@ -47,7 +47,7 @@ test(
             const validation = validator.validate(
                 'constraint',
                 'sofriaDocument',
-                '0.2.1',
+                '0.4.0',
                 output.sofria
             );
 
@@ -79,7 +79,7 @@ test(
             const validation = validator.validate(
                 'constraint',
                 'sofriaDocument',
-                '0.2.1',
+                '0.4.0',
                 output.sofria
             );
             t.ok(validation.isValid);
@@ -107,7 +107,7 @@ test(
             const validation = validator.validate(
                 'constraint',
                 'sofriaDocument',
-                '0.2.1',
+                '0.4.0',
                 output.sofria
             );
             t.ok(validation.isValid);
@@ -139,7 +139,7 @@ test(
             const validation = validator.validate(
                 'constraint',
                 'sofriaDocument',
-                '0.2.1',
+                '0.4.0',
                 output.sofria
             );
             t.ok(validation.isValid);
@@ -171,7 +171,7 @@ test(
             const validation = validator.validate(
                 'constraint',
                 'sofriaDocument',
-                '0.2.1',
+                '0.4.0',
                 output.sofria
             );
             t.ok(validation.isValid);
@@ -196,7 +196,7 @@ test(
                 const usx = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'sofria_export_usx', `${usxLeaf}.usx`))).toString();
                 pk5.importDocument({ 'lang': 'eng', 'abbr': 'foo' }, 'usx', usx);
                 const docId = pk5.gqlQuerySync('{documents { id } }').data.documents[0].id;
-                const cl = new SofriaRenderFromProskomma({ proskomma: pk5, actions: identityActions, debugLevel: 0 });
+                const cl = new SofriaRenderFromProskomma({ proskomma: pk5, actions: identityActions });
                 const output = {};
                 t.doesNotThrow(
                     () => {
@@ -234,7 +234,7 @@ test(
             const validation = validator.validate(
                 'constraint',
                 'sofriaDocument',
-                '0.2.1',
+                '0.4.0',
                 output.sofria
             );
             t.ok(validation.isValid);
@@ -257,7 +257,7 @@ test(
                 pk5.importDocument({ 'lang': 'eng', 'abbr': 'foo' }, 'usx', usx);
                 const docId = pk5.gqlQuerySync('{documents { id } }').data.documents[0].id;
                 // console.log(pk5.gqlQuerySync(`{ document(id: '${docId}') { mainSequence { blocks { dump } } } }`).data.document.mainSequence);
-                const cl = new SofriaRenderFromProskomma({ proskomma: pk5, actions: identityActions, debugLevel: 0 });
+                const cl = new SofriaRenderFromProskomma({ proskomma: pk5, actions: identityActions });
                 const output = {};
                 t.doesNotThrow(
                     () => {
@@ -271,7 +271,7 @@ test(
                 const validation = validator.validate(
                     'constraint',
                     'sofriaDocument',
-                    '0.3.0',
+                    '0.4.0',
                     output.sofria
                 );
                 t.ok(validation.isValid);
@@ -307,7 +307,7 @@ test(
             const validation = validator.validate(
                 'constraint',
                 'sofriaDocument',
-                '0.2.1',
+                '0.4.0',
                 output.sofria
             );
             t.ok(validation.isValid);
@@ -443,7 +443,7 @@ test(
     `Render tr/tc/th via SOFRIA (${testGroup})`,
     async function (t) {
         try {
-            t.plan(3);
+            t.plan(5);
             const pk = new Proskomma();
             const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'usfms', 'table.usfm'))).toString();
             pk.importDocument({ 'lang': 'eng', 'abbr': 'web' }, 'usfm', usfm);
@@ -459,7 +459,15 @@ test(
             const numberOfCells = 2;
             t.equal(output.paras.filter(b => b.type === 'row').length, numberOfRows, `The number of row is not ${numberOfRows}`);
             t.equal(output.paras.filter(b => b.type === 'row')[2].content[0].content.filter(c => c.subtype === 'cell').length, numberOfCells, `The number of cells render in the 2th row is not ${numberOfCells} `);
-            return;
+            const validator = new Validator();
+            const validation = validator.validate(
+                'constraint',
+                'sofriaDocument',
+                '0.4.0',
+                output.sofria
+            );
+            t.ok(validation.isValid);
+            t.equal(validation.errors, null);
         } catch (err) {
             console.log(err);
         }
@@ -505,3 +513,92 @@ test(
         }
     },
 );
+test(`Multiple para in verse Start End events in (${testGroup})`, (t) => {
+    t.plan(2);
+    try {
+        const pk6 = new Proskomma();
+        const usfm = fse.readFileSync(path.resolve(path.join('./', 'test', 'test_data', 'usfms', 'startEndVerse.usfm'))).toString();
+        pk6.importDocument({ 'lang': 'eng', 'abbr': 'francl' }, 'usfm', usfm);
+        const docId = pk6.gqlQuerySync('{documents { id } }').data.documents[0].id;
+        const actions = {
+            startVerses: [
+                {
+                    description: "startVerses",
+                    test: () => true,
+                    action: ({ config, context, workspace, output }) => {
+                        workspace.inVersesMileStone = true;
+                    }
+                },
+            ],
+            endVerses: [
+                {
+                    description: "endVerses",
+                    test: () => true,
+                    action: ({ config, context, workspace, output }) => {
+                        workspace.inVersesMileStone = false;
+
+                    }
+                },
+            ],
+            startWrapper: [
+                {
+                    description: "startWrapper",
+                    test: ({ context }) => context.sequences[0].element.subType === "verses",
+                    action: ({ config, context, workspace, output }) => {
+                        workspace.inVersesWrapper = true;
+
+
+                    }
+                },
+            ],
+            endWrapper: [
+                {
+                    description: "endWrapper",
+                    test: ({ context }) => context.sequences[0].element.subType === "verses",
+                    action: ({ config, context, workspace, output }) => {
+                        workspace.inVersesWrapper = false;
+
+                    }
+                },
+            ],
+            endParagraph: [
+                {
+                    description: "endParagraph",
+                    test: () => true,
+                    action: ({ config, context, workspace, output }) => {
+                        output.versesTextWrapper += " ";
+                        output.versesTextMileStone += " ";
+
+                    }
+                },
+            ],
+            text: [
+                {
+                    description: "identity",
+                    test: () => true,
+                    action: ({ context, workspace }) => {
+                        const element = context.sequences[0].element;
+                        if (workspace.inVersesWrapper) {
+                            output.versesTextWrapper += element.text;
+                        }
+                        if (workspace.inVersesMileStone) {
+                            output.versesTextMileStone += element.text;
+                        }
+                    }
+                },
+            ]
+
+
+
+        }
+        const cl = new SofriaRenderFromProskomma({ proskomma: pk6, actions: actions })
+        const output = { versesTextMileStone: "", versesTextWrapper: "" }
+        const workspace = { inVersesWrapper: false, inVersesMileStone: false }
+        t.doesNotThrow(() => {
+            cl.renderDocument1({ docId, context: {}, workspace, config: {}, output })
+        });
+        t.equal(output.versesTextMileStone, output.versesTextWrapper)
+    } catch (err) {
+        console.log(err);
+    }
+});

@@ -41,7 +41,7 @@ const sofria2WebActions = {
 
     startSequence: [
         {
-            description: "identity",
+            description: "startSequence",
             test: () => true,
             action: ({ context, workspace }) => {
                 workspace.currentSequence.type = context.sequences[0].type;
@@ -51,7 +51,7 @@ const sofria2WebActions = {
     ],
     endSequence: [
         {
-            description: "identity",
+            description: "endSequence",
             test: () => true,
             action: ({ context, workspace }) => {
                 if (context.inTable) {
@@ -83,7 +83,6 @@ const sofria2WebActions = {
                         }
 
                     ]
-                    workspace.paraContentStack[0].content.push(`<table border>`)
                 }
                 workspace.paraContentStack.unshift(
                     {
@@ -141,13 +140,13 @@ const sofria2WebActions = {
     ],
     inlineGraft: [
         {
-            description: "identity",
+            description: "inlineGraft",
             test: ({ context, workspace }) => context.sequences[0].element.subType !== "note_caller" &&
                 !(["footnote"].includes(context.sequences[0].element.subType) && !workspace.settings.showFootnotes) &&
                 !(["xref"].includes(context.sequences[0].element.subType) && !workspace.settings.showXrefs),
             action: (environment) => {
-                if (context.inTable) {
-                    context.inTable = false
+                if (environment.context.inTable) {
+                    environment.context.inTable = false
                     workspace.webParas.push(config.renderers.table(workspace.paraContentStack[0].content))
                 }
                 const element = environment.context.sequences[0].element;
@@ -266,6 +265,7 @@ const sofria2WebActions = {
             description: "Handle standard w attributes",
             test: ({ context }) => context.sequences[0].element.subType === "usfm:w",
             action: ({ config, workspace }) => {
+
                 const popped = workspace.paraContentStack.shift();
 
                 workspace.paraContentStack[0].content.push(config.renderers.wWrapper(
