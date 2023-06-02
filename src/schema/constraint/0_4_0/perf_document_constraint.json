@@ -1,0 +1,23 @@
+{
+  "$comment": "version 0.3.0",
+  "$id": "https://github.com/Proskomma/proskomma-json-tools/tree/main/src/schema/constraint/0_4_0/perf_document_constraint.json",
+  "type": "object",
+  "properties": {
+    "hooks": {
+      "type": "array"
+    },
+    "sequences": {
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^\\S+$"
+      },
+      "additionalProperties": {
+        "$ref": "./perf_sequence_constraint.json"
+      }
+    }
+  }
+}
+
+
+
+

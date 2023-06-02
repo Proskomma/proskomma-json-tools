@@ -1,6 +1,6 @@
 {
   "name": "proskomma-json-tools",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "Tools for working with Proskomma-derived formats such as PERF and SOFRIA",
   "main": "dist/index.js",
   "directories": {
@@ -27,6 +27,7 @@
     "@babel/core": "^7.17.10",
     "@babel/plugin-proposal-throw-expressions": "^7.18.6",
     "ajv": "^8.11.0",
+    "cheerio": "^1.0.0-rc.12",
     "deep-equal": "^2.0.5"
   },
   "devDependencies": {
