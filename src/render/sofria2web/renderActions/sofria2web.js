@@ -45,7 +45,7 @@ const sofria2WebActions = {
             test: () => true,
             action: ({ context, workspace }) => {
                 workspace.currentSequence.type = context.sequences[0].type;
-                workspace.currentSequence.blocks = ''
+                workspace.currentSequence.blocks = []
             }
         },
     ],
@@ -147,7 +147,7 @@ const sofria2WebActions = {
             action: (environment) => {
                 if (environment.context.inTable) {
                     environment.context.inTable = false
-                    workspace.webParas.push(config.renderers.table(workspace.paraContentStack[0].content))
+                    environment.workspace.webParas.push(config.renderers.table(workspace.paraContentStack[0].content))
                 }
                 const element = environment.context.sequences[0].element;
 
