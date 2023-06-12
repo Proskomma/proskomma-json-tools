@@ -45,7 +45,7 @@ const sofria2WebActions = {
             test: () => true,
             action: ({ context, workspace }) => {
                 workspace.currentSequence.type = context.sequences[0].type;
-                workspace.currentSequence.blocks = ''
+                workspace.currentSequence.blocks = []
             }
         },
     ],
@@ -53,8 +53,8 @@ const sofria2WebActions = {
         {
             description: "endSequence",
             test: () => true,
-            action: ({ context, workspace }) => {
-                if (context.inTable) {
+            action: ({ config, context, workspace }) => {
+                if (context.inTable && context.sequences[0].type.includes(['main'])) {
                     context.inTable = false
                     workspace.webParas.push(config.renderers.table(workspace.paraContentStack[0].content))
                 }
@@ -145,16 +145,11 @@ const sofria2WebActions = {
                 !(["footnote"].includes(context.sequences[0].element.subType) && !workspace.settings.showFootnotes) &&
                 !(["xref"].includes(context.sequences[0].element.subType) && !workspace.settings.showXrefs),
             action: (environment) => {
-                if (environment.context.inTable) {
-                    environment.context.inTable = false
-                    workspace.webParas.push(config.renderers.table(workspace.paraContentStack[0].content))
-                }
                 const element = environment.context.sequences[0].element;
 
                 const graftRecord = {
                     type: element.type,
                 };
-
                 if (element.sequence) {
                     graftRecord.sequence = {};
                     const cachedSequencePointer = environment.workspace.currentSequence;
@@ -178,7 +173,8 @@ const sofria2WebActions = {
             description: "Initialise content stack",
             test: () => true,
             action: ({ config, context, workspace }) => {
-                if (context.inTable) {
+
+                if (context.inTable && context.sequences[0].type.includes(['main'])) {
                     context.inTable = false
                     workspace.webParas.push(config.renderers.table(workspace.paraContentStack[0].content))
                 }
