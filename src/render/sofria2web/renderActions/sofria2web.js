@@ -145,10 +145,6 @@ const sofria2WebActions = {
                 !(["footnote"].includes(context.sequences[0].element.subType) && !workspace.settings.showFootnotes) &&
                 !(["xref"].includes(context.sequences[0].element.subType) && !workspace.settings.showXrefs),
             action: (environment) => {
-                if (environment.context.inTable) {
-                    environment.context.inTable = false
-                    environment.workspace.webParas.push(config.renderers.table(workspace.paraContentStack[0].content))
-                }
                 const element = environment.context.sequences[0].element;
 
                 const graftRecord = {
