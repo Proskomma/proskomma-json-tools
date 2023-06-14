@@ -41,7 +41,7 @@ test(`Table is render in  (${testGroup})`, (t) => {
     const usfm = fse.readFileSync(path.resolve(path.join('./', 'test', 'test_data', 'usfms', 'table.usfm'))).toString();
     pk6.importDocument({ 'lang': 'eng', 'abbr': 'francl' }, 'usfm', usfm);
     const docId = pk6.gqlQuerySync('{documents { id } }').data.documents[0].id;
-    const cl = new SofriaRenderFromProskomma({ proskomma: pk6, actions: sofria2WebActions })
+    const cl = new SofriaRenderFromProskomma({ proskomma: pk6, actions: sofria2WebActions, debugLevel: 0 })
     const output = {}
     t.doesNotThrow(() => {
       cl.renderDocument({ docId, config, output })

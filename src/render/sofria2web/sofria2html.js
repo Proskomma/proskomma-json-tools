@@ -97,7 +97,7 @@ const renderers = {
         }
         </span>`,
     mergeParas: paras => paras.join('\n'),
-    row: (atts, content) => {
+    row: (content) => {
         return (`<tr>${content.join("")}</tr>`)
     },
     table: (content) => {

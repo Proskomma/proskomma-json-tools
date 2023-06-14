@@ -258,6 +258,7 @@ class SofriaRenderFromProskomma extends ProskommaRender {
              }`
                 );
                 const blockResult = blocksResult.data.document.sequence.blocks[0];
+
                 for (const blockGraft of blockResult.bg) {
                     context.sequences[0].block = {
                         type: "graft",
@@ -272,10 +273,8 @@ class SofriaRenderFromProskomma extends ProskommaRender {
                 }
 
                 const subTypeValues = blockResult.bs.payload.split('/');
-
                 let subTypeValue;
                 if (subTypeValues[1] && ["tr", "zrow"].includes(subTypeValues[1])) {
-
                     subTypeValue = (subTypeValues[1] === "tr" ? "usfm:tr" : "pk");
                 } else if (subTypeValues[1]) {
                     subTypeValue = `usfm:${subTypeValues[1]}`;
@@ -288,9 +287,21 @@ class SofriaRenderFromProskomma extends ProskommaRender {
                     blockN: outputBlockN,
                     wrappers: []
                 }
+
                 if (context.sequences[0].block.type === "row") {
+                    if (!environment.workspace.inTable) {
+                        this.renderEvent(`startTable`, environment)
+                        environment.workspace.inTable = true
+                    }
+
                     this.renderEvent('startRow', environment);
+
+
                 } else {
+                    if (environment.workspace.inTable && context.sequences[0].type.includes('main')) {
+                        this.renderEvent(`endTable`, environment)
+                        environment.workspace.inTable = false
+                    }
                     this.renderEvent('startParagraph', environment);
                 }
                 this._tokens = [];
@@ -319,6 +330,7 @@ class SofriaRenderFromProskomma extends ProskommaRender {
                     this.renderEvent('startWrapper', environment);
                 }
                 this.renderContent(blockResult.items, environment);
+
                 this._tokens = [];
                 if (sequenceType === "main" && this.currentCV.verses) {
                     const wrapper = {
