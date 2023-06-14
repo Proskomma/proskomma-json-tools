@@ -11,8 +11,8 @@ class SofriaRenderFromJson extends ProskommaRender {
         this.cachedSequences = [];
     }
 
-    renderDocument1({docId, config, context, workspace, output}) {
-        const environment = {config, context, workspace, output};
+    renderDocument1({ docId, config, context, workspace, output }) {
+        const environment = { config, context, workspace, output };
         context.renderer = this;
         context.document = {
             id: docId,
@@ -54,18 +54,27 @@ class SofriaRenderFromJson extends ProskommaRender {
                 blockN,
                 wrappers: []
             }
-            
+
             if (block.type === 'graft') {
                 context.sequences[0].block.sequence = this.sequenceContext(block.sequence);
                 this.cachedSequences.unshift(block.sequence);
                 this.renderEvent('blockGraft', environment);
                 this.cachedSequences.shift();
-            } else if(block.type === 'row') {
-                this.renderEvent('startRow', environment);
-                this.renderContent(block.content, environment);
-                this.renderEvent('endRow', environment);
+            } else if (block.type === 'row') {
+                if (!environment.workspace.inTable) {
+                    this.renderEvent(`startTable`, environment)
+                    environment.workspace.inTable = true
+                }
+
+                this.renderElement(block, environment);
+
+
             }
-            else{   
+            else {
+                if (environment.workspace.inTable && context.sequences[0].type.includes('main')) {
+                    this.renderEvent(`endTable`, environment)
+                    environment.workspace.inTable = false
+                }
                 this.renderEvent('startParagraph', environment);
                 this.renderContent(block.content, environment);
                 this.renderEvent('endParagraph', environment);
@@ -78,12 +87,14 @@ class SofriaRenderFromJson extends ProskommaRender {
     }
 
     renderContent(content, environment) {
+
         for (const element of content) {
             this.renderElement(element, environment);
         }
     }
 
     renderElement(element, environment) {
+
         const maybeRenderMetaContent = (elementContext) => {
             if (element.meta_content) {
                 elementContext.metaContent = element.meta_content;
@@ -112,6 +123,8 @@ class SofriaRenderFromJson extends ProskommaRender {
             elementContext.text = element;
         }
         context.sequences[0].element = elementContext;
+
+
         if (elementContext.type === "text") {
             this.renderEvent('text', environment);
             maybeRenderMetaContent(elementContext);
@@ -136,6 +149,14 @@ class SofriaRenderFromJson extends ProskommaRender {
             context.sequences[0].element = elementContext;
             maybeRenderMetaContent(elementContext);
             this.renderEvent('endWrapper', environment);
+            context.sequences[0].block.wrappers.shift();
+        } else if (elementContext.type === 'row') {
+            context.sequences[0].block.wrappers.unshift(elementContext.subType);
+            this.renderEvent('startRow', environment);
+            this.renderContent(element.content, environment);
+            context.sequences[0].element = elementContext;
+            maybeRenderMetaContent(elementContext);
+            this.renderEvent('endRow', environment);
             context.sequences[0].block.wrappers.shift();
         } else {
             throw new Error(`Unexpected element type '${elementContext.type}`);

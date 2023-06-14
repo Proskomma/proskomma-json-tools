@@ -365,6 +365,10 @@ class SofriaRenderFromProskomma extends ProskommaRender {
                 outputBlockN++;
             }
         }
+        if (environment.workspace.inTable && context.sequences[0].type.includes('main')) {
+            this.renderEvent(`endTable`, environment)
+            environment.workspace.inTable = false
+        }
         this.renderEvent('endSequence', environment);
         if (sequenceType === 'main') {
 

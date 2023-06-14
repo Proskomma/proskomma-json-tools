@@ -200,7 +200,7 @@ test(
             const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'usfms', 'table.usfm'))).toString();
             pk.importDocument({ 'lang': 'eng', 'abbr': 'web' }, 'usfm', usfm);
             const docId = pk.gqlQuerySync('{documents { id } }').data.documents[0].id;
-            const cl = new PerfRenderFromProskomma({ proskomma: pk, actions: render.perfToPerf.renderActions.identityActions });
+            const cl = new PerfRenderFromProskomma({ proskomma: pk, actions: render.perfToPerf.renderActions.identityActions, debugLevel: 1 });
             const output = {};
             t.doesNotThrow(
                 () => cl.renderDocument(
@@ -211,6 +211,7 @@ test(
 
             const numberOfRows = 5;
             const numberOfCells = 2;
+            console.log(output.perf.sequences[mainSequenceId])
             t.equal(output.perf.sequences[mainSequenceId].blocks.filter(b => b.type === 'row').length, numberOfRows, `The number of row is not ${numberOfRows}`);
             t.equal(output.perf.sequences[mainSequenceId].blocks.filter(b => b.type === 'row')[2].content.filter(c => c.subtype === 'cell').length, numberOfCells, `The number of cells render in the 2th row is ${numberOfCells} `);
             const validator = new Validator();
