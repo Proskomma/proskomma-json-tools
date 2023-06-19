@@ -50,11 +50,10 @@ class SofriaRenderFromJson extends ProskommaRender {
         for (const [blockN, block] of sequence.blocks.entries()) {
             context.sequences[0].block = {
                 type: block.type,
-                subType: block.type,
+                subType: block.subtype,
                 blockN,
                 wrappers: []
             }
-
             if (block.type === 'graft') {
                 context.sequences[0].block.sequence = this.sequenceContext(block.sequence);
                 this.cachedSequences.unshift(block.sequence);
@@ -62,18 +61,24 @@ class SofriaRenderFromJson extends ProskommaRender {
                 this.cachedSequences.shift();
             } else if (block.type === 'row') {
                 if (!environment.workspace.inTable) {
-                    this.renderEvent(`startTable`, environment)
-                    environment.workspace.inTable = true
+                    this.renderEvent('startTable', environment);
+                    environment.workspace.inTable = true;
                 }
+                this.renderEvent('startRow', environment);
+                this.renderContent(block.content, environment);
+                if (environment.workspace.skipEndRow) {
+                    environment.workspace.skipEndRow = false
+                }
+                else {
+                    this.renderEvent('endRow', environment);
 
-                this.renderElement(block, environment);
-
-
+                }
             }
             else {
                 if (environment.workspace.inTable && context.sequences[0].type.includes('main')) {
-                    this.renderEvent(`endTable`, environment)
-                    environment.workspace.inTable = false
+                    this.renderEvent('endTable', environment);
+                    environment.workspace.inTable = false;
+
                 }
                 this.renderEvent('startParagraph', environment);
                 this.renderContent(block.content, environment);
@@ -81,20 +86,25 @@ class SofriaRenderFromJson extends ProskommaRender {
             }
             delete context.sequences[0].block;
         }
+        if (environment.workspace.inTable && context.sequences[0].type.includes('main')) {
+            this.renderEvent('endTable', environment);
+            environment.workspace.inTable = false;
+            environment.workspace.tableHasContent = false
+            environment.workspace.skipEndRow = false
+            environment.workspace.changingChapter = false
+        }
         this.renderEvent('endSequence', environment);
         this.cachedSequence = null;
         context.sequences.shift();
     }
 
     renderContent(content, environment) {
-
         for (const element of content) {
             this.renderElement(element, environment);
         }
     }
 
     renderElement(element, environment) {
-
         const maybeRenderMetaContent = (elementContext) => {
             if (element.meta_content) {
                 elementContext.metaContent = element.meta_content;
@@ -106,7 +116,6 @@ class SofriaRenderFromJson extends ProskommaRender {
         const elementContext = {
             type: element.type || 'text'
         };
-
 
         if (element.subtype) {
             elementContext.subType = element.subtype;
@@ -123,11 +132,13 @@ class SofriaRenderFromJson extends ProskommaRender {
             elementContext.text = element;
         }
         context.sequences[0].element = elementContext;
-
-
         if (elementContext.type === "text") {
+            if (environment.workspace.inTable) {
+                environment.workspace.tableHasContent = true
+            }
             this.renderEvent('text', environment);
             maybeRenderMetaContent(elementContext);
+
         } else if (elementContext.type === "mark") {
             this.renderEvent('mark', environment);
             maybeRenderMetaContent(elementContext);
@@ -143,20 +154,31 @@ class SofriaRenderFromJson extends ProskommaRender {
             this.cachedSequences.shift();
             maybeRenderMetaContent(elementContext);
         } else if (elementContext.type === "wrapper") {
+            if (elementContext.subType === 'chapter') {
+                if (environment.workspace.chapterCurent) {
+                    if (environment.workspace.chapterCurent != elementContext.atts.number) {
+                        environment.workspace.changingChapter = true
+                    }
+                }
+                else {
+                    environment.workspace.chapterCurent = elementContext.atts.number
+                }
+            }
+            if (environment.workspace.changingChapter && environment.workspace.inTable && environment.workspace.tableHasContent && elementContext.subType === 'chapter') {
+                this.renderEvent('endRow', environment)
+                this.renderEvent('endTable', environment)
+                environment.workspace.inTable = false
+                environment.workspace.tableHasContent = false
+                environment.workspace.skipEndRow = true
+                environment.workspace.changingChapter = false
+            }
             context.sequences[0].block.wrappers.unshift(elementContext.subType);
             this.renderEvent('startWrapper', environment);
             this.renderContent(element.content, environment);
             context.sequences[0].element = elementContext;
             maybeRenderMetaContent(elementContext);
             this.renderEvent('endWrapper', environment);
-            context.sequences[0].block.wrappers.shift();
-        } else if (elementContext.type === 'row') {
-            context.sequences[0].block.wrappers.unshift(elementContext.subType);
-            this.renderEvent('startRow', environment);
-            this.renderContent(element.content, environment);
-            context.sequences[0].element = elementContext;
-            maybeRenderMetaContent(elementContext);
-            this.renderEvent('endRow', environment);
+
             context.sequences[0].block.wrappers.shift();
         } else {
             throw new Error(`Unexpected element type '${elementContext.type}`);

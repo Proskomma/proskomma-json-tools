@@ -201,6 +201,7 @@ const sofria2WebActions = {
             description: "Add completed para to webParas",
             test: () => true,
             action: ({ config, context, workspace }) => {
+
                 workspace.webParas.push(
                     config.renderers.paragraph(
                         workspace.settings.showParaStyles || ['footnote', 'xref'].includes(context.sequences[0].type) ?
@@ -380,7 +381,6 @@ const sofria2WebActions = {
             description: "Build JSX",
             test: () => true,
             action: ({ config, workspace, output }) => {
-
                 output.paras = config.renderers.mergeParas(workspace.webParas);
             }
         }

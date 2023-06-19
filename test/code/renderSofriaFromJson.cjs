@@ -4,8 +4,6 @@ import path from "path";
 import SofriaRenderFromJson from "../../dist/SofriaRenderFromJson";
 import { identityActions } from "../../dist/render/sofriaToSofria/renderActions/identity";
 import { Validator } from "../../dist";
-import sofria2WebActions from '../../src/render/sofria2web/renderActions/sofria2web';
-const { renderers } = require('../../dist/render/sofria2web/sofria2html');
 
 const testGroup = "Render SOFRIA from JSON";
 
@@ -151,7 +149,6 @@ test(`Render SOFRIA with identity actions (${testGroup})`, async function (t) {
         console.log(err);
     }
 });
-
 test(`Render SOFRIA with identity actions with a Json containing Row/Cells(${testGroup})`, async function (t) {
     try {
         t.plan(3);
@@ -163,18 +160,19 @@ test(`Render SOFRIA with identity actions with a Json containing Row/Cells(${tes
         const cl = new SofriaRenderFromJson({
             srcJson: sofria,
             actions: identityActions,
+            debugLevel: 0
         });
         const output = {};
         t.doesNotThrow(() => cl.renderDocument({ docId: "", config: {}, output }));
         const numberOfRows = 4;
         const numberOfCells = 2;
         t.equal(
-            output.paras[2].content.filter((b) => b.type === "row").length,
+            output.paras.filter((b) => b.type === "row").length,
             numberOfRows,
             `The number of row is ${numberOfRows}`
         );
         t.equal(
-            output.paras[2].content
+            output.paras
                 .filter((b) => b.type === "row")[1]
                 .content[0].content.filter((c) => c.subtype === "cell").length,
             numberOfCells,
@@ -184,5 +182,4 @@ test(`Render SOFRIA with identity actions with a Json containing Row/Cells(${tes
     } catch (err) {
         console.log(err);
     }
-})
-
+});

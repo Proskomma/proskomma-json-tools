@@ -123,15 +123,15 @@ const identityActions = {
             action: ({ workspace }) => { }
         },
     ],
-    startTable: [
+    startRow: [
         {
             description: "identity",
             test: () => true,
             action: ({ context, workspace }) => {
                 const currentBlock = context.sequences[0].block;
                 const paraRecord = {
-                    type: currentBlock.type.includes('row') ? 'table' : 'row',
-                    subtype: currentBlock.subType.includes('row') ? 'table' : 'row',
+                    type: currentBlock.type,
+                    subtype: currentBlock.subType,
                     content: []
                 };
                 workspace.currentSequence.blocks.push(paraRecord);
@@ -155,56 +155,7 @@ const identityActions = {
             }
         },
     ],
-    startRow: [
-        {
-            description: "identity",
-            test: () => true,
-            action: ({ context, workspace }) => {
-                const element = context.sequences[0].element;
-                if (element.subType === "chapter") {
-                    workspace.chapter = element.atts.number;
-                    workspace.cachedChapter = workspace.chapter;
-                } else if (element.subType === "verses") {
-                    workspace.verses = element.atts.number;
-                    workspace.cachedVerses = workspace.verses;
-                }
-                const wrapperRecord = {
-                    type: element.type,
-                    subtype: element.subType,
-                    content: [],
-                };
-                if ('atts' in element) {
-                    wrapperRecord.atts = { ...element.atts };
-                }
-                if (workspace.outputContentStack.length === 0) {
-                    throw new Error(`outputContentStack is empty before pushing to its first element, near ${context.document.metadata.document.bookCode} ${workspace.cachedChapter}:${workspace.cachedVerses}`);
-                }
-
-                workspace.outputContentStack[0].push(wrapperRecord);
-                workspace.outputContentStack.unshift(wrapperRecord.content);
-            }
-
-
-
-        },
-    ],
     endRow: [
-        {
-            description: "identity",
-            test: () => true,
-            action: ({ workspace, context }) => {
-                const element = context.sequences[0].element;
-                if (element.subType === "chapter") {
-                    workspace.chapter = null;
-                } else if (element.subType === "verses") {
-                    workspace.verses = null;
-                }
-                workspace.outputContentStack.shift();
-
-            }
-        },
-    ],
-    endTable: [
         {
             description: "identity",
             test: () => true,
