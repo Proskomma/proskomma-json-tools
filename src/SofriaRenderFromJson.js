@@ -11,8 +11,8 @@ class SofriaRenderFromJson extends ProskommaRender {
         this.cachedSequences = [];
     }
 
-    renderDocument1({docId, config, context, workspace, output}) {
-        const environment = {config, context, workspace, output};
+    renderDocument1({ docId, config, context, workspace, output }) {
+        const environment = { config, context, workspace, output };
         context.renderer = this;
         context.document = {
             id: docId,
@@ -50,27 +50,48 @@ class SofriaRenderFromJson extends ProskommaRender {
         for (const [blockN, block] of sequence.blocks.entries()) {
             context.sequences[0].block = {
                 type: block.type,
-                subType: block.type,
+                subType: block.subtype,
                 blockN,
                 wrappers: []
             }
-            
             if (block.type === 'graft') {
                 context.sequences[0].block.sequence = this.sequenceContext(block.sequence);
                 this.cachedSequences.unshift(block.sequence);
                 this.renderEvent('blockGraft', environment);
                 this.cachedSequences.shift();
-            } else if(block.type === 'row') {
+            } else if (block.type === 'row') {
+                if (!environment.workspace.inTable) {
+                    this.renderEvent('startTable', environment);
+                    environment.workspace.inTable = true;
+                }
                 this.renderEvent('startRow', environment);
                 this.renderContent(block.content, environment);
-                this.renderEvent('endRow', environment);
+                if (environment.workspace.skipEndRow) {
+                    environment.workspace.skipEndRow = false
+                }
+                else {
+                    this.renderEvent('endRow', environment);
+
+                }
             }
-            else{   
+            else {
+                if (environment.workspace.inTable && context.sequences[0].type.includes('main')) {
+                    this.renderEvent('endTable', environment);
+                    environment.workspace.inTable = false;
+
+                }
                 this.renderEvent('startParagraph', environment);
                 this.renderContent(block.content, environment);
                 this.renderEvent('endParagraph', environment);
             }
             delete context.sequences[0].block;
+        }
+        if (environment.workspace.inTable && context.sequences[0].type.includes('main')) {
+            this.renderEvent('endTable', environment);
+            environment.workspace.inTable = false;
+            environment.workspace.tableHasContent = false
+            environment.workspace.skipEndRow = false
+            environment.workspace.changingChapter = false
         }
         this.renderEvent('endSequence', environment);
         this.cachedSequence = null;
@@ -96,7 +117,6 @@ class SofriaRenderFromJson extends ProskommaRender {
             type: element.type || 'text'
         };
 
-
         if (element.subtype) {
             elementContext.subType = element.subtype;
         }
@@ -113,8 +133,12 @@ class SofriaRenderFromJson extends ProskommaRender {
         }
         context.sequences[0].element = elementContext;
         if (elementContext.type === "text") {
+            if (environment.workspace.inTable) {
+                environment.workspace.tableHasContent = true
+            }
             this.renderEvent('text', environment);
             maybeRenderMetaContent(elementContext);
+
         } else if (elementContext.type === "mark") {
             this.renderEvent('mark', environment);
             maybeRenderMetaContent(elementContext);
@@ -130,12 +154,31 @@ class SofriaRenderFromJson extends ProskommaRender {
             this.cachedSequences.shift();
             maybeRenderMetaContent(elementContext);
         } else if (elementContext.type === "wrapper") {
+            if (elementContext.subType === 'chapter') {
+                if (environment.workspace.chapterCurent) {
+                    if (environment.workspace.chapterCurent != elementContext.atts.number) {
+                        environment.workspace.changingChapter = true
+                    }
+                }
+                else {
+                    environment.workspace.chapterCurent = elementContext.atts.number
+                }
+            }
+            if (environment.workspace.changingChapter && environment.workspace.inTable && environment.workspace.tableHasContent && elementContext.subType === 'chapter') {
+                this.renderEvent('endRow', environment)
+                this.renderEvent('endTable', environment)
+                environment.workspace.inTable = false
+                environment.workspace.tableHasContent = false
+                environment.workspace.skipEndRow = true
+                environment.workspace.changingChapter = false
+            }
             context.sequences[0].block.wrappers.unshift(elementContext.subType);
             this.renderEvent('startWrapper', environment);
             this.renderContent(element.content, environment);
             context.sequences[0].element = elementContext;
             maybeRenderMetaContent(elementContext);
             this.renderEvent('endWrapper', environment);
+
             context.sequences[0].block.wrappers.shift();
         } else {
             throw new Error(`Unexpected element type '${elementContext.type}`);

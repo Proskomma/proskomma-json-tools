@@ -160,6 +160,7 @@ test(`Render SOFRIA with identity actions with a Json containing Row/Cells(${tes
         const cl = new SofriaRenderFromJson({
             srcJson: sofria,
             actions: identityActions,
+            debugLevel: 0
         });
         const output = {};
         t.doesNotThrow(() => cl.renderDocument({ docId: "", config: {}, output }));

@@ -10,10 +10,10 @@ class PerfRenderFromJson extends ProskommaRender {
         this.srcJson = spec.srcJson;
     }
 
-    renderDocument1({docId, config, context, workspace, output}) {
-        const environment = {config, context, workspace, output};
+    renderDocument1({ docId, config, context, workspace, output }) {
+        const environment = { config, context, workspace, output };
         context.renderer = this;
-        
+
         context.document = {
             id: docId,
             schema: this.srcJson.schema,
@@ -62,12 +62,12 @@ class PerfRenderFromJson extends ProskommaRender {
                     context.sequences[0].block.isNew = block.new || false;
                     this.renderEvent('blockGraft', environment);
                 }
-            } else if(block.type === 'row') {
+            } else if (block.type === 'row') {
                 this.renderEvent('startRow', environment);
                 this.renderContent(block.content, environment);
                 this.renderEvent('endRow', environment);
             }
-            else{   
+            else {
                 this.renderEvent('startParagraph', environment);
                 this.renderContent(block.content, environment);
                 this.renderEvent('endParagraph', environment);
@@ -102,9 +102,9 @@ class PerfRenderFromJson extends ProskommaRender {
         }
         if (element.atts) {
             elementContext.atts = element.atts;
-          } else if (elementContext.type !== "end_milestone" && elementContext.type !== "meta_content") {
+        } else if (elementContext.type !== "end_milestone" && elementContext.type !== "meta_content") {
             elementContext.atts = {};
-          }
+        }
         if (element.target) {
             elementContext.target = element.target;
         }

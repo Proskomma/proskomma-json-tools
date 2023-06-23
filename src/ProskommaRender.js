@@ -13,6 +13,8 @@ class ProskommaRender {
             "startDocument",
             "endDocument",
             "startSequence",
+            "startTable",
+            "endTable",
             "endSequence",
             "unresolvedBlockGraft",
             "blockGraft",
@@ -36,7 +38,9 @@ class ProskommaRender {
             "endChapter",
             "text",
         ]) {
+
             if (actions[event]) {
+
                 this.actions[event] = actions[event].map(a => new ProskommaRenderAction(a));
             } else {
                 this.actions[event] = [];

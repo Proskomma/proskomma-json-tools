@@ -200,7 +200,7 @@ test(
             const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'usfms', 'table.usfm'))).toString();
             pk.importDocument({ 'lang': 'eng', 'abbr': 'web' }, 'usfm', usfm);
             const docId = pk.gqlQuerySync('{documents { id } }').data.documents[0].id;
-            const cl = new PerfRenderFromProskomma({ proskomma: pk, actions: render.perfToPerf.renderActions.identityActions });
+            const cl = new PerfRenderFromProskomma({ proskomma: pk, actions: render.perfToPerf.renderActions.identityActions, debugLevel: 0 });
             const output = {};
             t.doesNotThrow(
                 () => cl.renderDocument(

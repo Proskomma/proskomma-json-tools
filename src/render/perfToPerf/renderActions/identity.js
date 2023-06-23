@@ -3,7 +3,7 @@ const identityActions = {
         {
             description: "identity",
             test: () => true,
-            action: ({config, context, workspace, output}) => {
+            action: ({ config, context, workspace, output }) => {
                 output.perf = {};
                 output.perf.schema = context.document.schema;
                 output.perf.metadata = context.document.metadata;
@@ -15,7 +15,7 @@ const identityActions = {
         {
             description: "identity",
             test: () => true,
-            action: ({config, context, workspace, output}) => {
+            action: ({ config, context, workspace, output }) => {
             }
         },
     ],
@@ -23,7 +23,7 @@ const identityActions = {
         {
             description: "identity",
             test: () => true,
-            action: ({config, context, workspace, output}) => {
+            action: ({ config, context, workspace, output }) => {
                 output.perf.sequences[context.sequences[0].id] = {
                     type: context.sequences[0].type,
                     blocks: []
@@ -39,7 +39,7 @@ const identityActions = {
         {
             description: "identity",
             test: () => true,
-            action: ({config, context, workspace, output}) => {
+            action: ({ config, context, workspace, output }) => {
                 if (context.sequences.length > 1) {
                     workspace.outputSequence = output.perf.sequences[context.sequences[1].id];
                 }
@@ -71,7 +71,7 @@ const identityActions = {
         {
             description: "identity",
             test: () => true,
-            action: ({config, context, workspace, output}) => {
+            action: ({ config, context, workspace, output }) => {
                 const currentBlock = context.sequences[0].block;
                 const paraRecord = {
                     type: currentBlock.type,
@@ -89,7 +89,7 @@ const identityActions = {
         {
             description: "identity",
             test: () => true,
-            action: ({config, context, workspace, output}) => {
+            action: ({ config, context, workspace, output }) => {
             }
         },
     ],
@@ -98,7 +98,7 @@ const identityActions = {
             description: "identity",
             test: () => true,
             action: (environment) => {
-                const {config, context, workspace, output} = environment;
+                const { config, context, workspace, output } = environment;
                 const element = context.sequences[0].element;
                 workspace.currentContent = element.metaContent;
                 const lastOutputItem = workspace.outputContentStack[1][workspace.outputContentStack[1].length - 1];
@@ -113,13 +113,13 @@ const identityActions = {
         {
             description: "identity",
             test: () => true,
-            action: ({config, context, workspace, output}) => {
+            action: ({ config, context, workspace, output }) => {
                 const element = context.sequences[0].element;
                 const markRecord = {
                     type: element.type,
                     subtype: element.subType,
                 };
-                if (element.atts && typeof(element.atts) === "object" && Object.keys(element.atts).length !== 0) {
+                if (element.atts && typeof (element.atts) === "object" && Object.keys(element.atts).length !== 0) {
                     markRecord.atts = element.atts;
                 }
                 workspace.outputContentStack[0].push(markRecord);
@@ -153,7 +153,7 @@ const identityActions = {
         {
             description: "identity",
             test: () => true,
-            action: ({context, workspace}) => {
+            action: ({ context, workspace }) => {
                 const currentBlock = context.sequences[0].block;
                 const paraRecord = {
                     type: currentBlock.type,
@@ -164,28 +164,28 @@ const identityActions = {
                 workspace.currentContent = paraRecord.content;
                 workspace.outputBlock = workspace.outputSequence.blocks[workspace.outputSequence.blocks.length - 1];
                 workspace.outputContentStack = [workspace.outputBlock.content];
-            }           
+            }
         },
     ],
     endRow: [
         {
             description: "identity",
             test: () => true,
-            action: ({workspace}) => {}
+            action: ({ workspace }) => { }
         },
     ],
     startWrapper: [
         {
             description: "identity",
             test: () => true,
-            action: ({config, context, workspace, output}) => {
+            action: ({ config, context, workspace, output }) => {
                 const element = context.sequences[0].element;
                 const wrapperRecord = {
                     type: element.type,
                     subtype: element.subType,
                     content: [],
                 };
-                if ('atts' in element && typeof(element.atts) === "object" && Object.keys(element.atts).length !== 0) {
+                if ('atts' in element && typeof (element.atts) === "object" && Object.keys(element.atts).length !== 0) {
                     wrapperRecord.atts = element.atts;
                 }
                 workspace.outputContentStack[0].push(wrapperRecord);
@@ -197,7 +197,7 @@ const identityActions = {
         {
             description: "identity",
             test: () => true,
-            action: ({config, context, workspace, output}) => {
+            action: ({ config, context, workspace, output }) => {
                 workspace.outputContentStack.shift();
             }
         },
@@ -206,13 +206,13 @@ const identityActions = {
         {
             description: "identity",
             test: () => true,
-            action: ({config, context, workspace, output}) => {
+            action: ({ config, context, workspace, output }) => {
                 const element = context.sequences[0].element;
                 const milestoneRecord = {
                     type: element.type,
                     subtype: element.subType,
                 };
-                if (element.atts && typeof(element.atts) === "object" && Object.keys(element.atts).length !== 0) {
+                if (element.atts && typeof (element.atts) === "object" && Object.keys(element.atts).length !== 0) {
                     milestoneRecord.atts = element.atts;
                 }
                 workspace.outputContentStack[0].push(milestoneRecord);
@@ -223,7 +223,7 @@ const identityActions = {
         {
             description: "identity",
             test: () => true,
-            action: ({config, context, workspace, output}) => {
+            action: ({ config, context, workspace, output }) => {
                 const element = context.sequences[0].element;
                 const milestoneRecord = {
                     type: element.type,
@@ -237,7 +237,7 @@ const identityActions = {
         {
             description: "identity",
             test: () => true,
-            action: ({config, context, workspace, output}) => {
+            action: ({ config, context, workspace, output }) => {
                 const element = context.sequences[0].element;
                 workspace.outputContentStack[0].push(element.text);
             }

@@ -4,6 +4,7 @@ const camelToKebabCase = (str) =>
     str.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`);
 
 const getStyles = (type, subType) => {
+
     if (!styles[type]) {
         throw new Error(`Unknown style type '${type}'`);
     }
@@ -97,7 +98,7 @@ const renderers = {
         }
         </span>`,
     mergeParas: paras => paras.join('\n'),
-    row: (atts, content) => {
+    row: (content) => {
         return (`<tr>${content.join("")}</tr>`)
     },
     table: (content) => {

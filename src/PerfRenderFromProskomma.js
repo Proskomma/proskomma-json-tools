@@ -274,71 +274,71 @@ class PerfRenderFromProskomma extends ProskommaRender {
                             environment.context.sequences[0].block.wrappers.shift();
                         }
                         delete environment.context.sequences[0].element;
-                    
-                    }else if (scopeBits[0] === 'milestone' && item.subType === "start") {
-                            if (scopeBits[1] === 'ts') {
-                                const mark = {
-                                    type: "mark",
-                                    subType: `usfm:${camelCaseToSnakeCase(scopeBits[1])}`,
-                                    atts: {},
-                                };
-                                environment.context.sequences[0].element = mark;
-                                this.renderEvent('mark', environment);
-                                delete environment.context.sequences[0].element;
-                            } else {
-                                this._container = {
-                                    type: "start_milestone",
-                                    subType: `usfm:${camelCaseToSnakeCase(scopeBits[1])}`,
-                                    atts: {},
-                                }
+
+                    } else if (scopeBits[0] === 'milestone' && item.subType === "start") {
+                        if (scopeBits[1] === 'ts') {
+                            const mark = {
+                                type: "mark",
+                                subType: `usfm:${camelCaseToSnakeCase(scopeBits[1])}`,
+                                atts: {},
+                            };
+                            environment.context.sequences[0].element = mark;
+                            this.renderEvent('mark', environment);
+                            delete environment.context.sequences[0].element;
+                        } else {
+                            this._container = {
+                                type: "start_milestone",
+                                subType: `usfm:${camelCaseToSnakeCase(scopeBits[1])}`,
+                                atts: {},
                             }
                         }
                     }
                 }
             }
         }
+    }
 
-        maybeRenderText(environment) {
-            if (this._tokens.length === 0) {
-                return;
+    maybeRenderText(environment) {
+        if (this._tokens.length === 0) {
+            return;
+        }
+        const elementContext = {
+            type: 'text',
+            text: this._tokens.join(''),
+        };
+        environment.context.sequences[0].element = elementContext;
+        this._tokens = [];
+        this.renderEvent('text', environment);
+        delete environment.context.sequences[0].element;
+    }
+
+    renderContainer(environment) {
+        if (this._container.type === "wrapper") {
+            const direction = this._container.direction;
+            delete this._container.direction;
+            if (direction === 'start') {
+                environment.context.sequences[0].element = this._container;
+                environment.context.sequences[0].block.wrappers.unshift(this._container.subType);
+                this.renderEvent('startWrapper', environment);
+                delete environment.context.sequences[0].element;
+            } else {
+                environment.context.sequences[0].element = this._container;
+                this.renderEvent('endWrapper', environment);
+                environment.context.sequences[0].block.wrappers.shift();
+                delete environment.context.sequences[0].element;
             }
-            const elementContext = {
-                type: 'text',
-                text: this._tokens.join(''),
-            };
-            environment.context.sequences[0].element = elementContext;
-            this._tokens = [];
-            this.renderEvent('text', environment);
+        } else if (this._container.type === "start_milestone") {
+            environment.context.sequences[0].element = this._container;
+            this.renderEvent('startMilestone', environment);
+            delete environment.context.sequences[0].element;
+        } else if (this._container.type === "end_milestone") {
+            environment.context.sequences[0].element = this._container;
+            this.renderEvent('endMilestone', environment);
             delete environment.context.sequences[0].element;
         }
-
-        renderContainer(environment) {
-            if (this._container.type === "wrapper") {
-                const direction = this._container.direction;
-                delete this._container.direction;
-                if (direction === 'start') {
-                    environment.context.sequences[0].element = this._container;
-                    environment.context.sequences[0].block.wrappers.unshift(this._container.subType);
-                    this.renderEvent('startWrapper', environment);
-                    delete environment.context.sequences[0].element;
-                } else {
-                    environment.context.sequences[0].element = this._container;
-                    this.renderEvent('endWrapper', environment);
-                    environment.context.sequences[0].block.wrappers.shift();
-                    delete environment.context.sequences[0].element;
-                }
-            } else if (this._container.type === "start_milestone") {
-                environment.context.sequences[0].element = this._container;
-                this.renderEvent('startMilestone', environment);
-                delete environment.context.sequences[0].element;
-            } else if (this._container.type === "end_milestone") {
-                environment.context.sequences[0].element = this._container;
-                this.renderEvent('endMilestone', environment);
-                delete environment.context.sequences[0].element;
-            }
-            this._container = null;
-        }
-
+        this._container = null;
     }
+
+}
 
 module.exports = PerfRenderFromProskomma;
