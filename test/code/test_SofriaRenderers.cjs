@@ -40,6 +40,25 @@ test(
 );
 
 test(
+    `test event for intro in (${testGroup})`,
+    async function (t) {
+        try {
+
+            t.plan(2);
+            let pathDocument = 'test/test_data/usfms/intro.usfm'
+            let outputs = easySofriaRenderer(eventActions, pathDocument)
+
+            t.doesNotThrow(() => {
+                findDif(outputs.outputJson.events, outputs.outputProskomma.events)
+            })
+            t.isEqual(outputs.outputProskomma.events.indexOf("text : INTRODUCTION À L’ÉPÎTRE À TITE")
+                < outputs.outputProskomma.events.indexOf("text : (1 Ti 3:15. 1 Pi 2:15.)"), true)
+        } catch (err) {
+            console.log(err);
+        }
+    },
+);
+test(
     `test sofria2WebActions with sofria2html in (${testGroup})`,
     async function (t) {
         try {

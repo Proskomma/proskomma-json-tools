@@ -71,6 +71,7 @@ function easySofriaRenderer(action, pathToFetchData, config = {}) {
 
     //Render sofriaRenderFromJson with Json
     output = {}
+
     cl = new SofriaRenderFromJson({ srcJson: json, actions: action })
     try {
         cl.renderDocument({ docId: "", config, output })

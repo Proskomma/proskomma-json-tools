@@ -64,7 +64,7 @@ const eventActions = {
             test: () => true,
             action: ({ context, workspace, output }) => {
 
-                output.events.push('startParagraph')
+                output.events.push(`startParagraph ${context.sequences[0].block.subType}`)
             }
         },
     ],
@@ -167,7 +167,7 @@ const eventActions = {
             description: "identity",
             test: () => true,
             action: ({ context, workspace, output }) =>
-                output.events.push('text')
+                output.events.push(`text : ${context.sequences[0].element.text}`)
 
         },
     ],
