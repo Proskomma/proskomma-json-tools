@@ -53,11 +53,12 @@ class SofriaRenderFromProskomma extends ProskommaRender {
         const nSequences = documentResult.data.document.nSequences;
         this.sequences = {};
         if (!environment.nbBlock) {
-            environment.config.nbBlock = 1000;
+            environment.config.nbBlock = 10000;
         }
         for (const seq of documentResult.data.document.sequences) {
             this.sequences[seq.id] = seq;
         }
+
         const headers = {};
         for (const header of documentResult.data.document.headers) {
             headers[header.key] = header.value;
@@ -131,6 +132,7 @@ class SofriaRenderFromProskomma extends ProskommaRender {
 
         this.cachedSequenceIds.unshift(mainId);
         this.renderSequence(environment);
+
         this.cachedSequenceIds.shift();
         this.renderEvent('endDocument', environment);
 
@@ -157,7 +159,6 @@ class SofriaRenderFromProskomma extends ProskommaRender {
         if (sequenceType === 'main') {
             if (environment.workspace.blockId) {
                 blocksIdsToRender = environment.workspace.blockId
-
             }
         }
 
@@ -241,24 +242,61 @@ class SofriaRenderFromProskomma extends ProskommaRender {
                     inputBlockN = blocksIdsToRender.pop();
                 }
                 else {
-                    inputBlockN = blocksIdsToRender.pop();
+                    inputBlockN = blocksIdsToRender.shift();
 
                 }
-                const blocksResult = this.pk.gqlQuerySync(
-                    `{
-               document(id: "${context.document.id}") {
-                 sequence(id:"${sequenceId}") {
-                   blocks(positions:${inputBlockN}) {
-                     bg {subType payload}
-                     bs {payload}
-                     items {type subType payload}
-                   }
-                 }
-               }
-             }`
-                );
-                const blockResult = blocksResult.data.document.sequence.blocks[0];
 
+                let blocksResult
+                if (environment.config.excludeScopeTypes) {
+                    if (environment.config.excludeScopeTypes.length > 0) {
+                        const scopeTypes = environment.config.excludeScopeTypes.map(elem => `"${elem}"`)
+                        blocksResult = this.pk.gqlQuerySync(
+                            `{
+                   document(id: "${context.document.id}") {
+                     sequence(id:"${sequenceId}") {
+                       blocks(positions:${inputBlockN}) {
+                         bg {subType payload}
+                         bs {payload}
+                         items (excludeScopeTypes : [${scopeTypes}] ) {type subType payload}
+                       }        
+                     }
+                   }
+                 }`
+                        );
+                    }
+                    else {
+                        blocksResult = this.pk.gqlQuerySync(
+                            `{
+                   document(id: "${context.document.id}") {
+                     sequence(id:"${sequenceId}") {
+                       blocks(positions:${inputBlockN}) {
+                         bg {subType payload}
+                         bs {payload}
+                         items{type subType payload}
+                       }
+                     }
+                   }
+                 }`
+                        );
+                    }
+                }
+                else {
+
+                    blocksResult = this.pk.gqlQuerySync(
+                        `{
+                   document(id: "${context.document.id}") {
+                     sequence(id:"${sequenceId}") {
+                       blocks(positions:${inputBlockN}) {
+                         bg {subType payload}
+                         bs {payload}
+                         items {type subType payload}
+                       }
+                     }
+                   }
+                 }`
+                    );
+                }
+                const blockResult = blocksResult.data.document.sequence.blocks[0];
                 for (const blockGraft of blockResult.bg) {
                     context.sequences[0].block = {
                         type: "graft",
@@ -271,7 +309,6 @@ class SofriaRenderFromProskomma extends ProskommaRender {
                     this.cachedSequenceIds.shift();
                     outputBlockN++;
                 }
-
                 const subTypeValues = blockResult.bs.payload.split('/');
                 let subTypeValue;
                 if (subTypeValues[1] && ["tr", "zrow"].includes(subTypeValues[1])) {
@@ -636,5 +673,10 @@ class SofriaRenderFromProskomma extends ProskommaRender {
     }
 
 }
+
+
+
+
+
 
 module.exports = SofriaRenderFromProskomma;
