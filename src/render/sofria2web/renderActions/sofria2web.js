@@ -331,7 +331,7 @@ const sofria2WebActions = {
                 const popped = workspace.paraContentStack.shift();
                 workspace.paraContentStack[0].content.push(config.renderers.wWrapper(
                     (workspace.settings.showWordAtts ? popped.atts : {}),
-                    popped.content
+                    popped.content.join('')
                 ));
                 return false;
             }

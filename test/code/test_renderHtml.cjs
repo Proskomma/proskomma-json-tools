@@ -84,5 +84,20 @@ test(`wrapper ends in (${testGroup})`, (t) => {
     console.log(err);
   }
 });
-
-
+test(`No extra commas around word markup (${testGroup})`, (t) => {
+    t.plan(1);
+    try {
+        const pk7 = new Proskomma();
+        const usfm = fse.readFileSync(path.resolve(path.join('./', 'test', 'test_data', 'usfms', 'titus_aligned.usfm'))).toString();
+        pk7.importDocument({ 'lang': 'eng', 'abbr': 'francl' }, 'usfm', usfm);
+        const docId = pk7.gqlQuerySync('{documents { id } }').data.documents[0].id;
+        const cl = new SofriaRenderFromProskomma({ proskomma: pk7, actions: renderActions.sofria2WebActions })
+        const output = {}
+        t.doesNotThrow(() => {
+            cl.renderDocument({ docId, config, output })
+        });
+        console.log(output);
+    } catch (err) {
+        console.log(err);
+    }
+});
