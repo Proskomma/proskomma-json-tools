@@ -3,14 +3,10 @@ const fse = require('fs-extra');
 import path from 'path';
 const fs = require('fs');
 const { Proskomma } = require('proskomma');
-const { sofria2WebActions } = require('../../dist/render/sofria2web/renderActions/sofria2web');
+const { renderActions } = require('../../dist/render/sofria2web');
 const { renderers } = require('../../dist/render/sofria2web/sofria2html');
 const SofriaRenderFromProskomma = require('../../dist/SofriaRenderFromProskomma');
 const cheerio = require('cheerio')
-import { identityActions } from '../../dist/render/sofriaToSofria/renderActions/identity';
-import { Validator } from '../../dist/';
-
-
 
 const config = {
   showWordAtts: false,
@@ -41,7 +37,7 @@ test(`Table is render in  (${testGroup})`, (t) => {
     const usfm = fse.readFileSync(path.resolve(path.join('./', 'test', 'test_data', 'usfms', 'table.usfm'))).toString();
     pk6.importDocument({ 'lang': 'eng', 'abbr': 'francl' }, 'usfm', usfm);
     const docId = pk6.gqlQuerySync('{documents { id } }').data.documents[0].id;
-    const cl = new SofriaRenderFromProskomma({ proskomma: pk6, actions: sofria2WebActions, debugLevel: 0 })
+    const cl = new SofriaRenderFromProskomma({ proskomma: pk6, actions: renderActions.sofria2WebActions, debugLevel: 0 })
     const output = {}
     t.doesNotThrow(() => {
       cl.renderDocument({ docId, config, output })
@@ -79,7 +75,7 @@ test(`wrapper ends in (${testGroup})`, (t) => {
     const usfm = fse.readFileSync(path.resolve(path.join('./', 'test', 'test_data', 'usfms', 'abba.usfm'))).toString();
     pk6.importDocument({ 'lang': 'eng', 'abbr': 'francl' }, 'usfm', usfm);
     const docId = pk6.gqlQuerySync('{documents { id } }').data.documents[0].id;
-    const cl = new SofriaRenderFromProskomma({ proskomma: pk6, actions: sofria2WebActions })
+    const cl = new SofriaRenderFromProskomma({ proskomma: pk6, actions: renderActions.sofria2WebActions })
     const output = {}
     t.doesNotThrow(() => {
       cl.renderDocument({ docId, config, output })
