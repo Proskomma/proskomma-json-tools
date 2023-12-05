@@ -85,7 +85,7 @@ test(`wrapper ends in (${testGroup})`, (t) => {
   }
 });
 test(`No extra commas around word markup (${testGroup})`, (t) => {
-    t.plan(1);
+    t.plan(3);
     try {
         const pk7 = new Proskomma();
         const usfm = fse.readFileSync(path.resolve(path.join('./', 'test', 'test_data', 'usfms', 'titus_aligned.usfm'))).toString();
@@ -96,7 +96,8 @@ test(`No extra commas around word markup (${testGroup})`, (t) => {
         t.doesNotThrow(() => {
             cl.renderDocument({ docId, config, output })
         });
-        console.log(output);
+        t.ok("paras" in output);
+        t.ok(output.paras.includes("de Dieu et la connaissance"));
     } catch (err) {
         console.log(err);
     }
