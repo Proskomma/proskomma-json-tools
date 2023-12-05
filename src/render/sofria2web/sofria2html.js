@@ -57,14 +57,15 @@ const renderers = {
     text: text => `${text}`,
     chapter_label: number => `<span style="${getStyles('marks', "chapter_label")}">${number}</span>`,
     verses_label: number => `<span style="${getStyles('marks', "verses_label")}">${number}</span>`,
-    paragraph: (subType, content, footnoteNo) =>
-        ["usfm:f", "usfm:x"].includes(subType) ?
+    paragraph: (subType, content, footnoteNo) => {
+        return ["usfm:f", "usfm:x"].includes(subType) ?
             InlineElement({
                 style: getStyles('paras', subType),
                 linkText: (subType === "usfm:f") ? footnoteNo : "*",
-                children: content.join("")
+                children: content.join('')
             })
-            : `<p style="${getStyles('paras', subType)}">${content.join("")}</p>`,
+            : `<p style="${getStyles('paras', subType)}">${content.join('')}</p>`
+    },
     wrapper: (atts, subType, content) => subType === 'cell' ?
 
         atts.role === 'body' ?
@@ -83,8 +84,7 @@ const renderers = {
                 textAlign: "center"
             }}
         >
-        <div>${content}</div>
-            ${Object.entries(atts).map(
+        <div>${content}</div>${Object.entries(atts).map(
             a =>
                 `<div
                             style={{
@@ -94,9 +94,8 @@ const renderers = {
                         >
                         {${a[0]} = ${a[1]}} 
                         </div>`
-        )
-        }
-        </span>`,
+        ).join('')
+        }</span>`,
     mergeParas: paras => paras.join('\n'),
     row: (content) => {
         return (`<tr>${content.join("")}</tr>`)
