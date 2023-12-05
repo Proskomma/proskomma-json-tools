@@ -348,7 +348,7 @@ const sofria2WebActions = {
                 //workspace.paraContentStack[0].content.push(renderedText);
                 element.text.split(" ").map((w, id) => {
                     workspace.currentIndex += 1
-                    const renderedText = config.renderers.text((id === element.text.split(" ") - 1) ? w : w + " ", workspace.currentIndex)
+                    const renderedText = config.renderers.text((id === element.text.split(" ").length - 1) ? w : w + " ", workspace.currentIndex)
                     workspace.paraContentStack[0].content.push(renderedText);
                 })
 
