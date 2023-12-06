@@ -1,29 +1,6 @@
-const { styles } = require('./renderStyles');
-
-const camelToKebabCase = (str) =>
-    str.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`);
-
-const getStyles = (type, subType) => {
-
-    if (!styles[type]) {
-        throw new Error(`Unknown style type '${type}'`);
-    }
-    if (!styles[type][subType]) {
-        console.log(`No styles for ${type}/${subType}`)
-        return styles[type].default;
-    }
-    const retObj = { ...styles[type].default, ...styles[type][subType] };
-    let retArr = []
-    Object.entries(retObj).forEach(([key, value]) => {
-        retArr.push(`${camelToKebabCase(key)}: ${value}`)
-    })
-    return retArr.join("; ");
-}
-
-function InlineElement(props) {
-    return `<span
+const inlineElement =  props => `<span
             style={{
-                ...props.style,
+                class: props.class,
                 paddingLeft: "0.5em",
                 paddingRight: "0.5em",
                 backgroundColor: "#CCC",
@@ -33,38 +10,20 @@ function InlineElement(props) {
             onClick={toggleDisplay}
         >
             ${props.children}
-        </span>`
-    /* if not display
-        } else {
-            return `<span
-                style={{
-                    verticalAlign: "super",
-                    fontSize: "x-small",
-                    fontWeight: "bold",
-                    marginRight: "0.25em",
-                    padding: "2px",
-                    backgroundColor: "#CCC"
-                }}
-                onClick={toggleDisplay}
-            >
-            ${props.linkText}
-        </span>`
-        }
-    */
-}
+        </span>`;
 
 const renderers = {
     text: text => `${text}`,
-    chapter_label: number => `<span style="${getStyles('marks', "chapter_label")}">${number}</span>`,
-    verses_label: number => `<span style="${getStyles('marks', "verses_label")}">${number}</span>`,
+    chapter_label: number => `<span class="marks_chapter_label">${number}</span>`,
+    verses_label: number => `<span class="marks_verses_label">${number}</span>`,
     paragraph: (subType, content, footnoteNo) => {
         return ["usfm:f", "usfm:x"].includes(subType) ?
-            InlineElement({
-                style: getStyles('paras', subType),
-                linkText: (subType === "usfm:f") ? footnoteNo : "*",
+            inlineElement({
+                class: `paras_usfm_${subType.split(':')[1]}`,
+                // linkText: (subType === "usfm:f") ? footnoteNo : "*",
                 children: content.join('')
             })
-            : `<p style="${getStyles('paras', subType)}">${content.join('')}</p>`
+            : `<p class="${`paras_usfm_${subType.split(':')[1]}`}">${content.join('')}</p>`
     },
     wrapper: (atts, subType, content) => subType === 'cell' ?
 
@@ -74,7 +33,7 @@ const renderers = {
             `<th colspan=${atts.nCols} style="text-align:${atts.alignment}">${content.join("")}</th>`
         :
 
-        `<span style="${getStyles('wrappers', subType)}">${content}</span>`,
+        `<span class="${`paras_usfm_${subType.split(':')[1]}`}">${content}</span>`,
     wWrapper: (atts, content) => Object.keys(atts).length === 0 ?
         content :
         `<span
