@@ -1,29 +1,9 @@
-const inlineElement =  props => `<span
-            style={{
-                class: props.class,
-                paddingLeft: "0.5em",
-                paddingRight: "0.5em",
-                backgroundColor: "#CCC",
-                marginTop: "1em",
-                marginBottom: "1em"
-            }}
-            onClick={toggleDisplay}
-        >
-            ${props.children}
-        </span>`;
-
 const renderers = {
     text: text => `${text}`,
     chapter_label: number => `<span class="marks_chapter_label">${number}</span>`,
     verses_label: number => `<span class="marks_verses_label">${number}</span>`,
     paragraph: (subType, content, footnoteNo) => {
-        return ["usfm:f", "usfm:x"].includes(subType) ?
-            inlineElement({
-                class: `paras_usfm_${subType.split(':')[1]}`,
-                // linkText: (subType === "usfm:f") ? footnoteNo : "*",
-                children: content.join('')
-            })
-            : `<p class="${`paras_usfm_${subType.split(':')[1]}`}">${content.join('')}</p>`
+        return `<p class="${`paras_usfm_${subType.split(':')[1]}`}">${content.join('')}</p>`
     },
     wrapper: (atts, subType, content) => subType === 'cell' ?
 
@@ -33,7 +13,7 @@ const renderers = {
             `<th colspan=${atts.nCols} style="text-align:${atts.alignment}">${content.join("")}</th>`
         :
 
-        `<span class="${`paras_usfm_${subType.split(':')[1]}`}">${content}</span>`,
+        `<span class="${`paras_usfm_${subType.split(':')[1]}`}">${content.join("")}</span>`,
     wWrapper: (atts, content) => Object.keys(atts).length === 0 ?
         content :
         `<span
