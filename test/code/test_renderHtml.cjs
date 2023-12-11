@@ -125,6 +125,27 @@ test(`No extra commas around word markup (${testGroup})`, (t) => {
     }
 });
 
+test(`Footnote (${testGroup})`, (t) => {
+    t.plan(3);
+    try {
+        const pk8 = new Proskomma();
+        //eng_francl_mrk
+        const usfm = fse.readFileSync(path.resolve(path.join('./', 'test', 'test_data', 'usfms', 'eng_francl_mrk.usfm'))).toString();
+        pk8.importDocument({ 'lang': 'eng', 'abbr': 'francl' }, 'usfm', usfm);
+        const docId = pk8.gqlQuerySync('{documents { id } }').data.documents[0].id;
+        const cl = new SofriaRenderFromProskomma({ proskomma: pk8, actions: renderActions.sofria2WebActions })
+        const output = {}
+        t.doesNotThrow(() => {
+            cl.renderDocument({ docId, config, output })
+        });
+        t.ok("paras" in output);
+        t.ok(output.paras.includes("class=\"paras_usfm_p\""));
+    } catch (err) {
+        console.log(err);
+    }
+});
+
+
 test("Generate CSS (${testGroup})", t => {
     t.plan(4);
     let styleCss;

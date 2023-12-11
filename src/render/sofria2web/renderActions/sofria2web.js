@@ -252,7 +252,7 @@ const sofria2WebActions = {
                 };
                 if (context.sequences[0].element.subType === 'cell') {
                     pushed.atts = context.sequences[0].element.atts
-                };
+                }
 
                 workspace.currentIndex += 1
                 workspace.paraContentStack.unshift(
@@ -294,7 +294,15 @@ const sofria2WebActions = {
 
                 const popped = workspace.paraContentStack.shift();
 
-                workspace.paraContentStack[0].content.push(config.renderers.wrapper(popped.subType === 'cell' ? popped.atts : {}, popped.subType, popped.content, workspace.currentIndex));
+                workspace.paraContentStack[0]
+                    .content.push(
+                        config.renderers.wrapper(
+                            popped.subType === 'cell' ? popped.atts : {},
+                            popped.subType,
+                            popped.content,
+                            workspace.currentIndex
+                        )
+                );
 
             }
         },
@@ -344,8 +352,6 @@ const sofria2WebActions = {
             action: ({ config, context, workspace }) => {
 
                 const element = context.sequences[0].element;
-                //const renderedText = config.renderers.text(element.text);
-                //workspace.paraContentStack[0].content.push(renderedText);
                 element.text.split(" ").map((w, id) => {
                     workspace.currentIndex += 1
                     const renderedText = config.renderers.text((id === element.text.split(" ").length - 1) ? w : w + " ", workspace.currentIndex)
