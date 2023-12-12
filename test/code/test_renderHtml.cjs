@@ -139,7 +139,7 @@ test(`Footnote (${testGroup})`, (t) => {
             cl.renderDocument({ docId, config, output })
         });
         t.ok("paras" in output);
-        t.ok(output.paras.includes("class=\"paras_usfm_p\""));
+        t.ok(output.paras.includes("span class=\"paras_usfm_f\""));
     } catch (err) {
         console.log(err);
     }
