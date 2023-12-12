@@ -1,10 +1,10 @@
 const renderers = {
-    text: text => `${text}`,
+    text: text => text.replace(/{([^}]+)}/g, (all, first) => `<i>${first}</i>`),
     chapter_label: number => `<span class="marks_chapter_label">${number}</span>`,
     verses_label: number => `<span class="marks_verses_label">${number}</span>`,
     paragraph: (subType, content, footnoteNo) => {
         const paraClass = subType.split(':')[1];
-        const paraTag = ["f", "xt"].includes(paraClass) ? "span" : "p";
+        const paraTag = ["f", "x"].includes(paraClass) ? "span" : "p";
         return `<${paraTag} class="${`paras_usfm_${paraClass}`}">${content.join('')}</${paraTag}>`
     },
     wrapper: (atts, subType, content) => subType === 'cell' ?

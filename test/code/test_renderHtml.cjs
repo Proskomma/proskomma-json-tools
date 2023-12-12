@@ -129,17 +129,36 @@ test(`Footnote (${testGroup})`, (t) => {
     t.plan(3);
     try {
         const pk8 = new Proskomma();
-        //eng_francl_mrk
         const usfm = fse.readFileSync(path.resolve(path.join('./', 'test', 'test_data', 'usfms', 'eng_francl_mrk.usfm'))).toString();
         pk8.importDocument({ 'lang': 'eng', 'abbr': 'francl' }, 'usfm', usfm);
         const docId = pk8.gqlQuerySync('{documents { id } }').data.documents[0].id;
-        const cl = new SofriaRenderFromProskomma({ proskomma: pk8, actions: renderActions.sofria2WebActions })
+        const cl = new SofriaRenderFromProskomma({ proskomma: pk8, actions: renderActions.sofria2WebActions, debugLevel: 0 })
         const output = {}
         t.doesNotThrow(() => {
             cl.renderDocument({ docId, config, output })
         });
         t.ok("paras" in output);
         t.ok(output.paras.includes("span class=\"paras_usfm_f\""));
+    } catch (err) {
+        console.log(err);
+    }
+});
+
+test(`Text braces (${testGroup})`, (t) => {
+    t.plan(4);
+    try {
+        const pk9 = new Proskomma();
+        const usfm = fse.readFileSync(path.resolve(path.join('./', 'test', 'test_data', 'usfms', 'text_braces.usfm'))).toString();
+        pk9.importDocument({ 'lang': 'eng', 'abbr': 'francl' }, 'usfm', usfm);
+        const docId = pk9.gqlQuerySync('{documents { id } }').data.documents[0].id;
+        const cl = new SofriaRenderFromProskomma({ proskomma: pk9, actions: renderActions.sofria2WebActions, debugLevel: 0 })
+        const output = {}
+        t.doesNotThrow(() => {
+            cl.renderDocument({ docId, config, output })
+        });
+        t.ok("paras" in output);
+        t.ok(output.paras.includes("<i>beloved</i>"));
+        t.ok(!output.paras.includes("{"));
     } catch (err) {
         console.log(err);
     }
