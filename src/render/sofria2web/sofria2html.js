@@ -1,5 +1,5 @@
 const renderers = {
-    text: text => text.replace(/{([^}]+)}/g, (all, first) => `<i>${first}</i>`),
+    text: text => text.replace(/{/g, "<i>").replace(/}/g, "</i>"),
     chapter_label: number => `<span class="marks_chapter_label">${number}</span>`,
     verses_label: number => `<span class="marks_verses_label">${number}</span>`,
     paragraph: (subType, content, footnoteNo) => {
