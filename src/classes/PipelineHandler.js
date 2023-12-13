@@ -92,10 +92,10 @@ class PipelineHandler {
      * @param {object} data
      * @return {Promise<array>} A report
      */
-    async runPipeline(pipelineName, data) {
+    runPipeline(pipelineName, data) {
         const pipeline = this.getPipeline(pipelineName, data);
         this.loadTransforms(pipeline, 'perf');
-        return await this.evaluateSteps({specSteps: pipeline, inputValues: data});
+        return this.evaluateSteps({specSteps: pipeline, inputValues: data});
     }
 
     loadTransforms(pipeline, namespace='perf') {
@@ -178,6 +178,7 @@ class PipelineHandler {
             }
         }
         // Propagate values between transforms until nothing changes
+        const seenTransforms = new Set([]);
         let changed = true;
         let nWaitingTransforms = 0;
         while (changed) {
@@ -187,9 +188,19 @@ class PipelineHandler {
                     Object.values(transformInputs[transformStep.id]).filter(i => !i).length === 0 &&
                     Object.values(transformOutputs[transformStep.id]).filter(i => !i).length > 0
                 ) {
+                    if (!this.transforms[transformStep.name]) {
+                        throw new Error(`Could not find transform called ${transformStep.name}`);
+                    }
+                    if (seenTransforms.has(transformStep.id)) {
+                        throw new Error(`Transform ${transformStep.id} called more than once`);
+                    }
+                    seenTransforms.add(transformStep.id);
                     this.verbose && console.log(`Evaluating Transform ${transformStep.id}`);
                     try {
                         transformOutputs[transformStep.id] = this.transforms[transformStep.name].code({...transformInputs[transformStep.id], proskomma:this.getProskomma()});
+                        if (Object.values(transformOutputs[transformStep.id]).filter(v => !v).length > 0) {
+                            throw new Error(`Transform ${transformStep.id} returned at least one false/undefined value: ${JSON.stringify(transformOutputs[transformStep.id])}`)
+                        }
                     } catch (err) {
                         const errMsg = `Error evaluating Transform ${transformStep.id} (name=${transformStep.name}, type=${typeof transformStep.code}): ${err}`;
                         throw new Error(errMsg);

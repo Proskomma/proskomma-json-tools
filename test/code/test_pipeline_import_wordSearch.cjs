@@ -19,8 +19,8 @@ const perfContent = fse.readJsonSync(path.resolve(__dirname, '../test_data/perfs
 test(`returns output with valid args (${testGroup})`, (t) => {
     t.plan(6);
     try {
-        t.doesNotThrow(async () => {
-            let output = await pipelineH.runPipeline('wordSearchPipeline', {
+        t.doesNotThrow(() => {
+            let output = pipelineH.runPipeline('wordSearchPipeline', {
                 perf: perfContent,
                 searchString: 'God',
                 ignoreCase: '0',
