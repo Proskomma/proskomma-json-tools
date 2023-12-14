@@ -16,7 +16,7 @@ const pk = new Proskomma();
 pk.importDocument({lang: "fra", abbr: "lsg"}, "usfm", usfm);
 const perfContent = JSON.parse(pk.gqlQuerySync("{documents {perf}}").data.documents[0].perf);
 const usfmJsJson = usfmJsPackage.toJSON(usfm);
-// console.log("UsfmJs\n", JSON.stringify(usfmJsJson.headers, null, 2));
+// console.log("UsfmJs\n", JSON.stringify(usfmJsJson.chapters[1][1], null, 2));
 test(`perf=>usfmJs (${testGroup})`, t => {
     t.plan(5);
     let output;
@@ -33,7 +33,7 @@ test(`perf=>usfmJs (${testGroup})`, t => {
         const idHeader = output.usfmJs.headers.filter(h => h.tag === "id")[0];
         t.ok(idHeader);
         t.ok(idHeader.content.startsWith('TIT'));
-//        console.log("Proskomma\n", JSON.stringify(output.usfmJs.headers, null, 2));
+//        console.log("Proskomma\n", JSON.stringify(output.usfmJs.chapters, null, 2));
     } catch (err) {
         console.log(err);
         t.fail('perfToUsfmJsPipeline throws on valid perf');
