@@ -15,7 +15,7 @@ const perfToUsfmJsActions = {
             action: ({context, workspace, output}) => {
                 workspace.chapter = "front";
                 workspace.verses = "front";
-                workspace.contentStack = [];
+                workspace.zalns = [];
                 output.usfmJs = {
                     headers: [],
                     chapters: {}
@@ -65,14 +65,13 @@ const perfToUsfmJsActions = {
             action: ({context, workspace, output}) => {
                 workspace.verses = context.sequences[0].element.atts["number"];
                 output.usfmJs.chapters[workspace.chapter][workspace.verses] = {verseObjects: []};
-                workspace.contentStack = [];
             }
         }
     ],
     startMilestone: [
         {
             description: "Start zaln",
-            test: ({context}) => context.sequences[0].element.subType = "usfm:zaln",
+            test: ({context}) => context.sequences[0].element.subType === "usfm:zaln",
             action: ({context, workspace, output}) => {
                 const element = context.sequences[0].element;
                 const milestoneOb = {
@@ -86,7 +85,12 @@ const perfToUsfmJsActions = {
                 }
                 milestoneOb["children"] = [];
                 milestoneOb['endTag'] = null; // Flag for "open"
-                output.usfmJs.chapters[workspace.chapter][workspace.verses].verseObjects.push(milestoneOb);
+                if (workspace.zalns.length === 0) {
+                    output.usfmJs.chapters[workspace.chapter][workspace.verses].verseObjects.push(milestoneOb);
+                } else {
+                    workspace.zalns[0].children.push(milestoneOb);
+                }
+                workspace.zalns.unshift(milestoneOb);
             }
         },
 
@@ -94,19 +98,21 @@ const perfToUsfmJsActions = {
     endMilestone: [
         {
             description: "End zaln",
-            test: ({context}) => context.sequences[0].element.subType = "usfm:zaln",
+            test: ({context}) => context.sequences[0].element.subType === "usfm:zaln",
             action: ({context, workspace, output}) => {
-                const verseObjects = output.usfmJs.chapters[workspace.chapter][workspace.verses].verseObjects;
-                verseObjects[verseObjects.length - 1].endTag = "zaln-e\\*";
+                workspace.zalns[0].endTag = "zaln-e\\*";
+                workspace.zalns.shift();
             }
         },
     ],
     startWrapper: [
         {
             description: "w wrapper",
-            test: ({context}) => context.sequences[0].element.subType = "usfm:w",
+            test: ({
+                       context,
+                       workspace
+                   }) => context.sequences[0].element.subType === "usfm:w" && workspace.zalns.length > 0,
             action: ({context, workspace, output}) => {
-                const verseObjects = output.usfmJs.chapters[workspace.chapter][workspace.verses].verseObjects;
                 const wObject = {
                     tag: "w",
                     type: "word",
@@ -118,7 +124,7 @@ const perfToUsfmJsActions = {
                         wObject[attKey] = element.atts[`x-${attKey}`].join(',');
                     }
                 }
-                verseObjects[verseObjects.length -1].children.push(wObject);
+                workspace.zalns[0].children.push(wObject);
             }
         },
     ],
@@ -128,15 +134,22 @@ const perfToUsfmJsActions = {
             test: () => true,
             action: ({context, workspace, output}) => {
                 const text = context.sequences[0].element.text;
-                const verseObjects = output.usfmJs.chapters[workspace.chapter][workspace.verses].verseObjects;
-                if (verseObjects.length === 0) {
-                } else if (verseObjects.slice(-1)[0].type === "text") {
-                    verseObjects.slice(-1)[0].text += text;
-                } else if (verseObjects.slice(-1)[0].type === "milestone") {
-                    const children = verseObjects.slice(-1)[0].children;
+                const target = workspace.zalns[0] || output.usfmJs.chapters[workspace.chapter][workspace.verses].verseObjects.slice(-1)[0];
+                if (!target) {
+                } else if (target.type === "text") {
+                    if ('text' in target) {
+                        target.text = "";
+                    }
+                    target.text += text;
+                } else if (target.type === "milestone") {
+                    const children = target.children;
+                    console.log(children)
+                    if (children.length ===0 || !('text' in children[children.length - 1])) {
+                        children.push({type: "text", text: ""});
+                    }
                     children[children.length - 1].text += text;
                 } else {
-                    verseObjects.push({type: "text", text});
+                    console.log("Neither text nor milestone")
                 }
             }
         }

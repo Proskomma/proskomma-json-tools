@@ -16,7 +16,7 @@ const pk = new Proskomma();
 pk.importDocument({lang: "fra", abbr: "lsg"}, "usfm", usfm);
 const perfContent = JSON.parse(pk.gqlQuerySync("{documents {perf}}").data.documents[0].perf);
 const usfmJsJson = usfmJsPackage.toJSON(usfm);
-console.log("UsfmJs\n", JSON.stringify(usfmJsJson.chapters, null, 2));
+// console.log("UsfmJs\n", JSON.stringify(usfmJsJson.chapters, null, 2));
 test(`perf=>usfmJs (${testGroup})`, t => {
     t.plan(10);
     let output;
@@ -41,7 +41,7 @@ test(`perf=>usfmJs (${testGroup})`, t => {
         t.ok(output.usfmJs.chapters["1"]["1"].verseObjects[0]);
         // t.ok(output.usfmJs.chapters["1"]["1"].verseObjects[0].type === "text");
         // t.ok(output.usfmJs.chapters["1"]["1"].verseObjects[0].text.startsWith("Paul, serviteur de Dieu"));
-        //console.log("Proskomma\n", JSON.stringify(output.usfmJs, null, 2));
+        console.log("Proskomma\n", JSON.stringify(output.usfmJs, null, 2));
         // console.log(usfmJsPackage.toUSFM(output.usfmJs));
     } catch (err) {
         console.log(err);
