@@ -8,7 +8,7 @@ const testGroup = 'Perf 2 usfmJs';
 
 const pipelineH = new PipelineHandler({
     proskomma: new Proskomma(),
-    verbose: false
+    verbose: true
 });
 
 const usfm = fse.readFileSync(path.resolve(__dirname, '../test_data/usfms/titus_aligned.usfm')).toString();
@@ -16,9 +16,9 @@ const pk = new Proskomma();
 pk.importDocument({lang: "fra", abbr: "lsg"}, "usfm", usfm);
 const perfContent = JSON.parse(pk.gqlQuerySync("{documents {perf}}").data.documents[0].perf);
 const usfmJsJson = usfmJsPackage.toJSON(usfm);
-// console.log("UsfmJs\n", JSON.stringify(usfmJsJson.chapters[1][1], null, 2));
+console.log("UsfmJs\n", JSON.stringify(usfmJsJson.chapters, null, 2));
 test(`perf=>usfmJs (${testGroup})`, t => {
-    t.plan(5);
+    t.plan(10);
     let output;
     try {
         t.doesNotThrow(async () => {
@@ -28,12 +28,21 @@ test(`perf=>usfmJs (${testGroup})`, t => {
                 }
             );
         });
+        // console.log("Output", output.usfmJs.chapters["1"]["front"])
         t.ok(output.usfmJs);
         t.ok(output.usfmJs.headers);
         const idHeader = output.usfmJs.headers.filter(h => h.tag === "id")[0];
         t.ok(idHeader);
         t.ok(idHeader.content.startsWith('TIT'));
-//        console.log("Proskomma\n", JSON.stringify(output.usfmJs.chapters, null, 2));
+        t.ok(output.usfmJs.chapters);
+        t.ok(output.usfmJs.chapters["1"]);
+        t.ok(output.usfmJs.chapters["1"]["1"]);
+        t.ok(output.usfmJs.chapters["1"]["1"].verseObjects);
+        t.ok(output.usfmJs.chapters["1"]["1"].verseObjects[0]);
+        // t.ok(output.usfmJs.chapters["1"]["1"].verseObjects[0].type === "text");
+        // t.ok(output.usfmJs.chapters["1"]["1"].verseObjects[0].text.startsWith("Paul, serviteur de Dieu"));
+        //console.log("Proskomma\n", JSON.stringify(output.usfmJs, null, 2));
+        // console.log(usfmJsPackage.toUSFM(output.usfmJs));
     } catch (err) {
         console.log(err);
         t.fail('perfToUsfmJsPipeline throws on valid perf');
