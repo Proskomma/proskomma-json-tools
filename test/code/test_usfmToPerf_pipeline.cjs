@@ -14,10 +14,10 @@ const usfmContent = fse.readFileSync(path.resolve(__dirname, '../test_data/usfms
 
 const usfmContent2 = fse.readFileSync(path.resolve(__dirname, '../test_data/usfms/ult_tit_misplaced_ts.usfm')).toString();
 
-test(`usfm=>perf : validate the output perf (${testGroup})`, async (t) => {
+test(`usfm=>perf : validate the output perf (${testGroup})`, t => {
     t.plan(1);
     try {
-        let output = await pipelineH.runPipeline('usfmToPerfPipeline', {
+        let output = pipelineH.runPipeline('usfmToPerfPipeline', {
             usfm: usfmContent,
             selectors: {'lang': 'fra', 'abbr': 'ust'}
         });
@@ -29,8 +29,6 @@ test(`usfm=>perf : validate the output perf (${testGroup})`, async (t) => {
         } else {
             t.ok(validatorResult.isValid);
         }
-
-        // await saveFile(JSON.stringify(output.perf, null, 2));
     } catch (err) {
         console.log(err);
         t.fail('usfmToPerfPipeline throws on valid perf');
