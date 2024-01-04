@@ -133,7 +133,7 @@ const perfToUsfmJsActions = {
                     text: ""
                 };
                 const element = context.sequences[0].element;
-                for (const attKey of ["occurrences", "content"]) {
+                for (const attKey of ["occurrence", "occurrences", "content"]) {
                     if (element.atts[`x-${attKey}`]) {
                         wObject[attKey] = element.atts[`x-${attKey}`].join(',');
                     }

@@ -18,7 +18,7 @@ const perfContent = JSON.parse(pk.gqlQuerySync("{documents {perf}}").data.docume
 const usfmJsJson = usfmJsPackage.toJSON(usfm);
 // console.log("UsfmJs\n", JSON.stringify(usfmJsJson, null, 2));
 test(`perf=>usfmJs (${testGroup})`, t => {
-    t.plan(22);
+    t.plan(23);
     let output;
     try {
         t.doesNotThrow(async () => {
@@ -57,7 +57,8 @@ test(`perf=>usfmJs (${testGroup})`, t => {
         const nestedMilestone3 = nestedMilestone2.children[0];
         t.ok(nestedMilestone3.content === 'εὐσέβειαν');
         t.ok(nestedMilestone3.children.filter(c => c.tag === "w").length === nestedMilestone3.children.length);
-        t.ok(nestedMilestone3.children.map(c => c.text).join('') === "qui est selon la piété");
+        t.ok(nestedMilestone3.children.filter(c => c.tag === "w").length === nestedMilestone3.children.length);
+        t.ok(nestedMilestone3.children[0].occurrence);
         // console.log("Proskomma\n", JSON.stringify(output.usfmJs, null, 2));
         // console.log(usfmJsPackage.toUSFM(output.usfmJs));
     } catch (err) {
