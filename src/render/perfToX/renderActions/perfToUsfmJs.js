@@ -35,8 +35,12 @@ const perfToUsfmJsActions = {
     ],
     startParagraph: [
         {
-            description: "Output paragraph tag (main)",
-            test: ({workspace, output}) => output.usfmJs.chapters[workspace.chapter],
+            description: "Output paragraph tag (main), currently always to front",
+            test: ({
+                       context,
+                       workspace,
+                       output
+                   }) => context.sequences[0].type === "main" && output.usfmJs.chapters[workspace.chapter],
             action: ({context, workspace, output}) => {
                 if (!output.usfmJs.chapters[workspace.chapter]["front"]) {
                     output.usfmJs.chapters[workspace.chapter]["front"] = {verseObjects: []};
@@ -45,6 +49,16 @@ const perfToUsfmJsActions = {
                     tag: oneifyTag(context.sequences[0].block.subType.split(':')[1]),
                     type: "paragraph",
                     nextChar: "\n",
+                });
+            }
+        },
+        {
+            description: "mt (title)",
+            test: ({context, workspace, output}) => context.sequences[0].type === "title",
+            action: ({context, output}) => {
+                output.usfmJs.headers.push({
+                    tag: oneifyTag(context.sequences[0].block.subType.split(':')[1]),
+                    content: ""
                 });
             }
         }
@@ -70,7 +84,7 @@ const perfToUsfmJsActions = {
     ],
     startMilestone: [
         {
-            description: "Start zaln",
+            description: "Start zaln: make milestone and add to stack",
             test: ({context}) => context.sequences[0].element.subType === "usfm:zaln",
             action: ({context, workspace, output}) => {
                 const element = context.sequences[0].element;
@@ -97,9 +111,9 @@ const perfToUsfmJsActions = {
     ],
     endMilestone: [
         {
-            description: "End zaln",
+            description: "End zaln: pop stack",
             test: ({context}) => context.sequences[0].element.subType === "usfm:zaln",
-            action: ({context, workspace, output}) => {
+            action: ({workspace}) => {
                 workspace.zalns[0].endTag = "zaln-e\\*";
                 workspace.zalns.shift();
             }
@@ -107,12 +121,12 @@ const perfToUsfmJsActions = {
     ],
     startWrapper: [
         {
-            description: "w wrapper",
+            description: "w wrapper: make a new object with empty text",
             test: ({
                        context,
                        workspace
                    }) => context.sequences[0].element.subType === "usfm:w" && workspace.zalns.length > 0,
-            action: ({context, workspace, output}) => {
+            action: ({context, workspace}) => {
                 const wObject = {
                     tag: "w",
                     type: "word",
@@ -130,8 +144,8 @@ const perfToUsfmJsActions = {
     ],
     text: [
         {
-            description: "Push text to output or stack",
-            test: () => true,
+            description: "Main sequence: add text either as text object or to existing word object in milestone",
+            test: ({context}) => context.sequences[0].type === "main",
             action: ({context, workspace, output}) => {
                 const text = context.sequences[0].element.text;
                 const target = workspace.zalns[0] || output.usfmJs.chapters[workspace.chapter][workspace.verses].verseObjects.slice(-1)[0];
@@ -143,16 +157,44 @@ const perfToUsfmJsActions = {
                     target.text += text;
                 } else if (target.type === "milestone") {
                     const children = target.children;
-                    console.log(children)
-                    if (children.length ===0 || !('text' in children[children.length - 1])) {
+                    if (children.length === 0 || !('text' in children[children.length - 1])) {
                         children.push({type: "text", text: ""});
                     }
                     children[children.length - 1].text += text;
                 } else {
-                    console.log("Neither text nor milestone")
+                    throw new Error("Child is either text nor milestone");
                 }
             }
+        },
+        {
+            description: "Title sequence: add text to mt in header",
+            test: ({context}) => context.sequences[0].type === "title",
+            action: ({context, output}) => {
+                const text = context.sequences[0].element.text;
+                const headers = output.usfmJs.headers;
+                headers[headers.length - 1].content += text;
+            }
         }
+    ],
+    blockGraft: [
+        {
+            description: "Process title grafts",
+            test: (environment) => environment.context.sequences[0].block.subType === "title",
+            action: (environment) => {
+                const currentBlock = environment.context.sequences[0].block;
+                const graftRecord = {
+                    type: currentBlock.type,
+                    subtype: currentBlock.subType,
+                };
+                if (currentBlock.target) {
+                    graftRecord.target = currentBlock.target;
+                    environment.context.renderer.renderSequenceId(environment, graftRecord.target);
+                }
+                if (currentBlock.isNew) {
+                    graftRecord.new = currentBlock.isNew;
+                }
+            }
+        },
     ]
 }
 
