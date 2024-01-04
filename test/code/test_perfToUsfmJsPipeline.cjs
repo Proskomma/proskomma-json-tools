@@ -18,7 +18,7 @@ const perfContent = JSON.parse(pk.gqlQuerySync("{documents {perf}}").data.docume
 const usfmJsJson = usfmJsPackage.toJSON(usfm);
 // console.log("UsfmJs\n", JSON.stringify(usfmJsJson, null, 2));
 test(`perf=>usfmJs (${testGroup})`, t => {
-    t.plan(23);
+    t.plan(25);
     let output;
     try {
         t.doesNotThrow(async () => {
@@ -42,22 +42,24 @@ test(`perf=>usfmJs (${testGroup})`, t => {
         t.ok(output.usfmJs.chapters["1"]["1"].verseObjects);
         t.ok(output.usfmJs.chapters["1"]["1"].verseObjects[0]);
         // SINGLE MILESTONE
-        t.ok(output.usfmJs.chapters["1"]["1"].verseObjects[0].type === "milestone");
-        t.ok(output.usfmJs.chapters["1"]["1"].verseObjects[0].tag === "zaln");
-        t.ok(output.usfmJs.chapters["1"]["1"].verseObjects[0].lemma === "Παῦλος");
-        t.ok(output.usfmJs.chapters["1"]["1"].verseObjects[0].children.length === 2);
-        t.ok(output.usfmJs.chapters["1"]["1"].verseObjects[0].children[0].tag === "w");
-        t.ok(output.usfmJs.chapters["1"]["1"].verseObjects[0].children[0].text.startsWith("Paul"));
+        t.equal(output.usfmJs.chapters["1"]["1"].verseObjects[0].type, "milestone");
+        t.equal(output.usfmJs.chapters["1"]["1"].verseObjects[0].tag, "zaln");
+        t.equal(output.usfmJs.chapters["1"]["1"].verseObjects[0].lemma, "Παῦλος");
+        t.equal(output.usfmJs.chapters["1"]["1"].verseObjects[0].children.length, 1);
+        t.equal(output.usfmJs.chapters["1"]["1"].verseObjects[0].children[0].tag, "w");
+        t.equal(output.usfmJs.chapters["1"]["1"].verseObjects[0].children[0].text, "Paul");
+        t.equal(output.usfmJs.chapters["1"]["1"].verseObjects[1].type, "text");
+        t.equal(output.usfmJs.chapters["1"]["1"].verseObjects[1].text, ", ");
         // NESTED MILESTONES
         const nestedMilestone = output.usfmJs.chapters["1"]["1"].verseObjects.filter(m => m.strong === "G35880")[0];
         t.ok(nestedMilestone);
-        t.ok(nestedMilestone.content === 'τῆς');
+        t.equal(nestedMilestone.content, 'τῆς');
         const nestedMilestone2 = nestedMilestone.children[0];
-        t.ok(nestedMilestone2.content === 'κατ’');
+        t.equal(nestedMilestone2.content, 'κατ’');
         const nestedMilestone3 = nestedMilestone2.children[0];
-        t.ok(nestedMilestone3.content === 'εὐσέβειαν');
-        t.ok(nestedMilestone3.children.filter(c => c.tag === "w").length === 5);
-        t.ok(nestedMilestone3.children.filter(c => c.type === "text").length === 4);
+        t.equal(nestedMilestone3.content, 'εὐσέβειαν');
+        t.equal(nestedMilestone3.children.filter(c => c.tag === "w").length, 5);
+        t.equal(nestedMilestone3.children.filter(c => c.type === "text").length, 4);
         t.ok(nestedMilestone3.children[0].occurrence);
         // console.log("Proskomma\n", JSON.stringify(output.usfmJs, null, 2));
         // console.log(usfmJsPackage.toUSFM(output.usfmJs));

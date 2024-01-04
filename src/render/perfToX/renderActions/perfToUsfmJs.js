@@ -17,6 +17,7 @@ const perfToUsfmJsActions = {
                 workspace.chapter = "front";
                 workspace.verses = "front";
                 workspace.zalns = [];
+                workspace.inW = false;
                 output.usfmJs = {
                     headers: [],
                     chapters: {}
@@ -122,7 +123,7 @@ const perfToUsfmJsActions = {
     ],
     startWrapper: [
         {
-            description: "w wrapper: make a new object with empty text",
+            description: "start of w wrapper: make a new object with empty text",
             test: ({
                        context,
                        workspace
@@ -140,6 +141,19 @@ const perfToUsfmJsActions = {
                     }
                 }
                 workspace.zalns[0].children.push(wObject);
+                workspace.inW = true;
+            }
+        },
+    ],
+    endWrapper: [
+        {
+            description: "end of w wrapper: clear flag",
+            test: ({
+                       context,
+                       workspace
+                   }) => context.sequences[0].element.subType === "usfm:w" && workspace.zalns.length > 0,
+            action: ({context, workspace}) => {
+                workspace.inW = false;
             }
         },
     ],
@@ -149,7 +163,13 @@ const perfToUsfmJsActions = {
             test: ({context}) => context.sequences[0].type === "main",
             action: ({context, workspace, output}) => {
                 const text = context.sequences[0].element.text;
-                const target = workspace.zalns[0] || output.usfmJs.chapters[workspace.chapter][workspace.verses].verseObjects.slice(-1)[0];
+                let target = output.usfmJs.chapters[workspace.chapter][workspace.verses].verseObjects.slice(-1)[0];
+                if (workspace.zalns[0]) {
+                    target = workspace.zalns[0];
+                } else if (target.type === "milestone") {
+                    target = {type: "text", text: ""}
+                    output.usfmJs.chapters[workspace.chapter][workspace.verses].verseObjects.push(target);
+                }
                 if (!target) {
                 } else if (target.type === "text") {
                     if ('text' in target) {
