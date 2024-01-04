@@ -45,7 +45,7 @@ test(`perf=>usfmJs (${testGroup})`, t => {
         t.ok(output.usfmJs.chapters["1"]["1"].verseObjects[0].type === "milestone");
         t.ok(output.usfmJs.chapters["1"]["1"].verseObjects[0].tag === "zaln");
         t.ok(output.usfmJs.chapters["1"]["1"].verseObjects[0].lemma === "Παῦλος");
-        t.ok(output.usfmJs.chapters["1"]["1"].verseObjects[0].children.length === 1);
+        t.ok(output.usfmJs.chapters["1"]["1"].verseObjects[0].children.length === 2);
         t.ok(output.usfmJs.chapters["1"]["1"].verseObjects[0].children[0].tag === "w");
         t.ok(output.usfmJs.chapters["1"]["1"].verseObjects[0].children[0].text.startsWith("Paul"));
         // NESTED MILESTONES
@@ -56,8 +56,8 @@ test(`perf=>usfmJs (${testGroup})`, t => {
         t.ok(nestedMilestone2.content === 'κατ’');
         const nestedMilestone3 = nestedMilestone2.children[0];
         t.ok(nestedMilestone3.content === 'εὐσέβειαν');
-        t.ok(nestedMilestone3.children.filter(c => c.tag === "w").length === nestedMilestone3.children.length);
-        t.ok(nestedMilestone3.children.filter(c => c.tag === "w").length === nestedMilestone3.children.length);
+        t.ok(nestedMilestone3.children.filter(c => c.tag === "w").length === 5);
+        t.ok(nestedMilestone3.children.filter(c => c.type === "text").length === 4);
         t.ok(nestedMilestone3.children[0].occurrence);
         // console.log("Proskomma\n", JSON.stringify(output.usfmJs, null, 2));
         // console.log(usfmJsPackage.toUSFM(output.usfmJs));

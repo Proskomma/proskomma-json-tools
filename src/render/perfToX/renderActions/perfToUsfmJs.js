@@ -1,4 +1,5 @@
-// Put mt into headers
+const xre = require('xregexp');
+
 
 const oneifyTag = t => {
     if (['toc', 'toca', 'mt', 'imt', 's', 'ms', 'mte', 'sd'].includes(t)) {
@@ -157,7 +158,8 @@ const perfToUsfmJsActions = {
                     target.text += text;
                 } else if (target.type === "milestone") {
                     const children = target.children;
-                    if (children.length === 0 || !('text' in children[children.length - 1])) {
+                    const isWord = xre.test(text, xre('^[\\p{Letter}\\p{Number}\\p{Mark}\\u2060]{1,127}$'), 0);
+                    if (children.length === 0 || !('text' in children[children.length - 1]) || !isWord) {
                         children.push({type: "text", text: ""});
                     }
                     children[children.length - 1].text += text;
