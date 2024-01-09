@@ -12,6 +12,7 @@ const mergeUwAlignmentActions = {
                 workspace.verses = null;
                 workspace.verseWordOccurrences = {};
                 workspace.alignmentLookup = usfmJsHelps.alignmentLookupFromUsfmJs(config.usfmJs);
+                workspace.zalnNesting = 0;
                 // console.log(JSON.stringify(workspace.alignmentLookup["1"]["1"], null, 2))
                 output.perf = {};
                 return true;
@@ -71,25 +72,40 @@ const mergeUwAlignmentActions = {
                                 }
                             }
                             workspace.outputContentStack[0].push(milestone);
+                            workspace.zalnNesting++;
                         }
-                    }
-                    workspace.outputContentStack[0].push(text);
-                    const alignmentEndRecord = workspace.alignmentLookup[workspace.chapter][workspace.verses].after[alignmentKey];
-                    if (alignmentEndRecord) {
-                        for (const alignment of alignmentEndRecord) {
-                            const milestone = {
-                                "type": "end_milestone",
-                                "subtype": "usfm:zaln",
+                        if (workspace.zalnNesting > 0) {
+                            const wrapper = {
+                                "type": "wrapper",
+                                "subtype": "usfm:w",
+                                "content": [text],
                                 "atts": {
-                                    "x-strong": [alignment.strong],
-                                    "x-lemma": [alignment.lemma],
-                                    "x-morph": [alignment.morph.split(',')],
-                                    "x-occurrence": [`${alignment.occurrence}`],
-                                    "x-occurrences": [`${alignment.occurrences}`],
-                                    "x-content": [alignment.content]
+                                    "x-occurrence": [`${workspace.verseWordOccurrences[text]}`],
+                                    "x-occurrences": ["0"]
                                 }
+                            };
+                            workspace.outputContentStack[0].push(wrapper);
+                        } else {
+                            workspace.outputContentStack[0].push(text);
+                        }
+                        const alignmentEndRecord = workspace.alignmentLookup[workspace.chapter][workspace.verses].after[alignmentKey];
+                        if (alignmentEndRecord) {
+                            for (const alignment of alignmentEndRecord) {
+                                const milestone = {
+                                    "type": "end_milestone",
+                                    "subtype": "usfm:zaln",
+                                    "atts": {
+                                        "x-strong": [alignment.strong],
+                                        "x-lemma": [alignment.lemma],
+                                        "x-morph": [alignment.morph.split(',')],
+                                        "x-occurrence": [`${alignment.occurrence}`],
+                                        "x-occurrences": [`${alignment.occurrences}`],
+                                        "x-content": [alignment.content]
+                                    }
+                                }
+                                workspace.outputContentStack[0].push(milestone);
+                                workspace.zalnNesting--;
                             }
-                            workspace.outputContentStack[0].push(milestone);
                         }
                     }
                     // console.log((alignmentStartRecord && alignmentStartRecord.map(r => r.strong).join(', ')) || "-", `'${alignmentKey}'`, (alignmentEndRecord && alignmentEndRecord.map(r => r.strong).join(', ')) || "-");
