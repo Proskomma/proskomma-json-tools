@@ -1,0 +1,105 @@
+const usfmJsHelps = require('../../../usfmJsHelps');
+const xre = require("xregexp");
+
+const mergeUwAlignmentActions = {
+
+    startDocument: [
+        {
+            description: "Make alignment lookup",
+            test: () => true,
+            action: ({config, context, workspace, output}) => {
+                workspace.chapter = null;
+                workspace.verses = null;
+                workspace.verseWordOccurrences = {};
+                workspace.alignmentLookup = usfmJsHelps.alignmentLookupFromUsfmJs(config.usfmJs);
+                // console.log(JSON.stringify(workspace.alignmentLookup["1"]["1"], null, 2))
+                output.perf = {};
+                return true;
+            }
+        },
+    ],
+    mark: [
+        {
+            description: "Update CV state",
+            test: () => true,
+            action: ({context, workspace}) => {
+                try {
+                    const element = context.sequences[0].element;
+                    if (element.subType === "chapter") {
+                        workspace.chapter = element.atts["number"];
+                        workspace.verses = null;
+
+                    } else if (element.subType === "verses") {
+                        workspace.verses = element.atts["number"];
+                        workspace.verseWordOccurrences = {};
+                    }
+                } catch (err) {
+                    console.error(err);
+                    throw err;
+                }
+                return true;
+            },
+        },
+    ],
+    text: [
+        {
+            description: "Maintain occurrences, add alignment when match found",
+            test: () => true,
+            action: ({context, workspace}) => {
+                // Need to split words properly
+                const wordRe = xre('^[\\p{Letter}\\p{Number}\\p{Mark}\\u2060]{1,127}$')
+                const text = context.sequences[0].element.text;
+                if (xre.test(text, wordRe)) {
+                    if (!workspace.verseWordOccurrences[text]) {
+                        workspace.verseWordOccurrences[text] = 0;
+                    }
+                    workspace.verseWordOccurrences[text]++;
+                    const alignmentKey = `${text}_${workspace.verseWordOccurrences[text]}`;
+                    const alignmentStartRecord = workspace.alignmentLookup[workspace.chapter][workspace.verses].before[alignmentKey];
+                    if (alignmentStartRecord) {
+                        for (const alignment of alignmentStartRecord) {
+                            const milestone = {
+                                "type": "start_milestone",
+                                "subtype": "usfm:zaln",
+                                "atts": {
+                                    "x-strong": [alignment.strong],
+                                    "x-lemma": [alignment.lemma],
+                                    "x-morph": [alignment.morph.split(',')],
+                                    "x-occurrence": [`${alignment.occurrence}`],
+                                    "x-occurrences": [`${alignment.occurrences}`],
+                                    "x-content": [alignment.content]
+                                }
+                            }
+                            workspace.outputContentStack[0].push(milestone);
+                        }
+                    }
+                    workspace.outputContentStack[0].push(text);
+                    const alignmentEndRecord = workspace.alignmentLookup[workspace.chapter][workspace.verses].after[alignmentKey];
+                    if (alignmentEndRecord) {
+                        for (const alignment of alignmentEndRecord) {
+                            const milestone = {
+                                "type": "end_milestone",
+                                "subtype": "usfm:zaln",
+                                "atts": {
+                                    "x-strong": [alignment.strong],
+                                    "x-lemma": [alignment.lemma],
+                                    "x-morph": [alignment.morph.split(',')],
+                                    "x-occurrence": [`${alignment.occurrence}`],
+                                    "x-occurrences": [`${alignment.occurrences}`],
+                                    "x-content": [alignment.content]
+                                }
+                            }
+                            workspace.outputContentStack[0].push(milestone);
+                        }
+                    }
+                    // console.log((alignmentStartRecord && alignmentStartRecord.map(r => r.strong).join(', ')) || "-", `'${alignmentKey}'`, (alignmentEndRecord && alignmentEndRecord.map(r => r.strong).join(', ')) || "-");
+                } else {
+                    workspace.outputContentStack[0].push(text);
+                }
+                return false; // Override identity
+            }
+        }
+    ]
+};
+
+module.exports = {mergeUwAlignmentActions};

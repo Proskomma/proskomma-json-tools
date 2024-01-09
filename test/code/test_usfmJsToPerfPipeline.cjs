@@ -12,6 +12,7 @@ const pipelineH = new PipelineHandler({
 });
 
 const perfContent = fse.readJsonSync(path.resolve(__dirname, '../test_data/validation/titus_aligned.json'));
+const usfmJs = fse.readJsonSync(path.resolve(__dirname, '../test_data/usfmJs/titus_aligned.json'));
 
 test(`Strip uW alignment markup (${testGroup})`, t => {
     t.plan(5);
@@ -38,7 +39,6 @@ test(`Strip uW alignment markup (${testGroup})`, t => {
 test(`Make alignment lookup from UsfmJs (${testGroup})`, t => {
     t.plan(6);
     try {
-        const usfmJs = fse.readJsonSync(path.resolve(__dirname, '../test_data/usfmJs/titus_aligned.json'));
         const alignments = usfmJsHelps.alignmentLookupFromUsfmJs(usfmJs);
         t.ok(alignments);
         const verseAlignments = alignments["1"]["1"];
@@ -52,3 +52,25 @@ test(`Make alignment lookup from UsfmJs (${testGroup})`, t => {
         console.log(err);
     }
 });
+
+test(`Strip and merge pipeline (${testGroup})`, t => {
+    t.plan(2);
+    let output;
+    try {
+        const usfmJs = fse.readJsonSync(path.resolve(__dirname, '../test_data/usfmJs/titus_aligned.json'));
+        t.doesNotThrow(async () => {
+            output = pipelineH.runPipeline(
+                'mergeUwAlignmentPipeline', {
+                    perf: perfContent,
+                    usfmJs: usfmJs
+                }
+            );
+        });
+        t.ok(output.perf);
+        // console.log(JSON.stringify(output.perf, null, 2));
+    } catch (err) {
+        console.log(err);
+        t.fail('mergeUwAlignmentPipeline throws on valid perf');
+    }
+});
+
