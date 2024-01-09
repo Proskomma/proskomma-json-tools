@@ -2,7 +2,8 @@ const path = require('path');
 const fse = require('fs-extra');
 const test = require('tape');
 const {Proskomma} = require('proskomma');
-const {PipelineHandler} = require('../../dist/index');
+const {PipelineHandler, usfmJsHelps} = require('../../dist/index');
+
 const testGroup = 'UsfmJs to Perf';
 
 const pipelineH = new PipelineHandler({
@@ -11,6 +12,7 @@ const pipelineH = new PipelineHandler({
 });
 
 const perfContent = fse.readJsonSync(path.resolve(__dirname, '../test_data/validation/titus_aligned.json'));
+
 test(`Strip uW alignment markup (${testGroup})`, t => {
     t.plan(5);
     let output;
@@ -30,5 +32,23 @@ test(`Strip uW alignment markup (${testGroup})`, t => {
     } catch (err) {
         console.log(err);
         t.fail('stripUwAlignmentPipeline throws on valid perf');
+    }
+});
+
+test(`Make alignment lookup from UsfmJs (${testGroup})`, t => {
+    t.plan(6);
+    try {
+        const usfmJs = fse.readJsonSync(path.resolve(__dirname, '../test_data/usfmJs/titus_aligned.json'));
+        const alignments = usfmJsHelps.alignmentLookupFromUsfmJs(usfmJs);
+        t.ok(alignments);
+        const verseAlignments = alignments["1"]["1"];
+        t.ok("qui_1" in verseAlignments.before);
+        t.equal(verseAlignments.before["qui_1"].length, 3);
+        t.ok("piété_1" in verseAlignments.after);
+        t.equal(verseAlignments.after["piété_1"].length, 3);
+        t.equal(verseAlignments.before["qui_1"][0].content, verseAlignments.after["piété_1"][2].content);
+        // console.log(alignments["1"]["1"].before);
+    } catch (err) {
+        console.log(err);
     }
 });
