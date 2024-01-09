@@ -15,6 +15,7 @@ const mergeUwAlignmentActions = {
                 workspace.zalnNesting = 0;
                 // console.log(JSON.stringify(workspace.alignmentLookup["1"]["1"], null, 2))
                 output.perf = {};
+                output.occurrences = {};
                 return true;
             }
         },
@@ -23,16 +24,18 @@ const mergeUwAlignmentActions = {
         {
             description: "Update CV state",
             test: () => true,
-            action: ({context, workspace}) => {
+            action: ({context, workspace, output}) => {
                 try {
                     const element = context.sequences[0].element;
                     if (element.subType === "chapter") {
                         workspace.chapter = element.atts["number"];
                         workspace.verses = null;
+                        output.occurrences[workspace.chapter] = {};
 
                     } else if (element.subType === "verses") {
                         workspace.verses = element.atts["number"];
                         workspace.verseWordOccurrences = {};
+                        output.occurrences[workspace.chapter][workspace.verses] = [];
                     }
                 } catch (err) {
                     console.error(err);
@@ -46,7 +49,7 @@ const mergeUwAlignmentActions = {
         {
             description: "Maintain occurrences, add alignment when match found",
             test: () => true,
-            action: ({context, workspace}) => {
+            action: ({context, workspace, output}) => {
                 // Need to split words properly
                 const wordRe = xre('^[\\p{Letter}\\p{Number}\\p{Mark}\\u2060]{1,127}$')
                 const text = context.sequences[0].element.text;
@@ -55,6 +58,7 @@ const mergeUwAlignmentActions = {
                         workspace.verseWordOccurrences[text] = 0;
                     }
                     workspace.verseWordOccurrences[text]++;
+                    output.occurrences[workspace.chapter][workspace.verses].push(workspace.verseWordOccurrences[text]);
                     const alignmentKey = `${text}_${workspace.verseWordOccurrences[text]}`;
                     const alignmentStartRecord = workspace.alignmentLookup[workspace.chapter][workspace.verses].before[alignmentKey];
                     if (alignmentStartRecord) {

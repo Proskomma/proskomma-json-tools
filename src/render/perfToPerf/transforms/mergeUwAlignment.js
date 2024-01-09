@@ -18,7 +18,7 @@ const mergeUwAlignmentCode = function ({perf, usfmJs}) {
     );
     const output = {};
     cl.renderDocument({docId: "", config: {usfmJs}, output});
-    return {perf: output.perf}; // identityActions currently put PERF directly in output
+    return {perf: output.perf, occurrences: output.occurrences};
 }
 
 const mergeUwAlignment = {
@@ -41,6 +41,10 @@ const mergeUwAlignment = {
     outputs: [
         {
             name: "perf",
+            type: "json",
+        },
+        {
+            name: "occurrences",
             type: "json",
         }
     ],

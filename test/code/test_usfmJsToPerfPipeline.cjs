@@ -54,7 +54,7 @@ test(`Make alignment lookup from UsfmJs (${testGroup})`, t => {
 });
 
 test(`Strip and merge pipeline (${testGroup})`, t => {
-    t.plan(2);
+    t.plan(3);
     let output;
     try {
         const usfmJs = fse.readJsonSync(path.resolve(__dirname, '../test_data/usfmJs/titus_aligned.json'));
@@ -67,6 +67,7 @@ test(`Strip and merge pipeline (${testGroup})`, t => {
             );
         });
         t.ok(output.perf);
+        t.ok(output.occurrences);
         // console.log(JSON.stringify(output.perf, null, 2));
     } catch (err) {
         console.log(err);

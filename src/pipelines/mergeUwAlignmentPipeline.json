@@ -49,6 +49,35 @@
       {
         "name": "perf",
         "type": "json"
+      },
+      {
+        "name": "occurrences",
+        "type": "json"
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "title": "Add occurrences",
+    "name": "addUwAlignmentOccurrences",
+    "transformName": "addUwAlignmentOccurrences",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "perf",
+        "type": "json",
+        "source": "Transform 2 perf"
+      },
+      {
+        "name": "occurrences",
+        "type": "json",
+        "source": "Transform 2 occurrences"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "perf",
+        "type": "json"
       }
     ]
   },
@@ -58,6 +87,11 @@
     "outputs": [
       {
         "name": "perf",
+        "type": "json",
+        "source": "Transform 3 perf"
+      },
+      {
+        "name": "occurrences",
         "type": "json",
         "source": "Transform 2 perf"
       }
