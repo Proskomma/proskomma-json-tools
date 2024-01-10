@@ -4,7 +4,7 @@ import path from 'path';
 const { Proskomma } = require('proskomma');
 const { renderActions, renderStyles } = require('../../dist/render/sofria2web');
 const { renderers } = require('../../dist/render/sofria2web/sofria2html');
-const SofriaRenderFromProskomma = require('../../dist/SofriaRenderFromProskomma');
+const SofriaRenderFromProskomma = require('../../dist/render/renderers/SofriaRenderFromProskomma');
 const cheerio = require('cheerio')
 
 const config = {

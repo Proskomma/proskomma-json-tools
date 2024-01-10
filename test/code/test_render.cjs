@@ -1,5 +1,5 @@
 import test from 'tape';
-import ProskommaRender from '../../src/ProskommaRender';
+import ProskommaRender from '../../src/render/renderers/ProskommaRender';
 
 const testGroup = 'Render';
 
