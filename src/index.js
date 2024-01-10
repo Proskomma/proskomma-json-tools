@@ -1,5 +1,6 @@
 const Validator = require('./validator');
 const usfmHelps = require('./usfmHelps');
+const usfmJsHelps = require('./usfmJsHelps');
 const PipelineHandler = require('./classes/PipelineHandler');
 const ProskommaRender = require('./ProskommaRender');
 const PerfRenderFromJson = require('./PerfRenderFromJson');
@@ -13,6 +14,7 @@ const render = require('./render');
 module.exports = {
     Validator,
     usfmHelps,
+    usfmJsHelps,
     ProskommaRender,
     PerfRenderFromJson,
     SofriaRenderFromJson,

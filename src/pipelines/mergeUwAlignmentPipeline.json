@@ -1,0 +1,100 @@
+[
+  {
+    "id": 0,
+    "type": "Inputs",
+    "inputs": {
+      "perf": "json",
+      "usfmJs": "json"
+    }
+  },
+  {
+    "id": 1,
+    "title": "Strip uW alignment",
+    "name": "stripUwAlignment",
+    "transformName": "stripUwAlignment",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "perf",
+        "type": "json",
+        "source": "Input perf"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "perf",
+        "type": "json"
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "title": "Merge uW alignment",
+    "name": "mergeUwAlignment",
+    "transformName": "mergeUwAlignment",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "perf",
+        "type": "json",
+        "source": "Transform 1 perf"
+      },
+      {
+        "name": "usfmJs",
+        "type": "json",
+        "source": "Input usfmJs"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "perf",
+        "type": "json"
+      },
+      {
+        "name": "occurrences",
+        "type": "json"
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "title": "Add occurrences",
+    "name": "addUwAlignmentOccurrences",
+    "transformName": "addUwAlignmentOccurrences",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "perf",
+        "type": "json",
+        "source": "Transform 2 perf"
+      },
+      {
+        "name": "occurrences",
+        "type": "json",
+        "source": "Transform 2 occurrences"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "perf",
+        "type": "json"
+      }
+    ]
+  },
+  {
+    "id": 999,
+    "type": "Outputs",
+    "outputs": [
+      {
+        "name": "perf",
+        "type": "json",
+        "source": "Transform 3 perf"
+      },
+      {
+        "name": "occurrences",
+        "type": "json",
+        "source": "Transform 2 perf"
+      }
+    ]
+  }
+]

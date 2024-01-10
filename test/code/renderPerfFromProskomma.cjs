@@ -29,16 +29,16 @@ test(
     `Render PERF via identity actions (${testGroup})`,
     async function (t) {
         try {
-            t.plan(3);
+            t.plan(4);
 
-            // await thaw(pk, nt_ebible_4book);
             const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'usfms', 'webbe_mrk.usfm'))).toString();
             pk.importDocument({ 'lang': 'eng', 'abbr': "web" }, "usfm", usfm);
             const cl = new PerfRenderFromProskomma({ proskomma: pk, actions: render.perfToPerf.renderActions.identityActions });
             const docId = pk.gqlQuerySync('{documents { id } }').data.documents[0].id;
             const output = {};
             t.doesNotThrow(() => cl.renderDocument({ docId, config: {}, output }));
-            // console.log(JSON.stringify(output, null, 2));
+            const bdOb = Object.values(output.perf.sequences)[0].blocks[1].content[2];
+            t.ok(bdOb.content.length > 0);
             const validator = new Validator();
             const validation = validator.validate(
                 'constraint',
@@ -59,7 +59,6 @@ test(
     async function (t) {
         try {
             t.plan(3);
-            // await thaw(pk, nt_uw_1book);
             const pk2 = new Proskomma();
             const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'usfms', 'webbe_mrk.usfm'))).toString();
             pk2.importDocument({ 'lang': 'eng', 'abbr': "web" }, "usfm", usfm);
@@ -83,7 +82,7 @@ test(
 );
 
 test(
-    `Check for xrefs and wj in PERF (${testGroup})`,
+    `Check for xrefs, wj and nested wrappers in PERF (${testGroup})`,
     async function (t) {
         try {
             t.plan(5);
@@ -109,6 +108,7 @@ test(
             t.ok(validation.isValid);
             t.equal(validation.errors, null);
             const perfString = JSON.stringify(output.perf);
+            //console.log(perfString.substring(0, 1000))
             t.ok(perfString.includes('footnote'));
             t.ok(perfString.includes('usfm:wj'));
         } catch (err) {

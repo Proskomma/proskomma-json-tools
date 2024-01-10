@@ -3,7 +3,7 @@ const fse = require('fs-extra');
 const test = require('tape');
 const {Proskomma} = require('proskomma');
 const {PipelineHandler} = require('../../dist/index');
-const usfmJsPackage = require('usfm-js');
+// const usfmJsPackage = require('usfm-js');
 const testGroup = 'Perf 2 usfmJs';
 
 const pipelineH = new PipelineHandler({
@@ -15,7 +15,7 @@ const usfm = fse.readFileSync(path.resolve(__dirname, '../test_data/usfms/titus_
 const pk = new Proskomma();
 pk.importDocument({lang: "fra", abbr: "lsg"}, "usfm", usfm);
 const perfContent = JSON.parse(pk.gqlQuerySync("{documents {perf}}").data.documents[0].perf);
-const usfmJsJson = usfmJsPackage.toJSON(usfm);
+// const usfmJsJson = usfmJsPackage.toJSON(usfm);
 // console.log("UsfmJs\n", JSON.stringify(usfmJsJson, null, 2));
 test(`perf=>usfmJs (${testGroup})`, t => {
     t.plan(25);
@@ -28,7 +28,6 @@ test(`perf=>usfmJs (${testGroup})`, t => {
                 }
             );
         });
-        // console.log("Output", output.usfmJs.chapters["1"]["front"])
         t.ok(output.usfmJs);
         // HEADERS
         t.ok(output.usfmJs.headers);
@@ -61,8 +60,6 @@ test(`perf=>usfmJs (${testGroup})`, t => {
         t.equal(nestedMilestone3.children.filter(c => c.tag === "w").length, 5);
         t.equal(nestedMilestone3.children.filter(c => c.type === "text").length, 4);
         t.ok(nestedMilestone3.children[0].occurrence);
-        // console.log("Proskomma\n", JSON.stringify(output.usfmJs, null, 2));
-        // console.log(usfmJsPackage.toUSFM(output.usfmJs));
     } catch (err) {
         console.log(err);
         t.fail('perfToUsfmJsPipeline throws on valid perf');
