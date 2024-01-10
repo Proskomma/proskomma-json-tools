@@ -79,4 +79,3 @@ test(`Strip and merge pipeline (${testGroup})`, t => {
         t.fail('mergeUwAlignmentPipeline throws on valid perf');
     }
 });
-
