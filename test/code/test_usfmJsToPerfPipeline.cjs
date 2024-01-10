@@ -54,7 +54,7 @@ test(`Make alignment lookup from UsfmJs (${testGroup})`, t => {
 });
 
 test(`Strip and merge pipeline (${testGroup})`, t => {
-    t.plan(3);
+    t.plan(8);
     let output;
     try {
         const usfmJs = fse.readJsonSync(path.resolve(__dirname, '../test_data/usfmJs/titus_aligned.json'));
@@ -66,9 +66,14 @@ test(`Strip and merge pipeline (${testGroup})`, t => {
                 }
             );
         });
-        t.ok(output.perf);
         t.ok(output.occurrences);
-        // console.log(JSON.stringify(output.perf, null, 2));
+        t.ok(output.perf);
+        const mainContent = Object.values(output.perf.sequences)[0].blocks[1].content;
+        t.equal(mainContent[4].type, "start_milestone");
+        t.equal(mainContent[4].atts["x-lemma"][0], "δοῦλος");
+        t.equal(mainContent[5].subtype, "usfm:w");
+        t.equal(mainContent[5].content[0], "serviteur");
+        t.equal(mainContent[6].type, "end_milestone");
     } catch (err) {
         console.log(err);
         t.fail('mergeUwAlignmentPipeline throws on valid perf');
