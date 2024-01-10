@@ -1,4 +1,4 @@
-import PerfRenderFromJson from '../../../PerfRenderFromJson';
+import PerfRenderFromJson from '../../renderers/PerfRenderFromJson';
 const { verseWordsActions } = require('../renderActions/verseWords');
 
 const verseWordsCode = function ({ perf }) {

@@ -5,7 +5,7 @@ import path from 'path';
 import { PerfRenderFromJson } from '../../dist/index';
 const render = require('../../dist/render');
 
-import mergeActions from '../../dist/mergeActions';
+import mergeActions from '../../dist/render/renderers/mergeActions';
 import equal from 'deep-equal';
 
 const testGroup = 'Render PERF from JSON';

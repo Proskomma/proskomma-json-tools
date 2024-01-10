@@ -1,7 +1,7 @@
 import test from "tape";
 const fse = require("fs-extra");
 import path from "path";
-import SofriaRenderFromJson from "../../dist/SofriaRenderFromJson";
+import SofriaRenderFromJson from "../../dist/render/renderers/SofriaRenderFromJson";
 import { identityActions } from "../../dist/render/sofriaToSofria/renderActions/identity";
 import { Validator } from "../../dist";
 

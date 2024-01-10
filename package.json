@@ -1,6 +1,6 @@
 {
   "name": "proskomma-json-tools",
-  "version": "0.8.5",
+  "version": "0.8.6",
   "description": "Tools for working with Proskomma-derived formats such as PERF and SOFRIA",
   "main": "dist/index.js",
   "directories": {
@@ -10,7 +10,7 @@
     "test": "npm run build && bash -c \"tape -r @babel/register test/code/*.cjs | node_modules/tap-summary/bin/cmd.js\"",
     "rawTest": "tape -r @babel/register test/code/*.cjs",
     "oneTest": "npm run build && bash -c \"tape -r @babel/register test/code/$TESTSCRIPT.cjs\"",
-    "build": "rm -fr dist && babel src -d dist && cp -fr src/schema/ dist/ && cp -fr src/pipelines/*.json dist/pipelines/",
+    "build": "rm -fr dist && babel src -d dist && cp -fr src/schema/ dist/ && cp -fr src/render/pipelines/*.json dist/render/pipelines/",
     "prepublishOnly": "rm -fr dist && npm run build"
   },
   "repository": {

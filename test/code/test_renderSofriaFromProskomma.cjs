@@ -2,8 +2,8 @@ import test from 'tape';
 
 import path from 'path';
 import fse from 'fs-extra';
-import SofriaRenderFromProskomma from '../../dist/SofriaRenderFromProskomma';
-import SofriaRenderFromJson from '../../dist/SofriaRenderFromJson';
+import SofriaRenderFromProskomma from '../../dist/render/renderers/SofriaRenderFromProskomma';
+import SofriaRenderFromJson from '../../dist/render/renderers/SofriaRenderFromJson';
 import { identityActions } from '../../dist/render/sofriaToSofria/renderActions/identity';
 import { Proskomma } from 'proskomma';
 import { Validator } from '../../dist/';
