@@ -86,6 +86,50 @@ test(`merge alignment (${testGroup})`, async (t) => {
 });
 
 
+test(`merge alignment with extra verse (${testGroup})`, async (t) => {
+    t.plan(3);
+    try {
+        //convert outputStrip to usfm so we can add an extra verse
+        let strippedUsfm = (await pipelineH.runPipeline("perfToUsfmPipeline", {
+            perf: outputStrip
+        })).usfm;
+        //t.comment( "strippedUsfm looks like this " + strippedUsfm );
+
+
+        let usfmWithExtraVerse = strippedUsfm.replace( "\n\\c 2", "\n\\v 17\nTesting testing 123\n\\c 2" );
+        //t.comment( "usfmWithExtraVerse looks like this " + usfmWithExtraVerse );
+
+        let perfWithExtraVerse = await pipelineH.runPipeline("usfmToPerfPipeline", {
+            usfm: usfmWithExtraVerse
+        });
+
+
+
+        output = await pipelineH.runPipeline('mergeAlignmentPipeline', {
+            perf: perfWithExtraVerse,
+            strippedAlignment: reportStrip,
+        });
+        t.ok(output, 'perf alignment stripped');
+
+        // console.log(JSON.stringify(perfContent, ' ', 4));
+        t.same(output.perf, JSON.parse(perfContent));
+        const validator = new Validator();
+        let validation = validator.validate(
+            'constraint',
+            'perfDocument',
+            '0.3.0',
+            output.perf
+        );
+        t.equal(validation.errors, null);
+        // await saveFile(JSON.stringify(output.perf, null, 2), 'test/outputs/STRIP_perf_titus_merged_align_eng.json');
+    } catch (err) {
+        console.log(err);
+        t.fail('mergeAlignmentPipeline throws on valid perf');
+    }
+});
+
+
+
 //TESTING GRAFT ERRORS:
 
 const usfmContent = fse.readFileSync(path.resolve(__dirname, "../test_data/usfms/dcs-en-rut.usfm")).toString();
