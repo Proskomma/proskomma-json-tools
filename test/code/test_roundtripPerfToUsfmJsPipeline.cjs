@@ -36,7 +36,8 @@ test(`perf <=> usfmJs (${testGroup})`, t => {
         });
         t.ok(output.occurrences);
         t.ok(output.perf);
-        const mainContent = Object.values(output.perf.sequences)[0].blocks[1].content;
+        const mainContent = Object.values(output.perf.sequences)[0].blocks[1].content.slice(0,20);
+        console.log(JSON.stringify(mainContent, null, 2));
         t.equal(mainContent[4].type, "start_milestone");
         t.equal(mainContent[4].atts["x-lemma"][0], "δοῦλος");
         t.equal(mainContent[5].subtype, "usfm:w");

@@ -1,3 +1,4 @@
+const xre = require("xregexp");
 const flattenZalns = vos => {
     const ret = [];
     for (const vo of vos) {
@@ -17,6 +18,21 @@ const flattenZalns = vos => {
     return ret;
 }
 
+const wordsFromString = s => {
+    const wordlikeRE = xre('([\\p{Letter}\\p{Number}\\p{Mark}\\u2060]{1,127})');
+    return xre.match(s, wordlikeRE, 'all');
+    }
+
+const firstWordFromString = s => {
+    const words = wordsFromString(s);
+    return words[0];
+}
+
+const lastWordFromString = s => {
+    const words = wordsFromString(s);
+    return words[words.length -1];
+}
+
 const alignmentLookupFromUsfmJs = usfmJs => {
     let ret = {};
     for (const [chapterN, chapter] of Object.entries(usfmJs.chapters)) {
@@ -27,7 +43,7 @@ const alignmentLookupFromUsfmJs = usfmJs => {
                 "after": {}
             };
             for (const verseObject of flattenZalns(verse.verseObjects)) {
-                const startAlignmentKey = `${verseObject.children[0].text}_${verseObject.children[0].occurrence}`;
+                const startAlignmentKey = `${firstWordFromString(verseObject.children[0].text)}_${verseObject.children[0].occurrence}`;
                 if (!(startAlignmentKey in ret[chapterN][verseN]["before"])) {
                     ret[chapterN][verseN]["before"][startAlignmentKey] = [];
                 }
@@ -40,7 +56,7 @@ const alignmentLookupFromUsfmJs = usfmJs => {
                     content: verseObject.content
                 }
                 ret[chapterN][verseN]["before"][startAlignmentKey].push(vo);
-                const endAlignmentKey = `${verseObject.children[verseObject.children.length - 1].text}_${verseObject.children[verseObject.children.length - 1].occurrence}`;
+                const endAlignmentKey = `${lastWordFromString(verseObject.children[verseObject.children.length - 1].text)}_${verseObject.children[verseObject.children.length - 1].occurrence}`;
                 if (!(endAlignmentKey in ret[chapterN][verseN]["after"])) {
                     ret[chapterN][verseN]["after"][endAlignmentKey] = [];
                 }
