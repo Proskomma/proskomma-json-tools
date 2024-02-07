@@ -5,11 +5,15 @@ const verseWordsCode = function ({ perf }) {
     const cl = new PerfRenderFromJson(
         {
             srcJson: perf,
-            actions: verseWordsActions
+            actions: verseWordsActions,
         }
     );
     const output = {};
-    cl.renderDocument({ docId: "", config: {}, output });
+    try {
+        cl.renderDocument({docId: "", config: {}, output});
+    } catch (err) {
+        throw new Error(`Error from renderDocument in verseWords: ${err.message}`);
+    }
     return { verseWords: output.cv };
 }
 

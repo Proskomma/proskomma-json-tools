@@ -45,7 +45,7 @@ const mergeAlignmentActions = {
                 try {
                     const sequence = context.sequences[0];
                     if (sequence.type !== 'main') return true;
-                    
+
                     const text = context.sequences[0].element.text;
                     const words = xre.match(text, re, "all");
                     const { chapter, verses } = workspace;
@@ -89,7 +89,6 @@ const mergeAlignmentActions = {
 
                         workspace.currentOccurrences[word] ??= 0;
                         workspace.currentOccurrences[word]++;
-
                         const strippedKey = (position) =>
                             [
                                 position,
@@ -97,8 +96,8 @@ const mergeAlignmentActions = {
                                 workspace.currentOccurrences[word],
                                 totalOccurrences[chapter][verses][word],
                             ].join("--");
+                        const markup = strippedAlignment[chapter][verses] || {};
 
-                        const markup = strippedAlignment[chapter][verses];
                         let skipStartMilestone = false;
 
                         const afterWord = markup[strippedKey("after")];

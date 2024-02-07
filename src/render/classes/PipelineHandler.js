@@ -95,8 +95,13 @@ class PipelineHandler {
     runPipeline(pipelineName, data) {
         const pipeline = this.getPipeline(pipelineName, data);
         this.loadTransforms(pipeline, 'perf');
-        return this.evaluateSteps({specSteps: pipeline, inputValues: data});
+        try {
+            return this.evaluateSteps({specSteps: pipeline, inputValues: data});
+        } catch (err) {
+            throw new Error(`Error from runPipeline while running ${pipelineName}: ${err.message}`);
+        }
     }
+
 
     loadTransforms(pipeline, namespace='perf') {
         const transformSteps = pipeline.filter(s => s.type==='Transform');
