@@ -53,7 +53,7 @@ test(`strip alignment (${testGroup})`, async (t) => {
         t.ok(outputStrip, 'perf alignment stripped');
         t.ok(reportStrip, 'perf report alignement');
         // await saveFile(JSON.stringify(output.perf, null, 2), 'test/outputs/STRIP_perf_titus_stripped_eng.json');
-        // await saveFile(JSON.stringify(output.strippedAlignment, null, 2), 'test/outputs/STRIP_strippedAlignment_stripped_eng.json');    
+        // await saveFile(JSON.stringify(output.strippedAlignment, null, 2), 'test/outputs/STRIP_strippedAlignment_stripped_eng.json');
     } catch (err) {
         console.log(err);
         t.fail('stripAlignmentPipeline throws on valid perf');
@@ -84,6 +84,49 @@ test(`merge alignment (${testGroup})`, async (t) => {
         t.fail('mergeAlignmentPipeline throws on valid perf');
     }
 });
+
+
+test(`merge alignment with extra verse (${testGroup})`, async (t) => {
+    t.plan(2);
+    try {
+        //convert outputStrip to usfm so we can add an extra verse
+        let strippedUsfm = (await pipelineH.runPipeline("perfToUsfmPipeline", {
+            perf: outputStrip
+        })).usfm;
+        //t.comment( "strippedUsfm looks like this " + strippedUsfm );
+
+
+        let usfmWithExtraVerse = strippedUsfm.replace( "\n\\c 2", "\n\\v 17\nTesting testing 123\n\\c 2" );
+        // t.comment( "usfmWithExtraVerse looks like this " + usfmWithExtraVerse );
+
+        let perfWithExtraVerse = await pipelineH.runPipeline("usfmToPerfPipeline", {
+            usfm: usfmWithExtraVerse,
+            selectors: {'org': "uw", 'lang': 'fra', 'abbr': 'ust'}
+        }).perf;
+
+        output = await pipelineH.runPipeline('mergeAlignmentPipeline', {
+            perf: perfWithExtraVerse,
+            strippedAlignment: reportStrip,
+        });
+        t.ok(output, 'perf alignment stripped');
+
+        // console.log(JSON.stringify(perfContent, ' ', 4));
+        // t.same(output.perf, JSON.parse(perfContent));
+        const validator = new Validator();
+        let validation = validator.validate(
+            'constraint',
+            'perfDocument',
+            '0.3.0',
+            output.perf
+        );
+        t.equal(validation.errors, null);
+        // await saveFile(JSON.stringify(output.perf, null, 2), 'test/outputs/STRIP_perf_titus_merged_align_eng.json');
+    } catch (err) {
+        console.log(err);
+        t.fail('mergeAlignmentPipeline throws on valid perf with added verse');
+    }
+});
+
 
 
 //TESTING GRAFT ERRORS:

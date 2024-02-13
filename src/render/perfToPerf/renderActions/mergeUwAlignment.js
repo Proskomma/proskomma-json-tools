@@ -13,7 +13,7 @@ const mergeUwAlignmentActions = {
                 workspace.verseWordOccurrences = {};
                 workspace.alignmentLookup = usfmJsHelps.alignmentLookupFromUsfmJs(config.usfmJs);
                 workspace.zalnNesting = 0;
-                console.log(JSON.stringify(workspace.alignmentLookup["1"]["1"], null, 2))
+                //console.log(JSON.stringify(workspace.alignmentLookup["1"]["1"], null, 2))
                 output.perf = {};
                 output.occurrences = {};
                 return true;
@@ -114,23 +114,9 @@ const mergeUwAlignmentActions = {
                                         }
                                     }
                                     workspace.outputContentStack[0].push(milestone);
-                                    console.log(text);
-                                    if (text.startsWith("Dieu")) {
-                                        console.log(alignmentKey)
-                                        console.log(alignmentEndRecord)
-                                        process.exit(1)
-                                    }
                                     workspace.zalnNesting--;
                                 }
                             }
-                            /*
-                                                                                    console.log(
-                                                                                        (alignmentStartRecord && alignmentStartRecord.map(r => r.strong).join(', ')) || "-",
-                                                                                        `'${alignmentKey}'`,
-                                                                                        (alignmentEndRecord && alignmentEndRecord.map(r => r.strong).join(', ')) || "-"
-                                                                                    );
-
-                             */
                         }
 
                     } else {
