@@ -28,7 +28,7 @@ const mergeAlignmentActions = {
         {
             description: "setup",
             test: () => true,
-            action: ({ workspace, output }) => {
+            action: ({workspace, output}) => {
                 workspace.chapter = null;
                 workspace.verses = null;
                 workspace.currentOccurrences = {};
@@ -41,24 +41,24 @@ const mergeAlignmentActions = {
         {
             description: "add-to-text",
             test: () => true,
-            action: ({ config, context, workspace, output }) => {
+            action: ({config, context, workspace, output}) => {
                 try {
                     const sequence = context.sequences[0];
                     if (sequence.type !== 'main') return true;
 
                     const text = context.sequences[0].element.text;
                     const words = xre.match(text, re, "all");
-                    const { chapter, verses } = workspace;
+                    const {chapter, verses} = workspace;
                     if (!verses) return true;
 
-                    const { totalOccurrences, strippedAlignment } = config;
+                    const {totalOccurrences, strippedAlignment} = config;
 
                     const alignments = {
                         opened: null,
                     };
 
-                    const addWrappers = ({ subtype, content = [], atts = {} }) => {
-                        if(Object.keys(atts).length > 0) {
+                    const addWrappers = ({subtype, content = [], atts = {}}) => {
+                        if (Object.keys(atts).length > 0) {
                             return {
                                 type: "wrapper",
                                 subtype,
@@ -74,6 +74,7 @@ const mergeAlignmentActions = {
                     };
 
                     const onHoldChars = [];
+
                     function pushOnHoldChars() {
                         while (onHoldChars.length) {
                             workspace.outputContentStack[0].push(onHoldChars.shift());
@@ -89,15 +90,16 @@ const mergeAlignmentActions = {
 
                         workspace.currentOccurrences[word] ??= 0;
                         workspace.currentOccurrences[word]++;
-                        const strippedKey = (position) =>
-                            [
+                        const strippedKey = (position) => {
+                            return [
                                 position,
                                 word,
                                 workspace.currentOccurrences[word],
                                 totalOccurrences[chapter][verses][word],
                             ].join("--");
-                        const markup = strippedAlignment[chapter][verses] || {};
-
+                        }
+                        const markupChapter = strippedAlignment[chapter];
+                        const markup = markupChapter ? markupChapter[verses] || {} : {};
                         let skipStartMilestone = false;
 
                         const afterWord = markup[strippedKey("after")];
@@ -106,14 +108,14 @@ const mergeAlignmentActions = {
                         if (beforeWord?.length) pushOnHoldChars();
 
                         if (afterWord?.length && !alignments.opened) {
-                            afterWord.map(({ startMilestone }) =>
+                            afterWord.map(({startMilestone}) =>
                                 workspace.outputContentStack[0].push(startMilestone)
                             );
                             skipStartMilestone = true;
                         }
 
                         //TODO: Count number of opened alignments, to close them when there is a modified/new word in the current iteration.
-                        beforeWord?.forEach(({ payload }) => {
+                        beforeWord?.forEach(({payload}) => {
                             if (payload.type !== "start_milestone") {
                                 workspace.outputContentStack[0].push(payload);
                             }
@@ -124,7 +126,7 @@ const mergeAlignmentActions = {
                         });
 
                         //TODO: Decrease number of opened alignments as they are being pushed
-                        afterWord?.forEach(({ payload }) => {
+                        afterWord?.forEach(({payload}) => {
                             alignments.opened = false;
                             workspace.outputContentStack[0].push(payload);
                         });
@@ -162,8 +164,8 @@ const mergeAlignmentActions = {
     mark: [
         {
             description: "mark-chapters",
-            test: ({ context }) => context.sequences[0].element.subType === "chapter",
-            action: ({ config, context, workspace, output }) => {
+            test: ({context}) => context.sequences[0].element.subType === "chapter",
+            action: ({config, context, workspace, output}) => {
                 const element = context.sequences[0].element;
                 workspace.chapter = element.atts["number"];
                 workspace.verses = 0;
@@ -172,8 +174,8 @@ const mergeAlignmentActions = {
         },
         {
             description: "mark-verses",
-            test: ({ context }) => context.sequences[0].element.subType === "verses",
-            action: ({ config, context, workspace, output }) => {
+            test: ({context}) => context.sequences[0].element.subType === "verses",
+            action: ({config, context, workspace, output}) => {
                 const element = context.sequences[0].element;
                 workspace.verses = element.atts["number"];
                 workspace.currentOccurrences = {};
@@ -183,4 +185,4 @@ const mergeAlignmentActions = {
     ],
 };
 
-module.exports = { mergeAlignmentActions };
+module.exports = {mergeAlignmentActions};
