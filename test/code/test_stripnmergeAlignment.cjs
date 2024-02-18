@@ -86,7 +86,7 @@ test(`merge alignment (${testGroup})`, async (t) => {
 });
 
 
-test(`merge alignment with extra verse (${testGroup})`, async (t) => {
+test(`merge alignment with extra chapter and verse (${testGroup})`, async (t) => {
     t.plan(2);
     try {
         //convert outputStrip to usfm so we can add an extra verse
@@ -97,6 +97,7 @@ test(`merge alignment with extra verse (${testGroup})`, async (t) => {
 
 
         let usfmWithExtraVerse = strippedUsfm.replace( "\n\\c 2", "\n\\v 17\nTesting testing 123\n\\c 2" );
+        usfmWithExtraVerse = usfmWithExtraVerse + "\n\\c 4\n\\p\n\\v 1 and so it goes on.";
         // t.comment( "usfmWithExtraVerse looks like this " + usfmWithExtraVerse );
 
         let perfWithExtraVerse = await pipelineH.runPipeline("usfmToPerfPipeline", {

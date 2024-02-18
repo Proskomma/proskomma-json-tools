@@ -22,10 +22,16 @@ const verseWordsActions = {
                 if (element.subType === 'chapter') {
                     workspace.chapter = element.atts['number'];
                     workspace.verses = 0
+                    if (output.cv[workspace.chapter]) {
+                        throw new Error(`Duplicate chapter ${workspace.chapter} in verseWords`);
+                    }
                     output.cv[workspace.chapter] = {};
                     output.cv[workspace.chapter][workspace.verses] = {};
                 } else if (element.subType === 'verses') {
                     workspace.verses = element.atts['number'];
+                    if (output.cv[workspace.chapter][workspace.verses]) {
+                        throw new Error(`Duplicate verse ${workspace.chapter}:${workspace.verses} in verseWords`);
+                    }
                     output.cv[workspace.chapter][workspace.verses] = {};
                 }
             }
