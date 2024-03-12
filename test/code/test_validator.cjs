@@ -325,3 +325,28 @@ test(
         }
     },
 );
+
+test(
+    `validate USJ (${testGroup})`,
+    async function (t) {
+        try {
+            t.plan(2);
+            const sofria = fse.readJsonSync(
+                path.resolve(
+                    path.join(__dirname, '..', 'test_data', 'validation', 'usj', 'minimal.json')
+                )
+            )
+            const validator = new Validator();
+            const validation = validator.validate(
+                'usj',
+                'structure',
+                '0.2.4',
+                sofria
+            );
+            t.ok(validation.isValid);
+            t.equal(validation.errors, null);
+        } catch (err) {
+            console.log(err);
+        }
+    },
+);
