@@ -1,6 +1,6 @@
 {
   "$comment": "version 0.1.0",
-  "$id": "https://github.com/Proskomma/proskomma-json-tools/tree/main/src/schema/structure/0_2_1/document_structure.json",
+  "$id": "https://raw.githubusercontent.com/Proskomma/proskomma-json-tools/main/src/schema/structure/0_2_1/document_structure.json",
   "title": "Document (Structure)",
   "description": "A document, typically corresponding to a single USFM or USX book",
   "type": "object",
