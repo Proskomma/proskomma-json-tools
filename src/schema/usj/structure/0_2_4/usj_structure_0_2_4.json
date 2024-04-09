@@ -72,23 +72,29 @@
         },
         "link-href": {
           "description": "ID for link",
-          "type": "string"
+          "type": "string",
+          "pattern": "^[^ \t\r\n](.*[^ \t\r\n])?$"
         },
         "who": {
           "description": "The speaker in an sp tag",
-          "type": "string"
+          "type": "string",
+          "pattern": "^[^ \t\r\n](.*[^ \t\r\n])?$"
         },
         "eid": {
-          "description": "The end milestone id"
+          "description": "The end milestone id",
+          "pattern": "^[^ \t\r\n](.*[^ \t\r\n])?$"
         },
         "file": {
-          "description": "The filename"
+          "description": "The filename",
+          "pattern": "^[^ \t\r\n](.*[^ \t\r\n])?$"
         },
         "size": {
-          "description": "The file size"
+          "description": "The file size",
+          "pattern": "^[1-9][0-9]*$"
         },
         "ref": {
-          "description": "The file ref"
+          "description": "The file ref",
+          "pattern": "^[^ \t\r\n](.*[^ \t\r\n])?$"
         }
       },
       "required": ["type", "marker"],
