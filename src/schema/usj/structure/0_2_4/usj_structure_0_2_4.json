@@ -9,11 +9,13 @@
       "properties": {
         "type": {
           "description": "The kind/category of node or element this is, corresponding the USFM marker and USX node",
-          "type": "string"
+          "type": "string",
+          "pattern": "^[^ \t\r\n]+$"
         },
         "marker": {
           "description": "The corresponding marker in USFM or style in USX",
-          "type": "string"
+          "type": "string",
+          "pattern": "^[^ \t\r\n]+$"
         },
         "content": {
           "type": "array",
@@ -25,40 +27,48 @@
           }
         },
         "sid": {
-          "description": "Indicates the Book-chapter-verse value in the paragraph based structure",
-          "type": "string"
+          "description": "Indicates the Book-Chapter-Verse value in the paragraph-based structure",
+          "type": "string",
+          "pattern": "^[0-6A-Z]{3}( [1-9][0-9]{0,2}(:[1-9][0-9]{0,2})?)?$"
         },
         "number": {
           "description": "Chapter number or verse number",
-          "type": "string"
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,2}$"
         },
         "code": {
           "description": "The 3-letter book code in id element",
-          "pattern": "^[0-9A-Z]{3}$",
+          "pattern": "^[0-6A-Z]{3}$",
           "type": "string"
         },
         "altnumber": {
           "description": "Alternate chapter number or verse number",
-          "type": "string"
+          "type": "string",
+          "pattern": "^[^ \t\r\n](.*[^ \t\r\n])?$"
         },
         "pubnumber": {
           "description": "Published character of chapter or verse",
-          "type": "string"
+          "type": "string",
+          "pattern": "^[^ \t\r\n](.*[^ \t\r\n])?$"
         },
         "caller": {
           "description": "Caller character for footnotes and cross-refs",
-          "type": "string"
+          "type": "string",
+          "pattern": "^[^ \t\n]$"
         },
         "align": {
           "description": "Alignment of table cells",
-          "type": "string"
+          "type": "string",
+          "enum": ["left", "right", "center"]
         },
         "category": {
           "description": "Category of extended study bible sections",
-          "type": "string"
+          "type": "string",
+          "pattern": "^[^ \t\r\n](.*[^ \t\r\n])?$"
         }
       },
-      "required": ["type", "marker"]
+      "required": ["type", "marker"],
+      "additionalProperties" : false
     }
    },
   "properties": {
@@ -81,5 +91,6 @@
       }
     }
   },
-  "required": ["type", "version", "content"]
+  "required": ["type", "version", "content"],
+  "additionalProperties": false
 }
