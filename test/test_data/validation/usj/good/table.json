@@ -69,11 +69,11 @@
       "marker": "table",
       "content": [
         {
-          "type": "table:row",
+          "type": "row",
           "marker": "tr",
           "content": [
             {
-              "type": "table:cell",
+              "type": "cell",
               "marker": "th1",
               "align": "start",
               "content": [
@@ -81,7 +81,7 @@
               ]
             },
             {
-              "type": "table:cell",
+              "type": "cell",
               "marker": "th2",
               "align": "start",
               "content": [
@@ -89,7 +89,7 @@
               ]
             },
             {
-              "type": "table:cell",
+              "type": "cell",
               "marker": "thr3",
               "align": "end",
               "content": [
@@ -99,11 +99,11 @@
           ]
         },
         {
-          "type": "table:row",
+          "type": "row",
           "marker": "tr",
           "content": [
             {
-              "type": "table:cell",
+              "type": "cell",
               "marker": "tcr1",
               "align": "end",
               "content": [
@@ -111,7 +111,7 @@
               ]
             },
             {
-              "type": "table:cell",
+              "type": "cell",
               "marker": "tc2",
               "align": "start",
               "content": [
@@ -119,7 +119,7 @@
               ]
             },
             {
-              "type": "table:cell",
+              "type": "cell",
               "marker": "tcr3",
               "align": "end",
               "content": [
@@ -129,11 +129,11 @@
           ]
         },
         {
-          "type": "table:row",
+          "type": "row",
           "marker": "tr",
           "content": [
             {
-              "type": "table:cell",
+              "type": "cell",
               "marker": "tcr1",
               "align": "end",
               "content": [
@@ -141,7 +141,7 @@
               ]
             },
             {
-              "type": "table:cell",
+              "type": "cell",
               "marker": "tc2",
               "align": "start",
               "content": [
@@ -149,7 +149,7 @@
               ]
             },
             {
-              "type": "table:cell",
+              "type": "cell",
               "marker": "tcr3",
               "align": "end",
               "content": [
@@ -159,11 +159,11 @@
           ]
         },
         {
-          "type": "table:row",
+          "type": "row",
           "marker": "tr",
           "content": [
             {
-              "type": "table:cell",
+              "type": "cell",
               "marker": "tcr1",
               "align": "end",
               "content": [
@@ -171,7 +171,7 @@
               ]
             },
             {
-              "type": "table:cell",
+              "type": "cell",
               "marker": "tc2",
               "align": "start",
               "content": [
@@ -179,7 +179,7 @@
               ]
             },
             {
-              "type": "table:cell",
+              "type": "cell",
               "marker": "tcr3",
               "align": "end",
               "content": [
@@ -189,11 +189,11 @@
           ]
         },
         {
-          "type": "table:row",
+          "type": "row",
           "marker": "tr",
           "content": [
             {
-              "type": "table:cell",
+              "type": "cell",
               "marker": "tcr1",
               "align": "end",
               "content": [
@@ -201,7 +201,7 @@
               ]
             },
             {
-              "type": "table:cell",
+              "type": "cell",
               "marker": "tc2",
               "align": "start",
               "content": [
@@ -209,7 +209,7 @@
               ]
             },
             {
-              "type": "table:cell",
+              "type": "cell",
               "marker": "tcr3",
               "align": "end",
               "content": [
@@ -219,11 +219,11 @@
           ]
         },
         {
-          "type": "table:row",
+          "type": "row",
           "marker": "tr",
           "content": [
             {
-              "type": "table:cell",
+              "type": "cell",
               "marker": "tcr1",
               "align": "end",
               "content": [
@@ -231,7 +231,7 @@
               ]
             },
             {
-              "type": "table:cell",
+              "type": "cell",
               "marker": "tc2",
               "align": "start",
               "content": [
@@ -239,7 +239,7 @@
               ]
             },
             {
-              "type": "table:cell",
+              "type": "cell",
               "marker": "tcr3",
               "align": "end",
               "content": [

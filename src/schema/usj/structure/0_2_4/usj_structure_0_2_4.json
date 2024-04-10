@@ -1,7 +1,7 @@
 {
   "$id": "https://usfm-committee/usj.schema.json",
   "title": "Unified Scripture JSON",
-  "description": "The JSON varient of USFM and USX data models",
+  "description": "The JSON variant of USFM and USX data models",
   "type": "object",
   "$defs": {
     "paraMarkerObject": {
@@ -10,7 +10,7 @@
         "type": {
           "description": "The kind/category of node or element this is, corresponding the USFM marker and USX node",
           "type": "string",
-          "pattern": "^[^ \t\r\n]+$"
+          "enum": ["book", "chapter", "para", "sidebar", "table"]
         },
         "marker": {
           "description": "The corresponding marker in USFM or style in USX",
@@ -60,13 +60,14 @@
       "required": ["type", "marker"],
       "additionalProperties" : false
     },
+
     "charMarkerObject": {
       "type": "object",
       "properties": {
         "type": {
           "description": "The kind/category of node or element this is, corresponding the USFM marker and USX node",
           "type": "string",
-          "pattern": "^[^ \t\r\n]+$"
+          "enum": ["char", "verse", "figure", "note", "whitespace", "ms", "row", "cell"]
         },
         "marker": {
           "description": "The corresponding marker in USFM or style in USX",
@@ -150,6 +151,7 @@
       "additionalProperties" : false
     }
    },
+
   "properties": {
     "type": {
       "description": "The kind of node/element/marker this is",
