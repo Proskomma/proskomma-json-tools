@@ -5,12 +5,17 @@
   "type": "object",
   "$defs": {
     "paraMarkerObject": {
+      "description": "Para-like content including book and chapter",
       "type": "object",
       "properties": {
         "type": {
           "description": "The kind/category of node or element this is, corresponding the USFM marker and USX node",
           "type": "string",
-          "enum": ["book", "chapter", "para", "sidebar", "table"]
+          "enum": [
+            "book",
+            "chapter",
+            "para"
+          ]
         },
         "marker": {
           "description": "The corresponding marker in USFM or style in USX",
@@ -20,9 +25,13 @@
         "content": {
           "type": "array",
           "items": {
-            "anyOf":[
-              {"type": "string"},
-              {"$ref": "#/$defs/charMarkerObject"}
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "$ref": "#/$defs/charMarkerObject"
+              }
             ]
           }
         },
@@ -50,24 +59,24 @@
           "description": "Published character of chapter or verse",
           "type": "string",
           "pattern": "^[^ \t\r\n](.*[^ \t\r\n])?$"
-        },
-        "category": {
-          "description": "Category of extended study bible sections",
-          "type": "string",
-          "pattern": "^[^ \t\r\n](.*[^ \t\r\n])?$"
         }
       },
-      "required": ["type", "marker"],
-      "additionalProperties" : false
+      "required": [
+        "type",
+        "marker"
+      ],
+      "additionalProperties": false
     },
-
-    "charMarkerObject": {
+    "sidebarObject": {
       "type": "object",
+      "description": "Sidebar, which contains para-like content",
       "properties": {
         "type": {
           "description": "The kind/category of node or element this is, corresponding the USFM marker and USX node",
           "type": "string",
-          "enum": ["char", "verse", "figure", "note", "whitespace", "ms", "row", "cell"]
+          "enum": [
+            "sidebar"
+          ]
         },
         "marker": {
           "description": "The corresponding marker in USFM or style in USX",
@@ -77,9 +86,53 @@
         "content": {
           "type": "array",
           "items": {
-            "anyOf":[
-              {"type": "string"},
-              {"$ref": "#/$defs/charMarkerObject"}
+            "$ref": "#/$defs/paraMarkerObject"
+          }
+        },
+        "category": {
+          "description": "Category of extended study bible sections",
+          "type": "string",
+          "pattern": "^[^ \t\r\n](.*[^ \t\r\n])?$"
+        }
+      },
+      "required": [
+        "type",
+        "marker"
+      ],
+      "additionalProperties": false
+    },
+    "charMarkerObject": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "description": "The kind/category of node or element this is, corresponding the USFM marker and USX node",
+          "type": "string",
+          "enum": [
+            "char",
+            "verse",
+            "figure",
+            "note",
+            "whitespace",
+            "ms",
+            "row",
+            "cell"
+          ]
+        },
+        "marker": {
+          "description": "The corresponding marker in USFM or style in USX",
+          "type": "string",
+          "pattern": "^[^ \t\r\n]+$"
+        },
+        "content": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "$ref": "#/$defs/charMarkerObject"
+              }
             ]
           }
         },
@@ -107,11 +160,6 @@
           "description": "Caller character for footnotes and cross-refs",
           "type": "string",
           "pattern": "^[^ \t\n]$"
-        },
-        "align": {
-          "description": "Alignment of table cells",
-          "type": "string",
-          "enum": ["start", "end", "center"]
         },
         "link-id": {
           "description": "ID for link",
@@ -147,11 +195,183 @@
           "pattern": "^[^ \t\r\n](.*[^ \t\r\n])?$"
         }
       },
-      "required": ["type", "marker"],
-      "additionalProperties" : false
+      "required": [
+        "type",
+        "marker"
+      ],
+      "additionalProperties": false
+    },
+    "tableObject": {
+      "type": "object",
+      "description": "A table which contains rows",
+      "properties": {
+        "type": {
+          "description": "The kind/category of node or element this is, corresponding the USFM marker and USX node",
+          "type": "string",
+          "enum": [
+            "table"
+          ]
+        },
+        "marker": {
+          "description": "The corresponding marker in USFM or style in USX",
+          "type": "string",
+          "pattern": "^[^ \t\r\n]+$"
+        },
+        "content": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/rowObject"
+          }
+        },
+        "sid": {
+          "description": "Indicates the Book-Chapter-Verse value in the paragraph-based structure",
+          "type": "string",
+          "pattern": "(^[0-6A-Z]{3}( [1-9][0-9]{0,2}(:[1-9][0-9]{0,2}(-[1-9][0-9]{0,2})?)?)?$)|.*"
+        },
+        "number": {
+          "description": "Chapter number or verse number",
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,2}(-[1-9][0-9]{0,2})?$"
+        },
+        "altnumber": {
+          "description": "Alternate chapter number or verse number",
+          "type": "string",
+          "pattern": "^[^ \t\r\n](.*[^ \t\r\n])?$"
+        },
+        "pubnumber": {
+          "description": "Published character of chapter or verse",
+          "type": "string",
+          "pattern": "^[^ \t\r\n](.*[^ \t\r\n])?$"
+        }
+      },
+      "required": [
+        "type",
+        "marker"
+      ],
+      "additionalProperties": false
+    },
+    "rowObject": {
+      "type": "object",
+      "description": "A table row which contains cells",
+      "properties": {
+        "type": {
+          "description": "The kind/category of node or element this is, corresponding the USFM marker and USX node",
+          "type": "string",
+          "enum": [
+            "row"
+          ]
+        },
+        "marker": {
+          "description": "The corresponding marker in USFM or style in USX",
+          "type": "string",
+          "pattern": "^[^ \t\r\n]+$"
+        },
+        "content": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "$ref": "#/$defs/cellObject"
+              }
+            ]
+          }
+        },
+        "sid": {
+          "description": "Indicates the Book-Chapter-Verse value in the paragraph-based structure",
+          "type": "string",
+          "pattern": "(^[0-6A-Z]{3}( [1-9][0-9]{0,2}(:[1-9][0-9]{0,2}(-[1-9][0-9]{0,2})?)?)?$)|.*"
+        },
+        "number": {
+          "description": "Chapter number or verse number",
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,2}(-[1-9][0-9]{0,2})?$"
+        },
+        "altnumber": {
+          "description": "Alternate chapter number or verse number",
+          "type": "string",
+          "pattern": "^[^ \t\r\n](.*[^ \t\r\n])?$"
+        },
+        "pubnumber": {
+          "description": "Published character of chapter or verse",
+          "type": "string",
+          "pattern": "^[^ \t\r\n](.*[^ \t\r\n])?$"
+        }
+      },
+      "required": [
+        "type",
+        "marker"
+      ],
+      "additionalProperties": false
+    },
+    "cellObject": {
+      "type": "object",
+      "description": "A table cell",
+      "properties": {
+        "type": {
+          "description": "The kind/category of node or element this is, corresponding the USFM marker and USX node",
+          "type": "string",
+          "enum": [
+            "cell"
+          ]
+        },
+        "marker": {
+          "description": "The corresponding marker in USFM or style in USX",
+          "type": "string",
+          "pattern": "^[^ \t\r\n]+$"
+        },
+        "content": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "$ref": "#/$defs/charMarkerObject"
+              }
+            ]
+          }
+        },
+        "sid": {
+          "description": "Indicates the Book-Chapter-Verse value in the paragraph-based structure",
+          "type": "string",
+          "pattern": "(^[0-6A-Z]{3}( [1-9][0-9]{0,2}(:[1-9][0-9]{0,2}(-[1-9][0-9]{0,2})?)?)?$)|.*"
+        },
+        "number": {
+          "description": "Chapter number or verse number",
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,2}(-[1-9][0-9]{0,2})?$"
+        },
+        "altnumber": {
+          "description": "Alternate chapter number or verse number",
+          "type": "string",
+          "pattern": "^[^ \t\r\n](.*[^ \t\r\n])?$"
+        },
+        "pubnumber": {
+          "description": "Published character of chapter or verse",
+          "type": "string",
+          "pattern": "^[^ \t\r\n](.*[^ \t\r\n])?$"
+        },
+        "align": {
+          "description": "Alignment of table cells",
+          "type": "string",
+          "enum": [
+            "start",
+            "end",
+            "center"
+          ]
+        }
+      },
+      "required": [
+        "type",
+        "marker"
+      ],
+      "additionalProperties": false
     }
-   },
-
+  },
   "properties": {
     "type": {
       "description": "The kind of node/element/marker this is",
@@ -164,11 +384,25 @@
     "content": {
       "description": "The JSON representation of scripture contents from USFM/USX",
       "type": "array",
-      "items":{
-          "$ref": "#/$defs/paraMarkerObject"
+      "items": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/paraMarkerObject"
+          },
+          {
+            "$ref": "#/$defs/tableObject"
+          },
+          {
+            "$ref": "#/$defs/sidebarObject"
+          }
+        ]
       }
     }
   },
-  "required": ["type", "version", "content"],
+  "required": [
+    "type",
+    "version",
+    "content"
+  ],
   "additionalProperties": false
 }
