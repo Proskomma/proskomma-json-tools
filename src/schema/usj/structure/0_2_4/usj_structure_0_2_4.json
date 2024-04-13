@@ -5,15 +5,13 @@
   "type": "object",
   "$defs": {
     "paraMarkerObject": {
-      "description": "Para-like content including book and chapter",
+      "description": "Para-like content",
       "type": "object",
       "properties": {
         "type": {
-          "description": "The kind/category of node or element this is, corresponding the USFM marker and USX node",
+          "description": "The kind/category of node or element this is, corresponding to the USFM marker or USX node",
           "type": "string",
           "enum": [
-            "book",
-            "chapter",
             "para"
           ]
         },
@@ -39,16 +37,74 @@
           "description": "Indicates the Book-Chapter-Verse value in the paragraph-based structure",
           "type": "string",
           "pattern": "(^[0-6A-Z]{3}( [1-9][0-9]{0,2}(:[1-9][0-9]{0,2}(-[1-9][0-9]{0,2})?)?)?$)|.*"
-        },
-        "number": {
-          "description": "Chapter number or verse number",
+        }
+      },
+      "required": [
+        "type",
+        "marker"
+      ],
+      "additionalProperties": false
+    },
+    "bookObject": {
+      "description": "Book object",
+      "type": "object",
+      "properties": {
+        "type": {
+          "description": "The kind/category of node or element this is, corresponding the USFM marker and USX node",
           "type": "string",
-          "pattern": "^[1-9][0-9]{0,2}(-[1-9][0-9]{0,2})?$"
+          "enum": [
+            "book"
+          ]
+        },
+        "marker": {
+          "description": "The corresponding marker in USFM or style in USX",
+          "type": "string",
+          "pattern": "^[^ \t\r\n]+$"
         },
         "code": {
           "description": "The 3-letter book code in id element",
           "pattern": "^[0-6A-Z]{3}$",
           "type": "string"
+        },
+        "content": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "type",
+        "marker",
+        "code"
+      ],
+      "additionalProperties": false
+    },
+    "chapterObject": {
+      "description": "Chapter object",
+      "type": "object",
+      "properties": {
+        "type": {
+          "description": "The kind/category of node or element this is, corresponding the USFM marker and USX node",
+          "type": "string",
+          "enum": [
+            "chapter"
+          ]
+        },
+        "marker": {
+          "description": "The corresponding marker in USFM or style in USX",
+          "type": "string",
+          "pattern": "^[^ \t\r\n]+$"
+        },
+        "sid": {
+          "description": "Indicates the Book-Chapter-Verse value in the paragraph-based structure",
+          "type": "string",
+          "pattern": "(^[0-6A-Z]{3}( [1-9][0-9]{0,2}(:[1-9][0-9]{0,2}(-[1-9][0-9]{0,2})?)?)?$)|.*"
+        },
+        "number": {
+          "description": "Chapter number or verse number",
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,2}(-[1-9][0-9]{0,2})?$"
         },
         "altnumber": {
           "description": "Alternate chapter number or verse number",
@@ -56,14 +112,15 @@
           "pattern": "^[^ \t\r\n](.*[^ \t\r\n])?$"
         },
         "pubnumber": {
-          "description": "Published character of chapter or verse",
+          "description": "Published character of chapter or verse (mad and wrong)",
           "type": "string",
           "pattern": "^[^ \t\r\n](.*[^ \t\r\n])?$"
         }
       },
       "required": [
         "type",
-        "marker"
+        "marker",
+        "number"
       ],
       "additionalProperties": false
     },
@@ -336,7 +393,7 @@
           }
         },
         "sid": {
-          "description": "Indicates the Book-Chapter-Verse value in the paragraph-based structure",
+          "description": "Indicates the Book-Chapter-Verse value in the paragraph-based structure, or sometimes something completely different",
           "type": "string",
           "pattern": "(^[0-6A-Z]{3}( [1-9][0-9]{0,2}(:[1-9][0-9]{0,2}(-[1-9][0-9]{0,2})?)?)?$)|.*"
         },
@@ -387,6 +444,12 @@
       "items": {
         "anyOf": [
           {
+            "$ref": "#/$defs/bookObject"
+          },
+          {
+            "$ref": "#/$defs/chapterObject"
+          },
+          {
             "$ref": "#/$defs/paraMarkerObject"
           },
           {
@@ -399,10 +462,5 @@
       }
     }
   },
-  "required": [
-    "type",
-    "version",
-    "content"
-  ],
   "additionalProperties": false
 }
