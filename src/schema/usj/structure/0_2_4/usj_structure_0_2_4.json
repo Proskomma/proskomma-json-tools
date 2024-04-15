@@ -356,14 +356,12 @@
         "type",
         "marker"
       ],
-      "additionalProperties": {
-        "type": "string",
         "patternProperties": {
           "^x-": {
             "type": "string"
           }
-        }
-      }
+      },
+      "additionalProperties": false
     },
     "tableObject": {
       "type": "object",
