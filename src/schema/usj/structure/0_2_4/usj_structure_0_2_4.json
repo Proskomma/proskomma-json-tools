@@ -11,9 +11,7 @@
         "type": {
           "description": "The kind/category of node or element",
           "type": "string",
-          "enum": [
-            "para"
-          ]
+          "const": "para"
         },
         "marker": {
           "description": "The corresponding marker in USFM or style in USX",
@@ -45,9 +43,7 @@
         "type": {
           "description": "The kind/category of node or element",
           "type": "string",
-          "enum": [
-            "book"
-          ]
+          "const": "book"
         },
         "marker": {
           "description": "The corresponding marker in USFM or style in USX",
@@ -80,9 +76,7 @@
         "type": {
           "description": "The kind/category of node or element",
           "type": "string",
-          "enum": [
-            "chapter"
-          ]
+          "const": "chapter"
         },
         "marker": {
           "description": "The corresponding marker in USFM or style in USX",
@@ -124,9 +118,7 @@
         "type": {
           "description": "The kind/category of node or element",
           "type": "string",
-          "enum": [
-            "sidebar"
-          ]
+          "const": "sidebar"
         },
         "marker": {
           "description": "The corresponding marker in USFM or style in USX",
@@ -168,6 +160,9 @@
         },
         {
           "$ref": "#/$defs/figureObject"
+        },
+        {
+          "$ref": "#/$defs/noteObject"
         }
       ]
     },
@@ -180,7 +175,6 @@
           "type": "string",
           "enum": [
             "char",
-            "note",
             "whitespace",
             "row",
             "cell"
@@ -196,11 +190,6 @@
           "items": {
             "$ref": "#/$defs/inParaObject"
           }
-        },
-        "caller": {
-          "description": "Caller character for footnotes and cross-refs",
-          "type": "string",
-          "pattern": "^[^ \t\n]$"
         },
         "link-id": {
           "description": "ID for link",
@@ -218,6 +207,38 @@
       ],
       "additionalProperties": false
     },
+    "noteObject": {
+      "type": "object",
+      "description": "A note",
+      "properties": {
+        "type": {
+          "description": "The kind/category of node or element",
+          "type": "string",
+          "const": "note"
+        },
+        "marker": {
+          "description": "The corresponding marker in USFM or style in USX",
+          "type": "string",
+          "pattern": "^[^ \t\r\n]+$"
+        },
+        "content": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/inParaObject"
+          }
+        },
+        "caller": {
+          "description": "Caller character for footnotes and cross-refs",
+          "type": "string",
+          "pattern": "^[^ \t\n]$"
+        }
+      },
+      "required": [
+        "type",
+        "marker"
+      ],
+      "additionalProperties": false
+    },
     "figureObject": {
       "type": "object",
       "description": "a figure object",
@@ -225,9 +246,7 @@
         "type": {
           "description": "The kind/category of node or element",
           "type": "string",
-          "enum": [
-            "figure"
-          ]
+          "const": "figure"
         },
         "marker": {
           "description": "The corresponding marker in USFM or style in USX",
@@ -268,9 +287,7 @@
         "type": {
           "description": "The kind/category of node or element",
           "type": "string",
-          "enum": [
-            "verse"
-          ]
+          "const": "verse"
         },
         "marker": {
           "description": "The corresponding marker in USFM or style in USX",
@@ -312,9 +329,7 @@
         "type": {
           "description": "The kind/category of node or element",
           "type": "string",
-          "enum": [
-            "ms"
-          ]
+          "const": "ms"
         },
         "marker": {
           "description": "The corresponding marker in USFM or style in USX",
@@ -357,9 +372,7 @@
         "type": {
           "description": "The kind/category of node or element this is, corresponding the USFM marker and USX node",
           "type": "string",
-          "enum": [
-            "table"
-          ]
+          "const": "table"
         },
         "marker": {
           "description": "The corresponding marker in USFM or style in USX",
@@ -391,9 +404,7 @@
         "type": {
           "description": "The kind/category of node or element this is, corresponding the USFM marker and USX node",
           "type": "string",
-          "enum": [
-            "row"
-          ]
+          "const": "row"
         },
         "marker": {
           "description": "The corresponding marker in USFM or style in USX",
@@ -429,9 +440,7 @@
         "type": {
           "description": "The kind/category of node or element this is, corresponding the USFM marker and USX node",
           "type": "string",
-          "enum": [
-            "cell"
-          ]
+          "const": "cell"
         },
         "marker": {
           "description": "The corresponding marker in USFM or style in USX",
