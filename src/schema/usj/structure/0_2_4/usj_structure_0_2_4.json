@@ -23,20 +23,13 @@
         "content": {
           "type": "array",
           "items": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "$ref": "#/$defs/charMarkerObject"
-              }
-            ]
+            "$ref": "#/$defs/inParaObject"
           }
         },
         "sid": {
           "description": "Indicates the Book-Chapter-Verse value in the paragraph-based structure",
           "type": "string",
-          "pattern": "(^[0-6A-Z]{3}( [1-9][0-9]{0,2}(:[1-9][0-9]{0,2}(-[1-9][0-9]{0,2})?)?)?$)|.*"
+          "pattern": "^[0-6A-Z]{3}( [1-9][0-9]{0,2}(:[1-9][0-9]{0,2}(-[1-9][0-9]{0,2})?)?)?$"
         }
       },
       "required": [
@@ -99,7 +92,7 @@
         "sid": {
           "description": "Indicates the Book-Chapter-Verse value in the paragraph-based structure",
           "type": "string",
-          "pattern": "(^[0-6A-Z]{3}( [1-9][0-9]{0,2}(:[1-9][0-9]{0,2}(-[1-9][0-9]{0,2})?)?)?$)|.*"
+          "pattern": "^[0-6A-Z]{3}( [1-9][0-9]{0,2}(:[1-9][0-9]{0,2}(-[1-9][0-9]{0,2})?)?)?$"
         },
         "number": {
           "description": "Chapter number or verse number",
@@ -158,6 +151,19 @@
       ],
       "additionalProperties": false
     },
+    "inParaObject": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "$ref": "#/$defs/charMarkerObject"
+        },
+        {
+          "$ref": "#/$defs/milestoneObject"
+        }
+      ]
+    },
     "charMarkerObject": {
       "type": "object",
       "properties": {
@@ -170,7 +176,6 @@
             "figure",
             "note",
             "whitespace",
-            "ms",
             "row",
             "cell"
           ]
@@ -183,20 +188,13 @@
         "content": {
           "type": "array",
           "items": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "$ref": "#/$defs/charMarkerObject"
-              }
-            ]
+            "$ref": "#/$defs/inParaObject"
           }
         },
         "sid": {
           "description": "Indicates the Book-Chapter-Verse value in the paragraph-based structure",
           "type": "string",
-          "pattern": "(^[0-6A-Z]{3}( [1-9][0-9]{0,2}(:[1-9][0-9]{0,2}(-[1-9][0-9]{0,2})?)?)?$)|.*"
+          "pattern": "^[0-6A-Z]{3}( [1-9][0-9]{0,2}(:[1-9][0-9]{0,2}(-[1-9][0-9]{0,2})?)?)?$"
         },
         "number": {
           "description": "Chapter number or verse number",
@@ -226,6 +224,47 @@
           "description": "ID for link",
           "type": "string",
           "pattern": "^[^ \t\r\n](.*[^ \t\r\n])?$"
+        },
+        "file": {
+          "description": "The filename",
+          "type": "string",
+          "pattern": "^[^ \t\r\n](.*[^ \t\r\n])?$"
+        },
+        "size": {
+          "description": "The file size",
+          "type": "string"
+        },
+        "ref": {
+          "description": "The file ref",
+          "type": "string",
+          "pattern": "^[^ \t\r\n](.*[^ \t\r\n])?$"
+        }
+      },
+      "required": [
+        "type",
+        "marker"
+      ],
+      "additionalProperties": false
+    },
+    "milestoneObject": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "description": "The kind/category of node or element this is, corresponding the USFM marker and USX node",
+          "type": "string",
+          "enum": [
+            "ms"
+          ]
+        },
+        "marker": {
+          "description": "The corresponding marker in USFM or style in USX",
+          "type": "string",
+          "pattern": "^[^ \t\r\n]+$"
+        },
+        "sid": {
+          "description": "Indicates the Book-Chapter-Verse value in the paragraph-based structure",
+          "type": "string",
+          "pattern": "(^[0-6A-Z]{3}( [1-9][0-9]{0,2}(:[1-9][0-9]{0,2}(-[1-9][0-9]{0,2})?)?)?$)|.*"
         },
         "who": {
           "description": "The speaker in an sp tag",
@@ -382,14 +421,7 @@
         "content": {
           "type": "array",
           "items": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "$ref": "#/$defs/charMarkerObject"
-              }
-            ]
+            "$ref": "#/$defs/inParaObject"
           }
         },
         "sid": {
