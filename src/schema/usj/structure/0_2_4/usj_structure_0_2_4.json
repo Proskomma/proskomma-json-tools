@@ -9,7 +9,7 @@
       "type": "object",
       "properties": {
         "type": {
-          "description": "The kind/category of node or element this is, corresponding to the USFM marker or USX node",
+          "description": "The kind/category of node or element",
           "type": "string",
           "enum": [
             "para"
@@ -27,7 +27,7 @@
           }
         },
         "sid": {
-          "description": "Indicates the Book-Chapter-Verse value in the paragraph-based structure",
+          "description": "Indicates the Book-Chapter-Verse-like value",
           "type": "string",
           "pattern": "^[0-6A-Z]{3}( [1-9][0-9]{0,2}(:[1-9][0-9]{0,2}(-[1-9][0-9]{0,2})?)?)?$"
         }
@@ -43,7 +43,7 @@
       "type": "object",
       "properties": {
         "type": {
-          "description": "The kind/category of node or element this is, corresponding the USFM marker and USX node",
+          "description": "The kind/category of node or element",
           "type": "string",
           "enum": [
             "book"
@@ -78,7 +78,7 @@
       "type": "object",
       "properties": {
         "type": {
-          "description": "The kind/category of node or element this is, corresponding the USFM marker and USX node",
+          "description": "The kind/category of node or element",
           "type": "string",
           "enum": [
             "chapter"
@@ -90,22 +90,22 @@
           "pattern": "^[^ \t\r\n]+$"
         },
         "sid": {
-          "description": "Indicates the Book-Chapter-Verse value in the paragraph-based structure",
+          "description": "Indicates the Book-Chapter-Verse-like value",
           "type": "string",
           "pattern": "^[0-6A-Z]{3}( [1-9][0-9]{0,2}(:[1-9][0-9]{0,2}(-[1-9][0-9]{0,2})?)?)?$"
         },
         "number": {
-          "description": "Chapter number or verse number",
+          "description": "Chapter number",
           "type": "string",
           "pattern": "^[1-9][0-9]{0,2}(-[1-9][0-9]{0,2})?$"
         },
         "altnumber": {
-          "description": "Alternate chapter number or verse number",
+          "description": "Alternative chapter number",
           "type": "string",
           "pattern": "^[^ \t\r\n](.*[^ \t\r\n])?$"
         },
         "pubnumber": {
-          "description": "Published character of chapter or verse (mad and wrong)",
+          "description": "Published characters as non-orthogonal attribute for USFM-incompatibility (mad and wrong)",
           "type": "string",
           "pattern": "^[^ \t\r\n](.*[^ \t\r\n])?$"
         }
@@ -122,7 +122,7 @@
       "description": "Sidebar, which contains para-like content",
       "properties": {
         "type": {
-          "description": "The kind/category of node or element this is, corresponding the USFM marker and USX node",
+          "description": "The kind/category of node or element",
           "type": "string",
           "enum": [
             "sidebar"
@@ -152,6 +152,7 @@
       "additionalProperties": false
     },
     "inParaObject": {
+      "description": "The set of thingeys that can appear inside a paragraph-like thingeys",
       "anyOf": [
         {
           "type": "string"
@@ -160,20 +161,25 @@
           "$ref": "#/$defs/charMarkerObject"
         },
         {
+          "$ref": "#/$defs/verseObject"
+        },
+        {
           "$ref": "#/$defs/milestoneObject"
+        },
+        {
+          "$ref": "#/$defs/figureObject"
         }
       ]
     },
     "charMarkerObject": {
       "type": "object",
+      "description": "Character-type content",
       "properties": {
         "type": {
-          "description": "The kind/category of node or element this is, corresponding the USFM marker and USX node",
+          "description": "The kind/category of node or element",
           "type": "string",
           "enum": [
             "char",
-            "verse",
-            "figure",
             "note",
             "whitespace",
             "row",
@@ -191,26 +197,6 @@
             "$ref": "#/$defs/inParaObject"
           }
         },
-        "sid": {
-          "description": "Indicates the Book-Chapter-Verse value in the paragraph-based structure",
-          "type": "string",
-          "pattern": "^[0-6A-Z]{3}( [1-9][0-9]{0,2}(:[1-9][0-9]{0,2}(-[1-9][0-9]{0,2})?)?)?$"
-        },
-        "number": {
-          "description": "Chapter number or verse number",
-          "type": "string",
-          "pattern": "^[1-9][0-9]{0,2}(-[1-9][0-9]{0,2})?$"
-        },
-        "altnumber": {
-          "description": "Alternate chapter number or verse number",
-          "type": "string",
-          "pattern": "^[^ \t\r\n](.*[^ \t\r\n])?$"
-        },
-        "pubnumber": {
-          "description": "Published character of chapter or verse",
-          "type": "string",
-          "pattern": "^[^ \t\r\n](.*[^ \t\r\n])?$"
-        },
         "caller": {
           "description": "Caller character for footnotes and cross-refs",
           "type": "string",
@@ -224,6 +210,35 @@
           "description": "ID for link",
           "type": "string",
           "pattern": "^[^ \t\r\n](.*[^ \t\r\n])?$"
+        }
+      },
+      "required": [
+        "type",
+        "marker"
+      ],
+      "additionalProperties": false
+    },
+    "figureObject": {
+      "type": "object",
+      "description": "a figure object",
+      "properties": {
+        "type": {
+          "description": "The kind/category of node or element",
+          "type": "string",
+          "enum": [
+            "figure"
+          ]
+        },
+        "marker": {
+          "description": "The corresponding marker in USFM or style in USX",
+          "type": "string",
+          "pattern": "^[^ \t\r\n]+$"
+        },
+        "content": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         },
         "file": {
           "description": "The filename",
@@ -246,11 +261,56 @@
       ],
       "additionalProperties": false
     },
-    "milestoneObject": {
+    "verseObject": {
       "type": "object",
+      "description": "A verse number",
       "properties": {
         "type": {
-          "description": "The kind/category of node or element this is, corresponding the USFM marker and USX node",
+          "description": "The kind/category of node or element",
+          "type": "string",
+          "enum": [
+            "verse"
+          ]
+        },
+        "marker": {
+          "description": "The corresponding marker in USFM or style in USX",
+          "type": "string",
+          "pattern": "^[^ \t\r\n]+$"
+        },
+        "sid": {
+          "description": "Indicates the Book-Chapter-Verse-like value",
+          "type": "string",
+          "pattern": "^[0-6A-Z]{3}( [1-9][0-9]{0,2}(:[1-9][0-9]{0,2}(-[1-9][0-9]{0,2})?)?)?$"
+        },
+        "number": {
+          "description": "Verse number",
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,2}(-[1-9][0-9]{0,2})?$"
+        },
+        "altnumber": {
+          "description": "Alternative verse number",
+          "type": "string",
+          "pattern": "^[^ \t\r\n](.*[^ \t\r\n])?$"
+        },
+        "pubnumber": {
+          "description": "Published characters as non-orthogonal attribute for USFM-incompatibility (mad and wrong)",
+          "type": "string",
+          "pattern": "^[^ \t\r\n](.*[^ \t\r\n])?$"
+        }
+      },
+      "required": [
+        "type",
+        "marker",
+        "number"
+      ],
+      "additionalProperties": false
+    },
+    "milestoneObject": {
+      "type": "object",
+      "description": "Milestone (start or end marker)",
+      "properties": {
+        "type": {
+          "description": "The kind/category of node or element",
           "type": "string",
           "enum": [
             "ms"
@@ -275,31 +335,24 @@
           "description": "The end milestone id",
           "type": "string",
           "pattern": "^[^ \t\r\n](.*[^ \t\r\n])?$"
-        },
-        "file": {
-          "description": "The filename",
-          "type": "string",
-          "pattern": "^[^ \t\r\n](.*[^ \t\r\n])?$"
-        },
-        "size": {
-          "description": "The file size",
-          "type": "string"
-        },
-        "ref": {
-          "description": "The file ref",
-          "type": "string",
-          "pattern": "^[^ \t\r\n](.*[^ \t\r\n])?$"
         }
       },
       "required": [
         "type",
         "marker"
       ],
-      "additionalProperties": false
+      "additionalProperties": {
+        "type": "string",
+        "patternProperties": {
+          "^x-": {
+            "type": "string"
+          }
+        }
+      }
     },
     "tableObject": {
       "type": "object",
-      "description": "A table which contains rows",
+      "description": "A table, which contains rows",
       "properties": {
         "type": {
           "description": "The kind/category of node or element this is, corresponding the USFM marker and USX node",
@@ -323,21 +376,6 @@
           "description": "Indicates the Book-Chapter-Verse value in the paragraph-based structure",
           "type": "string",
           "pattern": "(^[0-6A-Z]{3}( [1-9][0-9]{0,2}(:[1-9][0-9]{0,2}(-[1-9][0-9]{0,2})?)?)?$)|.*"
-        },
-        "number": {
-          "description": "Chapter number or verse number",
-          "type": "string",
-          "pattern": "^[1-9][0-9]{0,2}(-[1-9][0-9]{0,2})?$"
-        },
-        "altnumber": {
-          "description": "Alternate chapter number or verse number",
-          "type": "string",
-          "pattern": "^[^ \t\r\n](.*[^ \t\r\n])?$"
-        },
-        "pubnumber": {
-          "description": "Published character of chapter or verse",
-          "type": "string",
-          "pattern": "^[^ \t\r\n](.*[^ \t\r\n])?$"
         }
       },
       "required": [
@@ -366,10 +404,7 @@
           "type": "array",
           "items": {
             "anyOf": [
-              {
-                "type": "string"
-              },
-              {
+               {
                 "$ref": "#/$defs/cellObject"
               }
             ]
@@ -379,21 +414,6 @@
           "description": "Indicates the Book-Chapter-Verse value in the paragraph-based structure",
           "type": "string",
           "pattern": "(^[0-6A-Z]{3}( [1-9][0-9]{0,2}(:[1-9][0-9]{0,2}(-[1-9][0-9]{0,2})?)?)?$)|.*"
-        },
-        "number": {
-          "description": "Chapter number or verse number",
-          "type": "string",
-          "pattern": "^[1-9][0-9]{0,2}(-[1-9][0-9]{0,2})?$"
-        },
-        "altnumber": {
-          "description": "Alternate chapter number or verse number",
-          "type": "string",
-          "pattern": "^[^ \t\r\n](.*[^ \t\r\n])?$"
-        },
-        "pubnumber": {
-          "description": "Published character of chapter or verse",
-          "type": "string",
-          "pattern": "^[^ \t\r\n](.*[^ \t\r\n])?$"
         }
       },
       "required": [
@@ -428,21 +448,6 @@
           "description": "Indicates the Book-Chapter-Verse value in the paragraph-based structure, or sometimes something completely different",
           "type": "string",
           "pattern": "(^[0-6A-Z]{3}( [1-9][0-9]{0,2}(:[1-9][0-9]{0,2}(-[1-9][0-9]{0,2})?)?)?$)|.*"
-        },
-        "number": {
-          "description": "Chapter number or verse number",
-          "type": "string",
-          "pattern": "^[1-9][0-9]{0,2}(-[1-9][0-9]{0,2})?$"
-        },
-        "altnumber": {
-          "description": "Alternate chapter number or verse number",
-          "type": "string",
-          "pattern": "^[^ \t\r\n](.*[^ \t\r\n])?$"
-        },
-        "pubnumber": {
-          "description": "Published character of chapter or verse",
-          "type": "string",
-          "pattern": "^[^ \t\r\n](.*[^ \t\r\n])?$"
         },
         "align": {
           "description": "Alignment of table cells",

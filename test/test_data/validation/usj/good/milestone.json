@@ -173,6 +173,16 @@
           "type": "ms",
           "marker": "ts-e",
           "eid": "ts_JUD_5-6"
+        },
+        {
+          "type": "ms",
+          "marker": "zaln-s",
+          "x-lemma": "foo"
+        },
+        "leFoo",
+        {
+          "type": "ms",
+          "marker": "zaln-e"
         }
       ]
     }
