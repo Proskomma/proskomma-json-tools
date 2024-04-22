@@ -4,11 +4,7 @@
   "properties": {
     "type": {
       "type": "string",
-      "enum": [
-        "paragraph",
-        "graft",
-        "row"
-      ]
+      "enum": ["paragraph", "graft", "row"]
     },
     "content": {
       "type": "array",
@@ -40,9 +36,7 @@
   "if": {
     "properties": {
       "type": {
-        "enum": [
-          "graft"
-        ]
+        "enum": ["graft"]
       }
     }
   },
@@ -52,7 +46,7 @@
         "enum": [
           "introduction",
           "intro_title",
-          "Intro_end_title",
+          "intro_end_title",
           "title",
           "end_title",
           "heading",
@@ -69,9 +63,7 @@
     "if": {
       "properties": {
         "type": {
-          "enum": [
-            "row"
-          ]
+          "enum": ["row"]
         }
       }
     },
@@ -93,4 +85,3 @@
     }
   }
 }
-

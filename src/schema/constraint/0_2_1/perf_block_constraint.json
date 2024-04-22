@@ -4,10 +4,7 @@
   "properties": {
     "type": {
       "type": "string",
-      "enum": [
-        "paragraph",
-        "graft"
-      ]
+      "enum": ["paragraph", "graft"]
     },
     "content": {
       "type": "array",
@@ -49,7 +46,7 @@
         "enum": [
           "introduction",
           "intro_title",
-          "Intro_end_title",
+          "intro_end_title",
           "title",
           "end_title",
           "heading",
@@ -71,5 +68,3 @@
     }
   }
 }
-
-
