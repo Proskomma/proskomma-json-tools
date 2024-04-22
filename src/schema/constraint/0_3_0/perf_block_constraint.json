@@ -1,16 +1,10 @@
 {
-  "$id": "https://github.com/Proskomma/proskomma-json-tools/tree/main/src/schema/constraint/0_3_0/perf_block_constraint.json",
+  "$id": "https://raw.githubusercontent.com/Proskomma/proskomma-json-tools/main/src/schema/constraint/0_3_0/perf_block_constraint.json",
   "type": "object",
   "properties": {
     "type": {
       "type": "string",
-      "enum": [
-        "paragraph",
-        "graft",
-        "row",
-        "node",
-        "lookup"
-      ]
+      "enum": ["paragraph", "graft", "row", "node", "lookup"]
     },
     "content": {
       "type": "array",
@@ -42,9 +36,7 @@
   "if": {
     "properties": {
       "type": {
-        "enum": [
-          "graft"
-        ]
+        "enum": ["graft"]
       }
     }
   },
@@ -54,7 +46,7 @@
         "enum": [
           "introduction",
           "intro_title",
-          "Intro_end_title",
+          "intro_end_title",
           "title",
           "end_title",
           "heading",
@@ -81,10 +73,7 @@
           "type": "string",
           "oneOf": [
             {
-              "enum": [
-                "row:heading",
-                "row:body"
-              ]
+              "enum": ["row:heading", "row:body"]
             }
           ]
         }
@@ -93,7 +82,7 @@
     "else": {
       "if": {
         "properties": {
-          "type": {"enum": ["node"]}
+          "type": { "enum": ["node"] }
         }
       },
       "then": {
@@ -101,7 +90,7 @@
           "subtype": {
             "type": "string",
             "oneOf": [
-              {"enum":  ["node"]},
+              { "enum": ["node"] },
               {
                 "pattern": "^x-\\S{1,256}$"
               }
@@ -123,9 +112,7 @@
                 }
               }
             },
-            "required": [
-              "id"
-            ],
+            "required": ["id"],
             "additionalProperties": false
           }
         }
@@ -133,7 +120,7 @@
       "else": {
         "if": {
           "properties": {
-            "type": {"enum": ["lookup"]}
+            "type": { "enum": ["lookup"] }
           }
         },
         "then": {
@@ -141,7 +128,7 @@
             "subtype": {
               "type": "string",
               "oneOf": [
-                {"enum":  ["lookup"]},
+                { "enum": ["lookup"] },
                 {
                   "pattern": "^x-\\S{1,256}$"
                 }
@@ -160,12 +147,9 @@
                   }
                 }
               },
-              "required": [
-                "primary"
-              ],
+              "required": ["primary"],
               "additionalProperties": false
             }
-
           }
         },
         "else": {

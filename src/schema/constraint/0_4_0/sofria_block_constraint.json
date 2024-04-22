@@ -1,14 +1,10 @@
 {
-  "$id": "https://github.com/Proskomma/proskomma-json-tools/tree/main/src/schema/constraint/0_4_0/sofria_block_constraint.json",
+  "$id": "https://raw.githubusercontent.com/Proskomma/proskomma-json-tools/main/src/schema/constraint/0_4_0/sofria_block_constraint.json",
   "type": "object",
   "properties": {
     "type": {
       "type": "string",
-      "enum": [
-        "paragraph",
-        "graft",
-        "row"
-      ]
+      "enum": ["paragraph", "graft", "row"]
     },
     "content": {
       "type": "array",
@@ -40,9 +36,7 @@
   "if": {
     "properties": {
       "type": {
-        "enum": [
-          "graft"
-        ]
+        "enum": ["graft"]
       }
     }
   },
@@ -52,7 +46,7 @@
         "enum": [
           "introduction",
           "intro_title",
-          "Intro_end_title",
+          "intro_end_title",
           "title",
           "end_title",
           "heading",
@@ -69,9 +63,7 @@
     "if": {
       "properties": {
         "type": {
-          "enum": [
-            "row"
-          ]
+          "enum": ["row"]
         }
       }
     },
@@ -93,4 +85,3 @@
     }
   }
 }
-

@@ -1,5 +1,5 @@
 {
-  "$id": "https://github.com/Proskomma/proskomma-json-tools/tree/main/src/schema/constraint/0_4_0/perf_sequence_constraint.json",
+  "$id": "https://raw.githubusercontent.com/Proskomma/proskomma-json-tools/main/src/schema/constraint/0_4_0/perf_sequence_constraint.json",
 
   "type": "object",
   "properties": {
@@ -35,7 +35,4 @@
       }
     }
   }
-
 }
-
-

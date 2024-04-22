@@ -1,5 +1,5 @@
 {
-  "$id": "https://github.com/Proskomma/proskomma-json-tools/tree/main/src/schema/structure/0_3_0/block_structure.json",
+  "$id": "https://raw.githubusercontent.com/Proskomma/proskomma-json-tools/main/src/schema/structure/0_3_0/block_structure.json",
   "title": "Block (Structure)",
   "description": "A block, which represents either a paragraph of text or a graft",
   "type": "object",
@@ -71,7 +71,7 @@
     },
     "hooks": {
       "type": "array",
-      "$ref": "./hook_structure.json"
+      "$ref": "./hooks_structure.json"
     }
   },
   "required": [

@@ -1,5 +1,5 @@
 {
-  "$id": "https://github.com/Proskomma/proskomma-json-tools/tree/main/src/schema/combined/0_4_0/perf_document_combined.json",
+  "$id": "https://raw.githubusercontent.com/Proskomma/proskomma-json-tools/main/src/schema/combined/0_4_0/perf_document_combined.json",
   "type": "object",
   "allOf": [
     {
