@@ -43,6 +43,8 @@ const sofriaSequenceConstraintSchema_0_4_0 = require('./schema/constraint/0_4_0/
 const sofriaBlockConstraintSchema_0_4_0 = require('./schema/constraint/0_4_0/sofria_block_constraint.json');
 const sofriaContentElementConstraintSchema_0_4_0 = require('./schema/constraint/0_4_0/sofria_contentElement_constraint.json');
 
+const usjSchema_0_2_4 = require('./schema/usj/structure/0_2_4/usj_structure_0_2_4.json');
+
 class Validator {
 
     constructor() {
@@ -50,6 +52,7 @@ class Validator {
             structure: {},
             constraint: {},
             proskomma: {},
+            usj: {}
         };
         for (const [key, schemaOb] of [
             [
@@ -385,6 +388,23 @@ class Validator {
             ]
         ]) {
             this.schema.constraint[key] = schemaOb;
+        }
+        for (const [key, schemaOb] of [
+            [
+                'structure',
+                {
+                    "0.2.4": [
+                        {
+                            "name": "Unified Scripture JSON",
+                            "validator": new Ajv()
+                                .compile(usjSchema_0_2_4)
+                        }
+                    ],
+                }
+
+            ]
+        ]) {
+            this.schema.usj[key] = schemaOb;
         }
     }
 
