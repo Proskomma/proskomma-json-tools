@@ -602,3 +602,76 @@ test(`Multiple para in verse Start End events in (${testGroup})`, (t) => {
         console.log(err);
     }
 });
+
+test(`Empty milestone events (${testGroup})`, (t) => {
+    t.plan(13);
+    try {
+        const pk7 = new Proskomma();
+        const usfm = fse.readFileSync(path.resolve(path.join('./', 'test', 'test_data', 'usfms', 'empty_milestone.usfm'))).toString();
+        pk7.importDocument({ 'lang': 'ara', 'abbr': 'xxa' }, 'usfm', usfm);
+        const result = pk7.gqlQuerySync('{documents { id mainSequence {blocks {dump } } } }').data.documents[0];
+        const docId = result.id;
+        t.ok(result.mainSequence.blocks[0].dump.includes("-milestone/zvideo-"));
+        const actions = {
+            startDocument: [
+                {
+                    description: "startDocument",
+                    test: () => true,
+                    action: ({output}) => {
+                        output.events = [];
+                        return true;
+                    }
+                }
+            ],
+            startMilestone: [
+                {
+                    description: "startMilestone",
+                    test: () => true,
+                    action: ({ context, output }) => {
+                        output.events.push(["startMS", context.sequences[0].element.subType]);
+                        return true;
+                    }
+                },
+            ],
+            endMilestone: [
+                {
+                    description: "endMilestone",
+                    test: () => true,
+                    action: ({ context, output }) => {
+                        output.events.push(["endMS", context.sequences[0].element.subType]);
+                        return true;
+                    }
+                },
+            ],
+            text: [
+                {
+                    description: "text",
+                    test: () => true,
+                    action: ({ context, output }) => {
+                        output.events.push(["text", context.sequences[0].element.text]);
+                        return true;
+                    }
+                },
+            ]
+        }
+        const cl = new SofriaRenderFromProskomma({ proskomma: pk7, actions: actions })
+        const output = { events: [] };
+        t.doesNotThrow(() => {
+            cl.renderDocument1({ docId, context: {}, config: {}, workspace: {}, output })
+        });
+        t.ok(output.events.length === 5);
+        const expected = [
+            [ 'startMS', 'usfm:zvideo' ],
+            [ 'endMS', 'usfm:zvideo' ],
+            [ 'startMS', 'usfm:zweblink' ],
+            [ 'text', 'سایت اینترنتی' ],
+            [ 'endMS', 'usfm:zweblink' ]
+        ];
+        for (const [n, expectedEvent] of expected.entries()) {
+            t.equal(expectedEvent[0], output.events[n][0]);
+            t.equal(expectedEvent[1], output.events[n][1]);
+        }
+    } catch (err) {
+        console.log(err);
+    }
+});

@@ -15,7 +15,7 @@ test(
             ));
             t.plan(2 * goodExamples.length);
             for (const file of goodExamples) {
-                console.log("***", file, "***");
+                // console.log("***", file, "***");
                 const usj = fse.readJsonSync(
                     path.resolve(
                         path.join(__dirname, '..', 'test_data', 'validation', 'usj', 'good', file)

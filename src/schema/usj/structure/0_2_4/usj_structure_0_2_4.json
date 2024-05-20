@@ -48,7 +48,7 @@
         "marker": {
           "description": "The corresponding marker in USFM or style in USX",
           "type": "string",
-          "pattern": "^[^ \t\r\n]+$"
+          "const": "id"
         },
         "code": {
           "description": "The 3-letter book code in id element",
@@ -81,7 +81,7 @@
         "marker": {
           "description": "The corresponding marker in USFM or style in USX",
           "type": "string",
-          "pattern": "^[^ \t\r\n]+$"
+          "const": "c"
         },
         "sid": {
           "description": "Indicates the Book-Chapter-Verse-like value",
@@ -123,7 +123,7 @@
         "marker": {
           "description": "The corresponding marker in USFM or style in USX",
           "type": "string",
-          "pattern": "^[^ \t\r\n]+$"
+          "const": "esb"
         },
         "content": {
           "type": "array",
@@ -337,9 +337,9 @@
           "pattern": "^[^ \t\r\n]+$"
         },
         "sid": {
-          "description": "Indicates the Book-Chapter-Verse value in the paragraph-based structure",
+          "description": "An id to distinguish milestones when using mad and wrong technology to process XML",
           "type": "string",
-          "pattern": "(^[0-6A-Z]{3}( [1-9][0-9]{0,2}(:[1-9][0-9]{0,2}(-[1-9][0-9]{0,2})?)?)?$)|.*"
+          "pattern": "^[^ \t\n](.*[^ \t\n])?$"
         },
         "who": {
           "description": "The speaker in an sp tag",
@@ -418,11 +418,6 @@
               }
             ]
           }
-        },
-        "sid": {
-          "description": "Indicates the Book-Chapter-Verse value in the paragraph-based structure",
-          "type": "string",
-          "pattern": "(^[0-6A-Z]{3}( [1-9][0-9]{0,2}(:[1-9][0-9]{0,2}(-[1-9][0-9]{0,2})?)?)?$)|.*"
         }
       },
       "required": [
@@ -451,11 +446,6 @@
             "$ref": "#/$defs/inParaObject"
           }
         },
-        "sid": {
-          "description": "Indicates the Book-Chapter-Verse value in the paragraph-based structure, or sometimes something completely different",
-          "type": "string",
-          "pattern": "(^[0-6A-Z]{3}( [1-9][0-9]{0,2}(:[1-9][0-9]{0,2}(-[1-9][0-9]{0,2})?)?)?$)|.*"
-        },
         "align": {
           "description": "Alignment of table cells",
           "type": "string",
@@ -464,6 +454,11 @@
             "end",
             "center"
           ]
+        },
+        "colspan": {
+          "description": "Number of columns spanned by the cell",
+          "type": "integer",
+          "minimum": 1
         }
       },
       "required": [
