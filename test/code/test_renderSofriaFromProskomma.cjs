@@ -5,7 +5,7 @@ import fse from 'fs-extra';
 import SofriaRenderFromProskomma from '../../dist/render/renderers/SofriaRenderFromProskomma';
 import SofriaRenderFromJson from '../../dist/render/renderers/SofriaRenderFromJson';
 import { identityActions } from '../../dist/render/sofriaToSofria/renderActions/identity';
-import { Proskomma } from 'proskomma';
+import { Proskomma } from 'proskomma-core';
 import { Validator } from '../../dist/';
 import sofria2WebActions from '../../src/render/sofria2web/renderActions/sofria2web';
 import { renderers } from '../../src/render/sofria2web/sofria2html';
@@ -604,7 +604,7 @@ test(`Multiple para in verse Start End events in (${testGroup})`, (t) => {
 });
 
 test(`Empty milestone events (${testGroup})`, (t) => {
-    t.plan(13);
+    t.plan(21);
     try {
         const pk7 = new Proskomma();
         const usfm = fse.readFileSync(path.resolve(path.join('./', 'test', 'test_data', 'usfms', 'empty_milestone.usfm'))).toString();
@@ -643,6 +643,26 @@ test(`Empty milestone events (${testGroup})`, (t) => {
                     }
                 },
             ],
+            startParagraph: [
+                {
+                    description: "startParagraph",
+                    test: () => true,
+                    action: ({ context, output }) => {
+                        output.events.push(["startPara", context.sequences[0].block.subType]);
+                        return true;
+                    }
+                },
+            ],
+            endParagraph: [
+                {
+                    description: "endParagraph",
+                    test: () => true,
+                    action: ({ context, output }) => {
+                        output.events.push(["endPara", context.sequences[0].block.subType]);
+                        return true;
+                    }
+                },
+            ],
             text: [
                 {
                     description: "text",
@@ -659,13 +679,17 @@ test(`Empty milestone events (${testGroup})`, (t) => {
         t.doesNotThrow(() => {
             cl.renderDocument1({ docId, context: {}, config: {}, workspace: {}, output })
         });
-        t.ok(output.events.length === 5);
+        t.ok(output.events.length === 9);
         const expected = [
+            [ 'startPara', 'usfm:p' ],
             [ 'startMS', 'usfm:zvideo' ],
+            [ 'endPara', 'usfm:p' ],
+            [ 'startPara', 'usfm:q' ],
             [ 'endMS', 'usfm:zvideo' ],
             [ 'startMS', 'usfm:zweblink' ],
             [ 'text', 'سایت اینترنتی' ],
-            [ 'endMS', 'usfm:zweblink' ]
+            [ 'endMS', 'usfm:zweblink' ],
+            [ 'endPara', 'usfm:q' ]
         ];
         for (const [n, expectedEvent] of expected.entries()) {
             t.equal(expectedEvent[0], output.events[n][0]);

@@ -1,6 +1,6 @@
 const { PipelineHandler, Validator } = require('../../dist/index');
 const test = require('tape');
-const { Proskomma } = require('proskomma');
+const { Proskomma } = require('proskomma-core');
 const fse = require('fs-extra');
 const path = require('path');
 

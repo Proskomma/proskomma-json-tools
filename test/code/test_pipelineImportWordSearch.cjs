@@ -1,7 +1,7 @@
 const { PipelineHandler } = require('../../dist/index');
 const { testPipelines, testTransforms } = require('../test_pipelines_transforms');
 const test = require('tape');
-const { Proskomma } = require('proskomma');
+const { Proskomma } = require('proskomma-core');
 const fse = require('fs-extra');
 const path = require('path');
 

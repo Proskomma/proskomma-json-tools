@@ -1,7 +1,7 @@
 import test from 'tape';
 const fse = require('fs-extra');
 import path from 'path';
-const { Proskomma } = require('proskomma');
+const { Proskomma } = require('proskomma-core');
 const { renderActions, renderStyles } = require('../../dist/render/sofria2web');
 const { renderers } = require('../../dist/render/sofria2web/sofria2html');
 const SofriaRenderFromProskomma = require('../../dist/render/renderers/SofriaRenderFromProskomma');
