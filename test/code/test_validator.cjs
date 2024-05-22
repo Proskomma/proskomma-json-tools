@@ -2,7 +2,7 @@ import test from 'tape';
 import path from 'path';
 import fse from 'fs-extra';
 import {Validator} from '../../src';
-import {Proskomma} from 'proskomma';
+import {Proskomma} from 'proskomma-core';
 
 const testGroup = 'Validator';
 

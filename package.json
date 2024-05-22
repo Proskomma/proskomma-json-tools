@@ -40,7 +40,7 @@
     "eslint": "^8.52.0",
     "fs-extra": "^11.1.1",
     "path": "^0.12.7",
-    "proskomma": "^0.9.2",
+    "proskomma-core": "^0.10.6",
     "tap-summary": "^4.0.0",
     "tape": "^5.7.2"
   }

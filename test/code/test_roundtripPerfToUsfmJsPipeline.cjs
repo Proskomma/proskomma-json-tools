@@ -1,7 +1,7 @@
 const path = require('path');
 const fse = require('fs-extra');
 const test = require('tape');
-const {Proskomma} = require('proskomma');
+const {Proskomma} = require('proskomma-core');
 const {PipelineHandler} = require('../../dist/index');
 const testGroup = 'Roundtrip Perf <=> UsfmJs';
 

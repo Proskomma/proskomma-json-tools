@@ -235,8 +235,7 @@ class SofriaRenderFromProskomma extends ProskommaRender {
         let outputBlockN = 0;
 
         for (let i = 0; i < numberBlockTorender; i++) {
-
-            if (blocksIdsToRender.length != 0) {
+            if (blocksIdsToRender.length !== 0) {
                 let inputBlockN = {}
                 if (sequenceType === 'main') {
                     inputBlockN = blocksIdsToRender.pop();
