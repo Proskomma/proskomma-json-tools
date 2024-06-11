@@ -699,3 +699,30 @@ test(`Empty milestone events (${testGroup})`, (t) => {
         console.log(err);
     }
 });
+
+test(
+    `Weird uW milestone (${testGroup})`,
+    async function (t) {
+        try {
+            t.plan(3);
+            const pk2 = new Proskomma();
+            const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'usfms', '51-PHP.usfm'))).toString();
+            pk2.importDocument({ 'lang': 'eng', 'abbr': "web" }, "usfm", usfm);
+            const docId = pk2.gqlQuerySync('{documents { id } }').data.documents[0].id;
+            const cl = new SofriaRenderFromProskomma({ proskomma: pk2, actions: identityActions });
+            const output = {};
+            t.doesNotThrow(() => cl.renderDocument({ docId, config: {}, output }));
+            const validator = new Validator();
+            const validation = validator.validate(
+                'constraint',
+                'sofriaDocument',
+                '0.4.0',
+                output.sofria
+            );
+            t.ok(validation.isValid);
+            t.equal(validation.errors, null);
+        } catch (err) {
+            console.log(err);
+        }
+    },
+);
