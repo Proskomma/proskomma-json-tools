@@ -68,14 +68,12 @@ const sofria2WebActions = {
             test: () => true,
             action: ({context, workspace}) => {
                 workspace.currentIndex += 1
-                workspace.paraContentStack = [
+                workspace.paraContentStack.unshift(
                     {
                         subType: 'table',
                         content: []
                     }
-
-                ]
-
+                )
             }
         },
     ],
@@ -84,7 +82,8 @@ const sofria2WebActions = {
             description: "Add completed table to webParas",
             test: () => true,
             action: ({config, context, workspace}) => {
-                workspace.webParas.push(config.renderers.table(workspace.paraContentStack[0].content))
+                workspace.webParas.push(config.renderers.table(workspace.paraContentStack[0].content));
+                workspace.paraContentStack.shift();
             }
         },
     ],
@@ -186,12 +185,12 @@ const sofria2WebActions = {
             action: ({config, context, workspace}) => {
                 workspace.currentIndex += 1
                 const block = context.sequences[0].block;
-                workspace.paraContentStack = [
+                workspace.paraContentStack.unshift(
                     {
                         subType: block.subType,
                         content: []
                     }
-                ]
+                );
             }
         },
     ],
@@ -210,6 +209,7 @@ const sofria2WebActions = {
                         workspace.currentIndex
                     )
                 );
+                workspace.paraContentStack.shift();
             }
         },
     ],
@@ -234,6 +234,7 @@ const sofria2WebActions = {
                 }
                 workspace.paraContentStack.unshift(
                     {
+                        subType: context.sequences[0].element.subType,
                         atts: standardAtts,
                         content: []
                     }
@@ -276,12 +277,12 @@ const sofria2WebActions = {
             action: ({config, workspace}) => {
 
                 const popped = workspace.paraContentStack.shift();
-
-                workspace.paraContentStack[0].content.push(config.renderers.wWrapper(
+                const toPush = config.renderers.wWrapper(
                     (workspace.settings.showWordAtts ? popped.atts : {}),
                     popped.content,
                     workspace.currentIndex
-                ));
+                );
+                workspace.paraContentStack[0].content.push(toPush);
                 return false;
             }
         },
@@ -325,6 +326,7 @@ const sofria2WebActions = {
                 workspace.currentIndex += 1
                 workspace.paraContentStack.unshift(
                     {
+                        subType: context.sequences[0].element.subType,
                         atts: standardAtts,
                         content: []
                     }
@@ -352,11 +354,11 @@ const sofria2WebActions = {
             description: "Push text to para",
             test: () => true,
             action: ({config, context, workspace}) => {
-
                 const element = context.sequences[0].element;
                 element.text.split(" ").map((w, id) => {
                     workspace.currentIndex += 1
                     const renderedText = config.renderers.text((id === element.text.split(" ").length - 1) ? w : w + " ", workspace.currentIndex)
+                    // console.log("text", w, "...", renderedText);
                     workspace.paraContentStack[0].content.push(renderedText);
                 })
 
