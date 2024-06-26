@@ -717,3 +717,20 @@ test(
         }
     },
 );
+test(
+    `Weird ACT uW milestone (${testGroup})`,
+    async function (t) {
+        try {
+            t.plan(1);
+            const pk2 = new Proskomma();
+            const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'usfms', 'ULT_ACT.usfm'))).toString();
+            pk2.importDocument({ 'lang': 'eng', 'abbr': "web" }, "usfm", usfm);
+            const docId = pk2.gqlQuerySync('{documents { id } }').data.documents[0].id;
+            const cl = new SofriaRenderFromProskomma({ proskomma: pk2, actions: sofria2WebActions });
+            const output = {};
+            t.doesNotThrow(() => cl.renderDocument({ docId, config: {renderers, selectedBcvNotes: []}, output }));
+        } catch (err) {
+            console.log(err);
+        }
+    },
+);
