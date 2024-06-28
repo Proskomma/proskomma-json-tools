@@ -165,7 +165,7 @@ class SofriaRenderFromProskomma extends ProskommaRender {
         let numberBlockTorender = 0
         if (sequenceType === 'main') {
             if (environment.workspace.chapters) {
-                while (environment.workspace.chapters.length != 0) {
+                while (environment.workspace.chapters.length !== 0) {
                     currentChapter = environment.workspace.chapters.pop();
                     if (currentChapter) {
                         currentChapterContext = this.pk.gqlQuerySync(`{document(id: "${context.document.id}") {cIndex(chapter: ${currentChapter}) {
@@ -222,7 +222,7 @@ class SofriaRenderFromProskomma extends ProskommaRender {
             throw new Error(`Sequence '${sequenceId}' not found in renderSequenceId()`);
         }
         if (environment.config.displayPartOfText != null) {
-            if (environment.config.displayPartOfText != 'continue') {
+            if (environment.config.displayPartOfText !== 'continue') {
                 context.sequences.unshift(this.sequenceContext(sequence, sequenceId));
             }
         }
