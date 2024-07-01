@@ -745,8 +745,12 @@ test(
 test(
     `Weird ACT uW milestone (${testGroup})`,
     async function (t) {
+        const chapterLabels = o => [...o.paras.matchAll(/<span class="marks_chapter_label">\d+<\/span>/g)]
+            .map(i => i[0])
+            .map(i => i.replace(/[^1234567890]/g, ""));
+
         try {
-            t.plan(2);
+            t.plan(7);
             const pk2 = new Proskomma();
             const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'usfms', 'ULT_ACT.usfm'))).toString();
             pk2.importDocument({ 'lang': 'eng', 'abbr': "web" }, "usfm", usfm);
@@ -754,8 +758,14 @@ test(
             const cl = new SofriaRenderFromProskomma({ proskomma: pk2, actions: sofria2WebActions });
             let output = {};
             t.doesNotThrow(() => cl.renderDocument({ docId, config: {renderers, selectedBcvNotes: []}, output }));
+            t.equal(chapterLabels(output).length, 28);
             output = {};
-            t.doesNotThrow(() => cl.renderDocument({ docId, config: {renderers, selectedBcvNotes: [], chapters: ['5', '10', '25']}, output }));
+            t.doesNotThrow(() => cl.renderDocument({ docId, config: {renderers, selectedBcvNotes: [], chapters: ['5', '10']}, output }));
+            const cLabels = chapterLabels(output);
+            t.equal(cLabels.length, 2);
+            t.ok(cLabels.includes("5"));
+            t.ok(cLabels.includes("10"));
+            t.throws(() => cl.renderDocument({ docId, config: {renderers, selectedBcvNotes: [], chapters: ['5', '50', '10']}, output }));
         } catch (err) {
             console.log(err);
         }
