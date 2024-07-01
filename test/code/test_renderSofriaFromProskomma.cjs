@@ -333,7 +333,6 @@ test(`Getting only one Chapter to render (${testGroup})`,
             const output = {};
             const context = {};
             const workspace = {};
-            const state = 'begin';
             const config = {
                 showWordAtts: false,
                 showTitles: true,
@@ -347,7 +346,6 @@ test(`Getting only one Chapter to render (${testGroup})`,
                 showVersesLabels: true,
                 selectedBcvNotes: [],
                 chapters: ['1'],
-                displayPartOfText: { state },
                 bcvNotesCallback: (bcv) => {
                     setBcvNoteRef(bcv);
                 },
@@ -363,7 +361,6 @@ test(`Getting only one Chapter to render (${testGroup})`,
 
             });
 
-
             t.equal(output.paras.filter(b => b.type === 'paragraph').length, currentChapterContext.data.document.cIndex.endBlock + 1, "The number of block paragraph render is 1 ");
         } catch (err) {
             console.log(err)
@@ -372,7 +369,46 @@ test(`Getting only one Chapter to render (${testGroup})`,
 
 
 );
+test('Is there an error when asking a chapter that is not here', async function (t) {
+    const docId = pk.gqlQuerySync('{documents { id }}').data.documents[0].id;
+    const renderer = new SofriaRenderFromProskomma({ proskomma: pk, actions: identityActions });
+    const output = {};
+    const context = {};
+    const workspace = {};
 
+    const config = {
+        showWordAtts: false,
+        showTitles: true,
+        showHeadings: true,
+        showIntroductions: true,
+        showFootnotes: true,
+        showXrefs: true,
+        showParaStyles: true,
+        showCharacterMarkup: true,
+        showChapterLabels: true,
+        showVersesLabels: true,
+        selectedBcvNotes: [],
+        chapters: ['1000'], // Assuming chapter 1000 doesn't exist
+        bcvNotesCallback: (bcv) => {
+            setBcvNoteRef(bcv);
+        },
+    };
+
+    try {
+        await renderer.renderDocument1({
+            docId: docId,
+            config,
+            context,
+            workspace,
+            output,
+        });
+        t.fail('Expected error was not thrown');
+    } catch (err) {
+        t.equal(err.message, "Chapter '1000' not found in document", 'Correct error message should be thrown');
+    }
+
+    t.end();
+});
 test(`Getting only multiple Chapter to render (${testGroup})`,
     async function (t) {
         try {
@@ -381,7 +417,6 @@ test(`Getting only multiple Chapter to render (${testGroup})`,
             const output = {};
             const context = {};
             const workspace = {};
-            const numberBlocks = 10;
             let numberOfBlocks = 0
             let currentChapterContext = pk.gqlQuerySync(`{document(id: "${docId}") {cIndex(chapter: 1) {
                 startBlock
@@ -393,7 +428,6 @@ test(`Getting only multiple Chapter to render (${testGroup})`,
                 endBlock
               }}}`)
             numberOfBlocks += currentChapterContext.data.document.cIndex.endBlock - currentChapterContext.data.document.cIndex.startBlock + 1
-            let state = 'begin';
             const config = {
                 showWordAtts: false,
                 showTitles: true,
@@ -407,7 +441,6 @@ test(`Getting only multiple Chapter to render (${testGroup})`,
                 showVersesLabels: true,
                 selectedBcvNotes: [],
                 chapters: [`1`, '3'],
-                displayPartOfText: { numberBlocks, state },
                 bcvNotesCallback: (bcv) => {
                     setBcvNoteRef(bcv);
                 },
@@ -422,15 +455,7 @@ test(`Getting only multiple Chapter to render (${testGroup})`,
             });
 
 
-            config.displayPartOfText.state = 'continue';
-
-            renderer.renderDocument1({
-                docId: docId,
-                config,
-                context,
-                workspace,
-                output,
-            });
+ 
 
             t.equal(output.paras.filter(b => b.type === 'paragraph').length, numberOfBlocks, "The number of block paragraph render is 20 ");
         } catch (err) {
@@ -720,8 +745,12 @@ test(
 test(
     `Weird ACT uW milestone (${testGroup})`,
     async function (t) {
+        const chapterLabels = o => [...o.paras.matchAll(/<span class="marks_chapter_label">\d+<\/span>/g)]
+            .map(i => i[0])
+            .map(i => i.replace(/[^1234567890]/g, ""));
+
         try {
-            t.plan(2);
+            t.plan(7);
             const pk2 = new Proskomma();
             const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'usfms', 'ULT_ACT.usfm'))).toString();
             pk2.importDocument({ 'lang': 'eng', 'abbr': "web" }, "usfm", usfm);
@@ -729,8 +758,14 @@ test(
             const cl = new SofriaRenderFromProskomma({ proskomma: pk2, actions: sofria2WebActions });
             let output = {};
             t.doesNotThrow(() => cl.renderDocument({ docId, config: {renderers, selectedBcvNotes: []}, output }));
+            t.equal(chapterLabels(output).length, 28);
             output = {};
-            t.doesNotThrow(() => cl.renderDocument({ docId, config: {renderers, selectedBcvNotes: [], chapters: ['5', '10', '50']}, output }));
+            t.doesNotThrow(() => cl.renderDocument({ docId, config: {renderers, selectedBcvNotes: [], chapters: ['5', '10']}, output }));
+            const cLabels = chapterLabels(output);
+            t.equal(cLabels.length, 2);
+            t.ok(cLabels.includes("5"));
+            t.ok(cLabels.includes("10"));
+            t.throws(() => cl.renderDocument({ docId, config: {renderers, selectedBcvNotes: [], chapters: ['5', '50', '10']}, output }));
         } catch (err) {
             console.log(err);
         }
