@@ -1,4 +1,4 @@
-import PerfRenderFromJson from '../../../PerfRenderFromJson';
+import PerfRenderFromJson from '../../renderers/PerfRenderFromJson';
 const { wordCountActions } = require('../renderActions/wordCount');
 
 const wordCountCode = function ({perf}) {

@@ -1,4 +1,4 @@
-import PerfRenderFromJson from '../../../PerfRenderFromJson';
+import PerfRenderFromJson from '../../renderers/PerfRenderFromJson';
 const { calculateUsfmChapterPositionsActions } = require('../renderActions/calculateUsfmChapterPositions');
 
 const calculateUsfmChapterPositionsCode = function ({perf}) {

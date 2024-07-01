@@ -1,6 +1,6 @@
 const { PipelineHandler, Validator } = require('../../dist/index');
 const test = require('tape');
-const { Proskomma } = require('proskomma');
+const { Proskomma } = require('proskomma-core');
 const fse = require('fs-extra');
 const path = require('path');
 
@@ -12,10 +12,10 @@ const perfContent = fse.readJsonSync(path.resolve(__dirname, '../test_data/perfs
 
 const validator = new Validator();
 
-test(`Validate the output perf (${testGroup})`, async (t) => {
+test(`Validate the output perf (${testGroup})`, t => {
     t.plan(1);
     try {
-        let output = await pipelineH.runPipeline('justTheBiblePipeline', {
+        let output = pipelineH.runPipeline('justTheBiblePipeline', {
             perf: perfContent
         });
 

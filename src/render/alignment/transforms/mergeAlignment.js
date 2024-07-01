@@ -1,5 +1,5 @@
-import PerfRenderFromJson from '../../../PerfRenderFromJson';
-import mergeActions from '../../../mergeActions';
+import PerfRenderFromJson from '../../renderers/PerfRenderFromJson';
+import mergeActions from '../../renderers/mergeActions';
 
 const { identityActions } = require('../../perfToPerf/renderActions/identity');
 const { mergeAlignmentActions } = require('../renderActions/mergeAlignement');

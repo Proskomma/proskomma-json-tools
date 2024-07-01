@@ -1,20 +1,9 @@
 import test from 'tape';
 
-const fse = require('fs-extra');
-const render = require('../../dist/render');
-
-import SofriaRenderFromProskomma from '../../dist/SofriaRenderFromProskomma';
-import SofriaRenderFromJson from "../../dist/SofriaRenderFromJson";
-import PerfRenderFromProskomma from '../../dist/PerfRenderFromProskomma';
-import PerfRenderFromJson from '../../dist/PerfRenderFromJson';
-
 import { sofria2WebActions } from '../../dist/render/sofria2web/renderActions/sofria2web';
 import { renderers } from '../../dist/render/sofria2web/sofria2html';
 
-import { identityActions } from '../../dist/render/sofriaToSofria/renderActions/identity';
-import findPairingEvents from '../lib/findPairingEvents';
 import { easySofriaRenderer } from '../lib/easyRender';
-import easyRender from '../lib/easyRender';
 import findDif from '../lib/findDif';
 import { eventActions } from '../lib/eventAction';
 const testGroup = 'Test sofriaRenderer';

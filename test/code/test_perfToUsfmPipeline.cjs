@@ -1,6 +1,6 @@
 const { PipelineHandler } = require('../../dist/index');
 const test = require('tape');
-const { Proskomma } = require('proskomma');
+const { Proskomma } = require('proskomma-core');
 const fse = require('fs-extra');
 const path = require('path');
 
@@ -10,14 +10,13 @@ const pipelineH = new PipelineHandler({proskomma:new Proskomma(), verbose:false}
 
 const perfContent = fse.readJsonSync(path.resolve(__dirname, '../test_data/perfs/titus_aligned_eng.json'));
 
-test(`perf=>usfm (${testGroup})`, (t) => {
+test(`perf=>usfm (${testGroup})`, t => {
     t.plan(1);
     try {
         t.doesNotThrow(async () => {
-            let output = await pipelineH.runPipeline('perfToUsfmPipeline', {
+            let output = pipelineH.runPipeline('perfToUsfmPipeline', {
                 perf: perfContent
             });
-            // await saveFile(output.usfm);
         })
     } catch (err) {
         console.log(err);

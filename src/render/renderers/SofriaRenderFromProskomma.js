@@ -218,8 +218,7 @@ class SofriaRenderFromProskomma extends ProskommaRender {
         let outputBlockN = 0;
 
         for (let i = 0; i < numberBlockTorender; i++) {
-
-            if (blocksIdsToRender.length != 0) {
+            if (blocksIdsToRender.length !== 0) {
                 let inputBlockN = {}
                 if (sequenceType === 'main') {
                     inputBlockN = blocksIdsToRender.pop();
@@ -437,9 +436,7 @@ class SofriaRenderFromProskomma extends ProskommaRender {
                         direction: "end",
                         subType: `usfm:${camelCaseToSnakeCase(scopeBits[2])}`,
                     };
-                    if (scopeBits[1] === 'milestone') {
-                        this._container.type = "end_milestone";
-                    } else {
+                    if (scopeBits[1] !== 'milestone') {
                         this._container.type = "wrapper";
                         this._container.atts = {};
                     }
@@ -604,6 +601,12 @@ class SofriaRenderFromProskomma extends ProskommaRender {
                             atts: {}
                         }
                     }
+                } else if (scopeBits[0] === 'milestone') { // End milestone
+                    this._container = {
+                        type: "end_milestone",
+                        subType: `usfm:${camelCaseToSnakeCase(scopeBits[1])}`,
+                        atts: {}
+                    }
                 }
             }
         }
@@ -651,6 +654,7 @@ class SofriaRenderFromProskomma extends ProskommaRender {
             environment.context.sequences[0].element = this._container;
             this.renderEvent('endMilestone', environment);
             delete environment.context.sequences[0].element;
+            this._container = null;
         }
         this._container = null;
     }

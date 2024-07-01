@@ -1,11 +1,10 @@
 
 const fse = require('fs-extra');
-import { Proskomma } from 'proskomma';
+import { Proskomma } from 'proskomma-core';
 import path from "path";
-import SofriaRenderFromProskomma from '../../dist/SofriaRenderFromProskomma';
-import SofriaRenderFromJson from '../../dist/SofriaRenderFromJson';
+import SofriaRenderFromProskomma from '../../dist/render/renderers/SofriaRenderFromProskomma';
+import SofriaRenderFromJson from '../../dist/render/renderers/SofriaRenderFromJson';
 import { identityActions } from '../../dist/render/sofriaToSofria/renderActions/identity';
-import { error } from 'console';
 
 
 function easyRender(renderer, action, pathToFetchData, typeDoc) {

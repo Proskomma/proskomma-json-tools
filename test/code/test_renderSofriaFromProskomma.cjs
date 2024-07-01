@@ -2,12 +2,12 @@ import test from 'tape';
 
 import path from 'path';
 import fse from 'fs-extra';
-import SofriaRenderFromProskomma from '../../dist/SofriaRenderFromProskomma';
-import SofriaRenderFromJson from '../../dist/SofriaRenderFromJson';
+import SofriaRenderFromProskomma from '../../dist/render/renderers/SofriaRenderFromProskomma';
+import SofriaRenderFromJson from '../../dist/render/renderers/SofriaRenderFromJson';
 import { identityActions } from '../../dist/render/sofriaToSofria/renderActions/identity';
-import { Proskomma } from 'proskomma';
+import { Proskomma } from 'proskomma-core';
 import { Validator } from '../../dist/';
-import sofria2WebActions from '../../src/render/sofria2web/renderActions/sofria2web';
+import {sofria2WebActions} from '../../src/render/sofria2web/renderActions/sofria2web';
 import { renderers } from '../../src/render/sofria2web/sofria2html';
 
 const testGroup = 'Render SOFRIA from Proskomma';
@@ -627,3 +627,137 @@ test(`Multiple para in verse Start End events in (${testGroup})`, (t) => {
         console.log(err);
     }
 });
+
+test(`Empty milestone events (${testGroup})`, (t) => {
+    t.plan(21);
+    try {
+        const pk7 = new Proskomma();
+        const usfm = fse.readFileSync(path.resolve(path.join('./', 'test', 'test_data', 'usfms', 'empty_milestone.usfm'))).toString();
+        pk7.importDocument({ 'lang': 'ara', 'abbr': 'xxa' }, 'usfm', usfm);
+        const result = pk7.gqlQuerySync('{documents { id mainSequence {blocks {dump } } } }').data.documents[0];
+        const docId = result.id;
+        t.ok(result.mainSequence.blocks[0].dump.includes("-milestone/zvideo-"));
+        const actions = {
+            startDocument: [
+                {
+                    description: "startDocument",
+                    test: () => true,
+                    action: ({output}) => {
+                        output.events = [];
+                        return true;
+                    }
+                }
+            ],
+            startMilestone: [
+                {
+                    description: "startMilestone",
+                    test: () => true,
+                    action: ({ context, output }) => {
+                        output.events.push(["startMS", context.sequences[0].element.subType]);
+                        return true;
+                    }
+                },
+            ],
+            endMilestone: [
+                {
+                    description: "endMilestone",
+                    test: () => true,
+                    action: ({ context, output }) => {
+                        output.events.push(["endMS", context.sequences[0].element.subType]);
+                        return true;
+                    }
+                },
+            ],
+            startParagraph: [
+                {
+                    description: "startParagraph",
+                    test: () => true,
+                    action: ({ context, output }) => {
+                        output.events.push(["startPara", context.sequences[0].block.subType]);
+                        return true;
+                    }
+                },
+            ],
+            endParagraph: [
+                {
+                    description: "endParagraph",
+                    test: () => true,
+                    action: ({ context, output }) => {
+                        output.events.push(["endPara", context.sequences[0].block.subType]);
+                        return true;
+                    }
+                },
+            ],
+            text: [
+                {
+                    description: "text",
+                    test: () => true,
+                    action: ({ context, output }) => {
+                        output.events.push(["text", context.sequences[0].element.text]);
+                        return true;
+                    }
+                },
+            ]
+        }
+        const cl = new SofriaRenderFromProskomma({ proskomma: pk7, actions: actions })
+        const output = { events: [] };
+        t.doesNotThrow(() => {
+            cl.renderDocument1({ docId, context: {}, config: {}, workspace: {}, output })
+        });
+        t.ok(output.events.length === 9);
+        const expected = [
+            [ 'startPara', 'usfm:p' ],
+            [ 'startMS', 'usfm:zvideo' ],
+            [ 'endPara', 'usfm:p' ],
+            [ 'startPara', 'usfm:q' ],
+            [ 'endMS', 'usfm:zvideo' ],
+            [ 'startMS', 'usfm:zweblink' ],
+            [ 'text', 'سایت اینترنتی' ],
+            [ 'endMS', 'usfm:zweblink' ],
+            [ 'endPara', 'usfm:q' ]
+        ];
+        for (const [n, expectedEvent] of expected.entries()) {
+            t.equal(expectedEvent[0], output.events[n][0]);
+            t.equal(expectedEvent[1], output.events[n][1]);
+        }
+    } catch (err) {
+        console.log(err);
+    }
+});
+
+test(
+    `Weird uW milestone (${testGroup})`,
+    async function (t) {
+        try {
+            t.plan(1);
+            const pk2 = new Proskomma();
+            const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'usfms', '51-PHP.usfm'))).toString();
+            pk2.importDocument({ 'lang': 'eng', 'abbr': "web" }, "usfm", usfm);
+            const docId = pk2.gqlQuerySync('{documents { id } }').data.documents[0].id;
+            const cl = new SofriaRenderFromProskomma({ proskomma: pk2, actions: sofria2WebActions });
+            const output = {};
+            t.doesNotThrow(() => cl.renderDocument({ docId, config: {renderers, selectedBcvNotes: []}, output }));
+        } catch (err) {
+            console.log(err);
+        }
+    },
+);
+test(
+    `Weird ACT uW milestone (${testGroup})`,
+    async function (t) {
+        try {
+            t.plan(2);
+            const pk2 = new Proskomma();
+            const usfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'usfms', 'ULT_ACT.usfm'))).toString();
+            pk2.importDocument({ 'lang': 'eng', 'abbr': "web" }, "usfm", usfm);
+            const docId = pk2.gqlQuerySync('{documents { id } }').data.documents[0].id;
+            const cl = new SofriaRenderFromProskomma({ proskomma: pk2, actions: sofria2WebActions });
+            let output = {};
+            t.doesNotThrow(() => cl.renderDocument({ docId, config: {renderers, selectedBcvNotes: []}, output }));
+            output = {};
+            t.doesNotThrow(() => cl.renderDocument({ docId, config: {renderers, selectedBcvNotes: [], chapters: ['5', '10', '25']}, output }));
+        } catch (err) {
+            console.log(err);
+        }
+    },
+);
