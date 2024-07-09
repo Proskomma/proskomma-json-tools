@@ -1,3 +1,4 @@
+
 const Validator = require('./validator');
 const usfmHelps = require('./usfmHelps');
 const usfmJsHelps = require('./usfmJsHelps');
