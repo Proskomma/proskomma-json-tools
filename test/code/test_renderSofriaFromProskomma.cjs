@@ -464,6 +464,51 @@ test(`Getting only multiple Chapter to render (${testGroup})`,
     }
 
 );
+test(`Chapter eating in option (${testGroup})`,
+    async function (t) {
+        try {
+            const docId = pk.gqlQuerySync('{documents { id }}').data.documents[0].id;
+            const renderer = new SofriaRenderFromProskomma({ proskomma: pk, actions: identityActions });
+            const output = {};
+            const context = {};
+            const workspace = {};
+
+            const config = {
+                showWordAtts: false,
+                showTitles: true,
+                showHeadings: true,
+                showIntroductions: true,
+                showFootnotes: true,
+                showXrefs: true,
+                showParaStyles: true,
+                showCharacterMarkup: true,
+                showChapterLabels: true,
+                showVersesLabels: true,
+                selectedBcvNotes: [],
+                chapters: [`1`, '3'],
+                bcvNotesCallback: (bcv) => {
+                    setBcvNoteRef(bcv);
+                },
+
+            };
+            renderer.renderDocument1({
+                docId: docId,
+                config,
+                context,
+                workspace,
+                output,
+            });
+
+
+ 
+
+            t.equal(config.chapters.length, 2, "The number of chapter in config object is 2");
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+);
 test(
     `Render tr/tc/th via SOFRIA (${testGroup})`,
     async function (t) {
