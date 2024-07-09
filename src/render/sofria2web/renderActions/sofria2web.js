@@ -6,9 +6,10 @@ const defaultSettings = {
     showXrefs: true,
     showChapterLabels: true,
     showVersesLabels: true,
+    showFirstVerseLabel: false,
     showCharacterMarkup: true,
     showParaStyles: true,
-    selectedBcvNotes: []
+    selectedBcvNotes: [],
 }
 
 const sofria2WebActions = {
@@ -34,6 +35,7 @@ const sofria2WebActions = {
                 workspace.footnoteNo = 1;
                 workspace.bookCode = context.document.metadata.document.bookCode;
                 workspace.chapter = 0;
+                workspace.foundPara = false;
 
             },
         }
@@ -183,6 +185,10 @@ const sofria2WebActions = {
             description: "Initialise content stack",
             test: () => true,
             action: ({config, context, workspace}) => {
+                if (context.sequences[0].type !== "title" && !workspace.foundPara) {
+                    workspace.webParas.push(config.renderers.startChapters(workspace.settings.nColumns));
+                    workspace.foundPara = true;
+                }
                 workspace.currentIndex += 1
                 const block = context.sequences[0].block;
                 workspace.paraContentStack.unshift(
@@ -279,10 +285,11 @@ const sofria2WebActions = {
                 const popped = workspace.paraContentStack.shift();
                 const toPush = config.renderers.wWrapper(
                     (workspace.settings.showWordAtts ? popped.atts : {}),
-                    popped.content,
+                    popped.content.join(""),
                     workspace.currentIndex
                 );
                 workspace.paraContentStack[0].content.push(toPush);
+                if (workspace.settings.showGlossaryStar) {workspace.paraContentStack[0].content.push("<span class=\"glossary_star\">*</span>")}
                 return false;
             }
         },
@@ -314,7 +321,7 @@ const sofria2WebActions = {
         {
             description: "Handle zaln word-like atts",
             test: ({context}) => context.sequences[0].element.subType === "usfm:zaln",
-            action: ({context, workspace}) => {
+            action: ({config, context, workspace}) => {
 
                 const atts = context.sequences[0].element.atts;
                 const standardAtts = {};
@@ -324,13 +331,7 @@ const sofria2WebActions = {
                     }
                 }
                 workspace.currentIndex += 1
-                workspace.paraContentStack.unshift(
-                    {
-                        subType: context.sequences[0].element.subType,
-                        atts: standardAtts,
-                        content: []
-                    }
-                );
+                workspace.paraContentStack[0].content.push(config.renderers.milestone("usfm:zaln", standardAtts));
                 return false;
             }
         },
@@ -339,12 +340,15 @@ const sofria2WebActions = {
         {
             description: "Handle zaln word-like atts",
             test: ({context}) => context.sequences[0].element.subType === "usfm:zaln",
-            action: ({config, workspace}) => {
-                const popped = workspace.paraContentStack.shift();
-                workspace.paraContentStack[0].content.push(config.renderers.wWrapper(
-                    (workspace.settings.showWordAtts ? popped.atts : {}),
-                    popped.content.join('')
-                ));
+            action: ({config, context, workspace}) => {
+                const atts = context.sequences[0].element.atts;
+                const standardAtts = {};
+                for (const [key, value] of Object.entries(atts)) {
+                    if (["x-strong", "x-lemma", "x-morph", "x-content"].includes(key)) {
+                        standardAtts[key.split('-')[1]] = value;
+                    }
+                }
+                workspace.paraContentStack[0].content.push(config.renderers.milestone("usfm:zaln", standardAtts));
                 return false;
             }
         },
@@ -377,6 +381,9 @@ const sofria2WebActions = {
                     workspace.chapter = element.atts.number;
                     workspace.paraContentStack[0].content.push(config.renderers.chapter_label(element.atts.number, workspace.currentIndex));
                 } else if (element.subType === "verses_label" && workspace.settings.showVersesLabels) {
+                    if (element.atts.number === "1" && !workspace.settings.showFirstVerseLabel) {
+                        return false;
+                    }
                     let bcv = [];
                     if (config.selectedBcvNotes.length > 0) {
                         bcv = [workspace.bookCode, workspace.chapter, element.atts.number]
@@ -388,9 +395,13 @@ const sofria2WebActions = {
     ],
     endDocument: [
         {
-            description: "Build JSX",
+            description: "Build output",
             test: () => true,
             action: ({config, workspace, output}) => {
+                if (workspace.foundPara) {
+                    workspace.webParas.push(config.renderers.endChapters());
+                    workspace.foundPara = true;
+                }
                 output.paras = config.renderers.mergeParas(workspace.webParas);
             }
         }
