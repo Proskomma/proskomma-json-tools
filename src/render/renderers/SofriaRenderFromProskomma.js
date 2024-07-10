@@ -101,11 +101,11 @@ class SofriaRenderFromProskomma extends ProskommaRender {
         if (config.chapters) {
             if (workspace.chapters) {
                 if (workspace.chapters.length === 0) {
-                    workspace.chapters = config.chapters
+                    workspace.chapters = [...config.chapters]
                 }
             }
             else {
-                workspace.chapters = config.chapters
+                workspace.chapters = [...config.chapters]
             }
         }
         if (workspace.chapters) {
