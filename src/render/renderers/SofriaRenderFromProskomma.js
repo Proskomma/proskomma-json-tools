@@ -453,7 +453,7 @@ class SofriaRenderFromProskomma extends ProskommaRender {
                 }
             }
             if (item.type === 'token') {
-                this._tokens.push(item.payload.replace(/\s+/g, " "));
+                this._tokens.push(item.payload.replace(/[\r\n\t ]+/g, " "));
             } else if (item.type === "graft") {
                 this.maybeRenderText(environment);
                 const graft = {
