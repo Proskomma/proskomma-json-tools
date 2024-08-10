@@ -961,7 +961,7 @@ test(`Render by chapter verses (${testGroup})`, async function (t) {
 
     const renderer = new SofriaRenderFromProskomma({
       proskomma: pk,
-      actions: identityActions,
+      actions: sofria2WebActions,
     });
     const output = {};
     const context = {};
@@ -979,14 +979,13 @@ test(`Render by chapter verses (${testGroup})`, async function (t) {
       showChapterLabels: true,
       showVersesLabels: true,
       selectedBcvNotes: [],
-      verses: ["3"],
-      chapters: [`1`],
-      bcvNotesCallback: (bcv) => {
-        setBcvNoteRef(bcv);
-      },
+      verses: ["1"],
+      chapters: ["1"],
+
       renderers,
 
     };
+
     const test = {...config}
     t.doesNotThrow(() => {
       renderer.renderDocument1({
@@ -997,6 +996,7 @@ test(`Render by chapter verses (${testGroup})`, async function (t) {
         output,
       });
     });
+    console.log(output.paras)
     t.equal(
       output.paras.filter((b) => b.type === "paragraph").length,
       numberOfBlocks,
