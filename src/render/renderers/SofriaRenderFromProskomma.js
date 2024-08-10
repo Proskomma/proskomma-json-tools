@@ -684,7 +684,6 @@ class SofriaRenderFromProskomma extends ProskommaRender {
   }
   blockForCv(environment, sequenceId, sequenceType) {
     let blocksResult1 = [];
-    console.log(environment.workspace.chapters);
     while (environment.workspace.chapters.length > 0) {
       let currentChapter = environment.workspace.chapters.shift();
       while (environment.workspace.verses.length > 0) {
@@ -702,25 +701,26 @@ class SofriaRenderFromProskomma extends ProskommaRender {
                    }
                  }
                }`
-          ).data.document.sequence.blocks[0]
+          ).data.document.sequence.blocks
         );
       }
       environment.workspace.verses = [...environment.config.verses];
     }
+    blocksResult1 = blocksResult1.flat();
 
     for (let i = 0; i < blocksResult1.length; i++) {
       const blockResult = blocksResult1[i];
-      for (const blockGraft of blockResult.bg) {
-        console.log(blockGraft.payload);
-        console.log(environment.context.sequences);
-        environment.context.sequences[0].block = {
-          type: "graft",
-          subType: camelCaseToSnakeCase(blockGraft.subType),
-          sequence: environment.context.sequences[sequenceId],
-        };
-        this.cachedSequenceIds.unshift(blockGraft.payload);
-        this.renderEvent("blockGraft", environment);
-        this.cachedSequenceIds.shift();
+      if (blockResult?.bg.length > 0) {
+        for (const blockGraft of blockResult.bg) {
+          environment.context.sequences[0].block = {
+            type: "graft",
+            subType: camelCaseToSnakeCase(blockGraft.subType),
+            sequence: environment.context.sequences[sequenceId],
+          };
+          this.cachedSequenceIds.unshift(blockGraft.payload);
+          this.renderEvent("blockGraft", environment);
+          this.cachedSequenceIds.shift();
+        }
       }
       const subTypeValues = blockResult.bs.payload.split("/");
       let subTypeValue;

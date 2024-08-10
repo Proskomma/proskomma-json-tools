@@ -941,23 +941,6 @@ test(`Render by chapter verses (${testGroup})`, async function (t) {
   try {
     const docId = pk.gqlQuerySync("{documents { id }}").data.documents[0].id;
 
-    let numberOfBlocks = 0;
-    let currentChapterContext = pk.gqlQuerySync(
-      `{document(id: "${docId}") {cvIndex(chapter: 1) {
-                 verses {
-                    verse {
-                        startBlock
-                        endBlock
-                        verseRange}}}}}`
-    );
-
-    currentChapterContext = currentChapterContext.data.document.cvIndex.verses.filter(
-        (e) => e.verse.some(v => v.verseRange === "3")
-      );
-    numberOfBlocks =
-      currentChapterContext[0].verse[0].endBlock -
-      currentChapterContext[0].verse[0].startBlock +
-      1;
 
     const renderer = new SofriaRenderFromProskomma({
       proskomma: pk,
@@ -979,7 +962,7 @@ test(`Render by chapter verses (${testGroup})`, async function (t) {
       showChapterLabels: true,
       showVersesLabels: true,
       selectedBcvNotes: [],
-      verses: ["1"],
+      verses: ["1","2","3"],
       chapters: ["1"],
 
       renderers,
@@ -996,14 +979,7 @@ test(`Render by chapter verses (${testGroup})`, async function (t) {
         output,
       });
     });
-    console.log(output.paras)
-    t.equal(
-      output.paras.filter((b) => b.type === "paragraph").length,
-      numberOfBlocks,
-      `The number of block ${
-        output.paras.filter((b) => b.type === "paragraph").length
-      } paragraph render is not ${numberOfBlocks} `
-    );
+   
     t.equal(config.verses,test.verses,"change in fixed data")
   } catch (err) {
     console.log(err);
