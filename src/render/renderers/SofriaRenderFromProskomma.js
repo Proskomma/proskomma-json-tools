@@ -696,7 +696,8 @@ class SofriaRenderFromProskomma extends ProskommaRender {
                      blocks(withScriptureCV: "${currentChapter}:${currentVerse}"){
                        bg {subType payload}
                        bs {payload}
-                       items {type subType payload}
+                       items(withScriptureCV: "${currentChapter}:${currentVerse}")
+                        {type subType payload}
                      }        
                    }
                  }
