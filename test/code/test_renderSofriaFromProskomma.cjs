@@ -979,7 +979,6 @@ test(`Render by chapter verses (${testGroup})`, async function (t) {
         output,
       });
     });
-   
     t.equal(config.verses,test.verses,"change in fixed data")
   } catch (err) {
     console.log(err);
