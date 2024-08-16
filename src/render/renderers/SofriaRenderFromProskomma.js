@@ -230,7 +230,7 @@ class SofriaRenderFromProskomma extends ProskommaRender {
       numberBlockTorender = blocksIdsToRender.length;
     }
     documentResult = this.pk.gqlQuerySync(
-      `{document(id: "${context.document.id}") {id sequence(id:"${sequenceId}") {id type nBlocks blocks(positions: [${blocksIdsToRender}]){ os {payload} is {payload} } } } }`
+      `{document(id: "${context.document.id}") {id sequence(id:"${sequenceId}") {id type nBlocks  } } }`
     );
     const sequence = documentResult.data.document.sequence;
 
@@ -688,9 +688,29 @@ class SofriaRenderFromProskomma extends ProskommaRender {
       let currentChapter = environment.workspace.chapters.shift();
       while (environment.workspace.verses.length > 0) {
         let currentVerse = environment.workspace.verses.shift();
-        blocksResult1.push(
-          this.pk.gqlQuerySync(
-            `{
+        if (environment.config?.excludeScopeTypes?.length > 0) {
+          const scopeTypes = environment.config.excludeScopeTypes.map(
+            (elem) => `"${elem}"`
+          );
+          blocksResult1.push(
+            this.pk.gqlQuerySync(
+              `{
+               document(id: "${environment.context.document.id}") {
+                   sequence(id:"${sequenceId}") {
+                     blocks(withScriptureCV: "${currentChapter}:${currentVerse}"){
+                     bg {subType payload}
+                     bs {payload}
+                     items (excludeScopeTypes : [${scopeTypes}],withScriptureCV: "${currentChapter}:${currentVerse}" ) {type subType payload}
+                   }        
+                 }
+               }
+             }`
+            ).data.document.sequence.blocks
+          );
+        } else {
+          blocksResult1.push(
+            this.pk.gqlQuerySync(
+              `{
                  document(id: "${environment.context.document.id}") {
                    sequence(id:"${sequenceId}") {
                      blocks(withScriptureCV: "${currentChapter}:${currentVerse}"){
@@ -702,8 +722,9 @@ class SofriaRenderFromProskomma extends ProskommaRender {
                    }
                  }
                }`
-          ).data.document.sequence.blocks
-        );
+            ).data.document.sequence.blocks
+          );
+        }
       }
       environment.workspace.verses = [...environment.config.verses];
     }
