@@ -939,6 +939,8 @@ test(`Weird ACT uW milestone (${testGroup})`, async function (t) {
 
 test(`Render by chapter verses (${testGroup})`, async function (t) {
   try {
+    t.plan(1);
+
     const docId = pk.gqlQuerySync("{documents { id }}").data.documents[0].id;
 
 
@@ -962,14 +964,12 @@ test(`Render by chapter verses (${testGroup})`, async function (t) {
       showChapterLabels: true,
       showVersesLabels: true,
       selectedBcvNotes: [],
-      verses: ["1","2","3"],
+      byVerseExpirimental: true,
       chapters: ["1"],
-
       renderers,
 
     };
 
-    const test = {...config}
     t.doesNotThrow(() => {
       renderer.renderDocument1({
         docId: docId,
@@ -979,7 +979,7 @@ test(`Render by chapter verses (${testGroup})`, async function (t) {
         output,
       });
     });
-    t.equal(config.verses,test.verses,"change in fixed data")
+
   } catch (err) {
     console.log(err);
   }
