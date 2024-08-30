@@ -114,23 +114,10 @@ class SofriaRenderFromProskomma extends ProskommaRender {
         workspace.chapters = [...config.chapters];
       }
     }
-    if (config.verses) {
-      if (workspace.verses) {
-        if (workspace.verses.length === 0) {
-          workspace.verses = [...config.verses];
-        }
-      } else {
-        workspace.verses = [...config.verses];
-      }
-    }
 
     if (workspace.chapters) {
       context.document.metadata.document.properties.chapters =
         workspace.chapters[0];
-    }
-    if (workspace.verses) {
-      context.document.metadata.document.properties.verses =
-        workspace.verses[0];
     }
 
     this.renderSequence(environment);
@@ -167,7 +154,10 @@ class SofriaRenderFromProskomma extends ProskommaRender {
 
     let numberBlockTorender = 0;
     if (sequenceType === "main") {
-      if (environment.workspace.chapters && !environment.workspace.verses) {
+      if (
+        environment.workspace.chapters &&
+        !environment.config?.byVerseExperimental
+      ) {
         while (environment.workspace.chapters.length > 0) {
           currentChapter = environment.workspace.chapters.shift();
 
@@ -246,7 +236,7 @@ class SofriaRenderFromProskomma extends ProskommaRender {
 
     if (
       environment.workspace?.chapters?.length > 0 &&
-      environment.workspace?.verses?.length > 0
+      environment.config?.byVerseExperimental
     ) {
       this.blockForCv(environment, sequenceId, sequenceType);
     } else {
@@ -686,53 +676,56 @@ class SofriaRenderFromProskomma extends ProskommaRender {
     let blocksResult1 = [];
     while (environment.workspace.chapters.length > 0) {
       let currentChapter = environment.workspace.chapters.shift();
-      while (environment.workspace.verses.length > 0) {
-        let currentVerse = environment.workspace.verses.shift();
-        if (environment.config?.excludeScopeTypes?.length > 0) {
-          const scopeTypes = environment.config.excludeScopeTypes.map(
-            (elem) => `"${elem}"`
-          );
-          blocksResult1.push(
-            this.pk.gqlQuerySync(
-              `{
-               document(id: "${environment.context.document.id}") {
-                   sequence(id:"${sequenceId}") {
-                     blocks(withScriptureCV: "${currentChapter}:${currentVerse}"){
-                     bg {subType payload}
-                     bs {payload}
-                     items (excludeScopeTypes : [${scopeTypes}],withScriptureCV: "${currentChapter}:${currentVerse}" ) {type subType payload}
-                   }        
-                 }
-               }
-             }`
-            ).data.document.sequence.blocks
-          );
-        } else {
-          blocksResult1.push(
-            this.pk.gqlQuerySync(
-              `{
+      blocksResult1.push(
+        this.pk
+          .gqlQuerySync(
+            `{
                  document(id: "${environment.context.document.id}") {
-                   sequence(id:"${sequenceId}") {
-                     blocks(withScriptureCV: "${currentChapter}:${currentVerse}"){
-                       bg {subType payload}
-                       bs {payload}
-                       items(withScriptureCV: "${currentChapter}:${currentVerse}")
-                        {type subType payload}
-                     }        
+                      cvIndex(chapter: ${currentChapter}) {
+                        verses {
+                          verse {
+                            items(includeContext: true) {
+                              payload
+                              type
+                              subType
+                            }
+                          }
+                        }
+                      
                    }
                  }
                }`
-            ).data.document.sequence.blocks
-          );
-        }
-      }
-      environment.workspace.verses = [...environment.config.verses];
+          )
+          .data.document.cvIndex.verses.map((e) => e.verse)
+      );
     }
-    blocksResult1 = blocksResult1.flat();
 
+    blocksResult1 = blocksResult1
+      .flat()
+      .filter((e) => e.length > 0)
+      .map((e) => e[0]);
     for (let i = 0; i < blocksResult1.length; i++) {
-      const blockResult = blocksResult1[i];
-      if (blockResult?.bg.length > 0) {
+      if (environment.config?.excludeScopeTypes?.length > 0) {
+        var blockResult = {
+          items: blocksResult1[i].items.filter(
+            (e) =>
+              e.subType != "heading" &&
+              e.subType != "title" &&
+              !environment.config.excludeScopeTypes.some((scopeType) =>
+                e.payload.includes(scopeType)
+              )
+          ),
+        };
+      } else {
+        var blockResult = {
+          items: blocksResult1[i].items.filter(
+            (e) => e.subType != "heading" && e.subType != "title"
+          ),
+        };
+      }
+
+      blockResult["bs"] = { payload: "blockTag/m" };
+      if (blockResult?.bg?.length > 0) {
         for (const blockGraft of blockResult.bg) {
           environment.context.sequences[0].block = {
             type: "graft",
@@ -744,15 +737,18 @@ class SofriaRenderFromProskomma extends ProskommaRender {
           this.cachedSequenceIds.shift();
         }
       }
-      const subTypeValues = blockResult.bs.payload.split("/");
+      const subTypeValues = blockResult?.bs?.payload.split("/");
       let subTypeValue;
-      if (subTypeValues[1] && ["tr", "zrow"].includes(subTypeValues[1])) {
-        subTypeValue = subTypeValues[1] === "tr" ? "usfm:tr" : "pk";
-      } else if (subTypeValues[1]) {
-        subTypeValue = `usfm:${subTypeValues[1]}`;
-      } else {
-        subTypeValue = subTypeValues[0];
+      if (subTypeValues) {
+        if (subTypeValues[1] && ["tr", "zrow"].includes(subTypeValues[1])) {
+          subTypeValue = subTypeValues[1] === "tr" ? "usfm:tr" : "pk";
+        } else if (subTypeValues[1]) {
+          subTypeValue = `usfm:${subTypeValues[1]}`;
+        } else {
+          subTypeValue = subTypeValues[0];
+        }
       }
+
       environment.context.sequences[0].block = {
         type: ["usfm:tr", "pk"].includes(subTypeValue) ? "row" : "paragraph",
         subType: subTypeValue,

@@ -1,6 +1,6 @@
 {
   "name": "proskomma-json-tools",
-  "version": "0.8.20",
+  "version": "0.8.21",
   "description": "Tools for working with Proskomma-derived formats such as PERF and SOFRIA",
   "main": "dist/index.js",
   "directories": {
