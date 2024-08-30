@@ -156,7 +156,7 @@ class SofriaRenderFromProskomma extends ProskommaRender {
     if (sequenceType === "main") {
       if (
         environment.workspace.chapters &&
-        !environment.config?.byVerseExpirimental
+        !environment.config?.byVerseExperimental
       ) {
         while (environment.workspace.chapters.length > 0) {
           currentChapter = environment.workspace.chapters.shift();
@@ -236,7 +236,7 @@ class SofriaRenderFromProskomma extends ProskommaRender {
 
     if (
       environment.workspace?.chapters?.length > 0 &&
-      environment.config?.byVerseExpirimental
+      environment.config?.byVerseExperimental
     ) {
       this.blockForCv(environment, sequenceId, sequenceType);
     } else {

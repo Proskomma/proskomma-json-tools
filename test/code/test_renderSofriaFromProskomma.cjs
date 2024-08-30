@@ -964,7 +964,7 @@ test(`Render by chapter verses (${testGroup})`, async function (t) {
       showChapterLabels: true,
       showVersesLabels: true,
       selectedBcvNotes: [],
-      byVerseExpirimental: true,
+      byVerseExperimental: true,
       chapters: ["1"],
       renderers,
 
