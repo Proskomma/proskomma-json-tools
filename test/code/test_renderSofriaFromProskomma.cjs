@@ -836,9 +836,9 @@ test(`Empty milestone events (${testGroup})`, (t) => {
     const expected = [
       ["startPara", "usfm:p"],
       ["startMS", "usfm:zvideo"],
+      ["endMS", "usfm:zvideo"],
       ["endPara", "usfm:p"],
       ["startPara", "usfm:q"],
-      ["endMS", "usfm:zvideo"],
       ["startMS", "usfm:zweblink"],
       ["text", "سایت اینترنتی"],
       ["endMS", "usfm:zweblink"],
@@ -852,7 +852,6 @@ test(`Empty milestone events (${testGroup})`, (t) => {
     console.log(err);
   }
 });
-
 test(`Weird uW milestone (${testGroup})`, async function (t) {
   try {
     t.plan(1);

@@ -651,6 +651,7 @@ class SofriaRenderFromProskomma extends ProskommaRender {
             subType: `usfm:${camelCaseToSnakeCase(scopeBits[1])}`,
             atts: {},
           };
+          this.renderContainer(environment);
         }
       }
     }
