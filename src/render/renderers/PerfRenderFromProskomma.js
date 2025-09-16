@@ -186,13 +186,17 @@ class PerfRenderFromProskomma extends ProskommaRender {
                     this._container = {
                         direction: "end",
                         subType: `usfm:${camelCaseToSnakeCase(scopeBits[2])}`,
+                        atts: {}
                     };
                     if (scopeBits[1] === 'milestone') {
                         this._container.type = "end_milestone";
                     } else {
                         this._container.type = "wrapper";
-                        this._container.atts = {};
-                    }
+                        if (scopeBits[3] in this._container.atts) {
+                            this._container.atts[scopeBits[3]].push(scopeBits[5]);
+                        } else {
+                            this._container.atts[scopeBits[3]] = [scopeBits[5]];
+                        }                    }
                 }
             }
         } else {

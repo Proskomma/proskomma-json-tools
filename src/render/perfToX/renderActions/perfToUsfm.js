@@ -19,10 +19,9 @@ const buildMilestone = (type, atts = {}) => {
     return str + "\\*";
 }
 
-const buildEndWrapper = (type, atts = {}, isnested = false) => {
-    if(atts == null) atts = {};
+const buildEndWrapper = (type, atts, isnested = false) => {
     let str="|";
-    for (let [key, value] of Object.entries(atts)) {
+    for (let [key, value] of Object.entries(atts || {})) {
         str = str + oneifyTag(key) + "=\"" + value + "\" ";
     };
     str = str + "\\";

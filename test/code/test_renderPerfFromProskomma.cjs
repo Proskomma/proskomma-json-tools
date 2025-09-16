@@ -226,3 +226,56 @@ test(
         }
     },
 );
+
+test(
+    `usfm with default attribute(${testGroup})`,
+    async function (t) {
+        try {
+            t.plan(2);
+
+            let rawUsfm = fse.readFileSync(path.resolve(path.join('test', 'test_data', 'usfms', '78-GALspavbl.usfm'))).toString();
+            let tabRawUsfm = rawUsfm.split(/(\\[a-z]+[\d\*]?|\n)/g).filter((e) => e !== '' && e !== ' ' && e !== '\n');
+
+            const pk = new Proskomma();
+            pk.importDocument({ 'lang': 'eng', 'abbr': 'web' }, 'usfm', rawUsfm);
+            const docId = pk.gqlQuerySync('{documents { id } }').data.documents[0].id;
+            const cl = new PerfRenderFromProskomma({
+                proskomma: pk,
+                actions: render.perfToX.renderActions.calculateUsfmChapterPositionsActions,
+                debugLevel: 0
+            });
+            const output = {};
+
+            cl.renderDocument({
+                docId,
+                config: {},
+                output,
+            });
+
+            const cl2 = new PerfRenderFromProskomma({
+                proskomma: pk,
+                actions: render.perfToX.renderActions.perfToUsfmActions,
+                debugLevel: 0
+            });
+            const output2 = {};
+            t.doesNotThrow(
+                () => cl2.renderDocument(
+                    { docId, config: {report: output.report}, output: output2 }
+                )
+            );
+
+            let tabOutputUsfm = output2.usfm.split(/(\\[a-z]+[\d\*]?|\n)/g).filter((e) => e !== '' && e !== ' ' && e !== '\n');
+
+            let diff = [];
+
+            tabRawUsfm.forEach((elem, i) => {
+                if (!tabOutputUsfm[i] || elem.trim() !== tabOutputUsfm[i].trim()) {
+                    diff.push([tabOutputUsfm[i], elem]);
+                }
+            });
+            t.equal(diff.join(''), '');
+        } catch (err) {
+            console.log(err);
+        }
+    },
+);
