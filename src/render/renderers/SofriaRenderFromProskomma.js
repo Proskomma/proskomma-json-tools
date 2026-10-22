@@ -475,9 +475,11 @@ class SofriaRenderFromProskomma extends ProskommaRender {
       }
     } else {
       if (this._container) {
+        // An empty span (eg \jmp |link-id="x"\jmp*) only has its start pending here, so it still needs closing below
+        const emptySpanEnd = this._container.direction === "start" && item.subType === "end";
         this.maybeRenderText(environment);
         this.renderContainer(environment);
-        if (item.payload.includes("spanWith")) {
+        if (item.payload.includes("spanWith") && !emptySpanEnd) {
           this.maybeRenderText(environment);
           return;
         }
