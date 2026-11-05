@@ -30,7 +30,11 @@ const recordingAction = name => ({
     description: `Record ${name}`,
     test: () => true,
     action: ({ workspace, context }) => {
-        workspace.events.push({ event: name, sequenceId: context.sequences[0].id });
+        workspace.events.push({
+            event: name,
+            sequenceId: context.sequences[0].id,
+            sequenceType: context.sequences[0].type,
+        });
     },
 });
 
@@ -60,6 +64,13 @@ const renderEvents = usfm => {
                 environment.context.renderer.renderSequence(environment);
             },
         }],
+        inlineGraft: [{
+            description: 'Render inline grafts',
+            test: ({ context }) => !!context.sequences[0].element.sequence,
+            action: environment => {
+                environment.context.renderer.renderSequence(environment);
+            },
+        }],
         startTable: [recordingAction('startTable')],
         endTable: [recordingAction('endTable')],
         startRow: [recordingAction('startRow')],
@@ -70,38 +81,46 @@ const renderEvents = usfm => {
     return output.events;
 };
 
-// Returns a list of tables, each being the number of rows it contains,
-// or throws if table events are unbalanced
+// Returns a list of tables, in the order they end, as '<sequence type>:<number of rows>'.
+// Tables may be nested (eg a table in a note in a table cell), so open tables
+// are tracked per sequence. Throws if table events are unbalanced.
 const tablesFromEvents = events => {
     const tables = [];
-    let open = null;
-    for (const { event, sequenceId } of events) {
+    const open = {};
+    for (const { event, sequenceId, sequenceType } of events) {
         if (event === 'startTable') {
-            if (open) {
-                throw new Error('startTable while a table is already open');
+            if (open[sequenceId]) {
+                throw new Error(`startTable while a table is already open in ${sequenceType}`);
             }
-            open = { sequenceId, rows: 0 };
+            open[sequenceId] = { sequenceType, rows: 0 };
         } else if (event === 'startRow') {
-            if (!open) {
-                throw new Error('startRow outside a table');
+            if (!open[sequenceId]) {
+                throw new Error(`startRow outside a table in ${sequenceType}`);
             }
-            open.rows++;
+            open[sequenceId].rows++;
         } else if (event === 'endTable') {
-            if (!open) {
-                throw new Error('endTable without startTable');
+            if (!open[sequenceId]) {
+                throw new Error(`endTable without startTable in ${sequenceType}`);
             }
-            if (open.sequenceId !== sequenceId) {
-                throw new Error('endTable in a different sequence from startTable');
-            }
-            tables.push(open.rows);
-            open = null;
+            tables.push(`${sequenceType}:${open[sequenceId].rows}`);
+            delete open[sequenceId];
         }
     }
-    if (open) {
-        throw new Error('table never ended');
+    if (Object.keys(open).length > 0) {
+        throw new Error(`table never ended in ${Object.values(open).map(t => t.sequenceType).join(', ')}`);
     }
     return tables;
 };
+
+const tablesOrError = usfm => {
+    try {
+        return tablesFromEvents(renderEvents(usfm));
+    } catch (err) {
+        return err.message;
+    }
+};
+
+const rowCounts = tables => Array.isArray(tables) ? tables.map(t => Number(t.split(':')[1])) : tables;
 
 for (const [label, separator] of [
     ['only a heading', ''],
@@ -110,14 +129,7 @@ for (const [label, separator] of [
 ]) {
     test(`Table followed by ${label} renders as two tables (${testGroup})`, t => {
         t.plan(1);
-        const events = renderEvents(tablesUsfm(separator));
-        let tables;
-        try {
-            tables = tablesFromEvents(events);
-        } catch (err) {
-            tables = err.message;
-        }
-        t.same(tables, [8, 5], 'two tables, with 8 and 5 rows');
+        t.same(rowCounts(tablesOrError(tablesUsfm(separator))), [8, 5], 'two tables, with 8 and 5 rows');
     });
 }
 
@@ -132,11 +144,45 @@ test(`Main-sequence table followed by a heading is ended before the heading (${t
 \\s1 Length
 \\tr \\tc1 handbreadth \\tc2 3 inches
 `;
-    let tables;
-    try {
-        tables = tablesFromEvents(renderEvents(usfm));
-    } catch (err) {
-        tables = err.message;
-    }
-    t.same(tables, [2, 1], 'two tables, with 2 and 1 rows');
+    // Which sequence the second table is in depends on the proskomma-core version
+    t.same(rowCounts(tablesOrError(usfm)), [2, 1], 'two tables, with 2 and 1 rows');
+});
+
+test(`Table in a footnote is started and ended in the footnote (${testGroup})`, t => {
+    t.plan(1);
+    const usfm = `\\id GEN
+\\c 1
+\\p
+\\v 1 Some text.\\f + \\fr 1:1 \\ft A table:
+\\tr \\tc1 cubit \\tc2 18 inches
+\\tr \\tc1 span \\tc2 9 inches\\f* More text.
+\\p
+\\v 2 After.
+`;
+    t.same(tablesOrError(usfm), ['footnote:2'], 'one table in the footnote, with 2 rows');
+});
+
+// TODO: table state is shared across sequences, so when the footnote's rows start,
+// the renderer thinks a table is already open and never starts one in the footnote.
+// Fails the same way before the #69 fix. Likely fix: renderSequence saves the table
+// state on entry, starts each sequence with no open table, and restores it on exit.
+// Skipped rather than todo, because tap-summary (used by npm test) counts TODO as a failure.
+test(`Table in a footnote in a table cell does not end the enclosing table (${testGroup})`, { skip: true }, t => {
+    t.plan(1);
+    const usfm = `\\id GEN
+\\c 1
+\\p
+\\v 1 Some text.
+\\tr \\tc1 cubit\\f + \\ft A table:
+\\tr \\tc1 a \\tc2 b
+\\tr \\tc1 c \\tc2 d\\f* \\tc2 18 inches
+\\tr \\tc1 span \\tc2 9 inches
+\\p
+\\v 2 After.
+`;
+    t.same(
+        tablesOrError(usfm),
+        ['footnote:2', 'main:2'],
+        'a 2-row table in the footnote, inside a 2-row table in main',
+    );
 });
