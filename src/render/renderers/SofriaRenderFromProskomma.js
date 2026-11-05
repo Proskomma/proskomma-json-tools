@@ -231,6 +231,7 @@ class SofriaRenderFromProskomma extends ProskommaRender {
     }
 
     context.sequences.unshift(this.sequenceContext(sequence, sequenceId));
+    const enclosingTableState = this.startSequenceTableState(environment);
     this.renderEvent("startSequence", environment);
     let outputBlockN = 0;
 
@@ -306,6 +307,7 @@ class SofriaRenderFromProskomma extends ProskommaRender {
               blockN: outputBlockN,
               sequence: this.sequences[blockGraft.payload],
             };
+            this.maybeEndTable(environment);
             this.cachedSequenceIds.unshift(blockGraft.payload);
             this.renderEvent("blockGraft", environment);
             this.cachedSequenceIds.shift();
@@ -332,19 +334,12 @@ class SofriaRenderFromProskomma extends ProskommaRender {
             if (!environment.workspace.inTable) {
               this.renderEvent(`startTable`, environment);
               environment.workspace.inTable = true;
+              environment.workspace.tableSequenceId = environment.context.sequences[0].id;
             }
 
             this.renderEvent("startRow", environment);
           } else {
-            if (
-              environment.workspace.inTable &&
-              context.sequences[0].type.includes("main")
-            ) {
-              this.renderEvent(`endTable`, environment);
-              environment.workspace.tableHasContent = false;
-              environment.workspace.inTable = false;
-              environment.workspace.skipEndRow = false;
-            }
+            this.maybeEndTable(environment);
             this.renderEvent("startParagraph", environment);
           }
           this._tokens = [];
@@ -421,22 +416,35 @@ class SofriaRenderFromProskomma extends ProskommaRender {
         }
       }
 
-      if (
-        environment.workspace.inTable &&
-        context.sequences[0].type.includes("main")
-      ) {
-        this.renderEvent(`endTable`, environment);
-        environment.workspace.tableHasContent = false;
-        environment.workspace.inTable = false;
-        environment.workspace.skipEndRow = false;
-      }
+      this.maybeEndTable(environment);
       this.renderEvent("endSequence", environment);
       if (sequenceType === "main") {
         environment.workspace.blockId = blocksIdsToRender;
       }
       context.sequences.shift();
     }
+    Object.assign(environment.workspace, enclosingTableState);
   }
+
+  startSequenceTableState(environment) {
+    // Each sequence has its own table state, so that a table in a note inside
+    // a table cell is rendered as a nested table rather than as rows of the
+    // enclosing table. Returns the enclosing state, to restore at the end of
+    // the sequence.
+    const workspace = environment.workspace;
+    const enclosingTableState = {
+      inTable: workspace.inTable,
+      tableHasContent: workspace.tableHasContent,
+      skipEndRow: workspace.skipEndRow,
+      tableSequenceId: workspace.tableSequenceId,
+    };
+    workspace.inTable = false;
+    workspace.tableHasContent = false;
+    workspace.skipEndRow = false;
+    workspace.tableSequenceId = null;
+    return enclosingTableState;
+  }
+
   renderContent(items, environment) {
     for (let i = 0; i < items.length; i++) {
       this.renderItem(items[i], environment);
@@ -659,6 +667,23 @@ class SofriaRenderFromProskomma extends ProskommaRender {
     }
   }
 
+  maybeEndTable(environment) {
+    // Close an open table, but only from the sequence that opened it.
+    // Tables may live in non-main sequences, eg Proskomma puts rows that
+    // directly follow \s into the heading sequence (see issue #69), while
+    // notes inside table cells must not close the enclosing table.
+    if (
+      environment.workspace.inTable &&
+      environment.workspace.tableSequenceId ===
+        environment.context.sequences[0].id
+    ) {
+      this.renderEvent(`endTable`, environment);
+      environment.workspace.tableHasContent = false;
+      environment.workspace.inTable = false;
+      environment.workspace.skipEndRow = false;
+    }
+  }
+
   maybeRenderText(environment, sequenceId) {
     if (this._tokens.length === 0) {
       return;
@@ -735,6 +760,7 @@ class SofriaRenderFromProskomma extends ProskommaRender {
             subType: camelCaseToSnakeCase(blockGraft.subType),
             sequence: environment.context.sequences[sequenceId],
           };
+          this.maybeEndTable(environment);
           this.cachedSequenceIds.unshift(blockGraft.payload);
           this.renderEvent("blockGraft", environment);
           this.cachedSequenceIds.shift();
@@ -761,19 +787,12 @@ class SofriaRenderFromProskomma extends ProskommaRender {
         if (!environment.workspace.inTable) {
           this.renderEvent(`startTable`, environment);
           environment.workspace.inTable = true;
+          environment.workspace.tableSequenceId = environment.context.sequences[0].id;
         }
 
         this.renderEvent("startRow", environment);
       } else {
-        if (
-          environment.workspace.inTable &&
-          environment.context.sequences[0].type.includes("main")
-        ) {
-          this.renderEvent(`endTable`, environment);
-          environment.workspace.tableHasContent = false;
-          environment.workspace.inTable = false;
-          environment.workspace.skipEndRow = false;
-        }
+        this.maybeEndTable(environment);
         this.renderEvent("startParagraph", environment);
       }
       this._tokens = [];
@@ -847,15 +866,7 @@ class SofriaRenderFromProskomma extends ProskommaRender {
       }
       delete environment.context.sequences[0].block;
     }
-    if (
-      environment.workspace.inTable &&
-      environment.context.sequences[0].type.includes("main")
-    ) {
-      this.renderEvent(`endTable`, environment);
-      environment.workspace.tableHasContent = false;
-      environment.workspace.inTable = false;
-      environment.workspace.skipEndRow = false;
-    }
+    this.maybeEndTable(environment);
     this.renderEvent("endSequence", environment);
 
     environment.context.sequences.shift();
