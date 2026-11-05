@@ -231,6 +231,7 @@ class SofriaRenderFromProskomma extends ProskommaRender {
     }
 
     context.sequences.unshift(this.sequenceContext(sequence, sequenceId));
+    const enclosingTableState = this.startSequenceTableState(environment);
     this.renderEvent("startSequence", environment);
     let outputBlockN = 0;
 
@@ -422,7 +423,28 @@ class SofriaRenderFromProskomma extends ProskommaRender {
       }
       context.sequences.shift();
     }
+    Object.assign(environment.workspace, enclosingTableState);
   }
+
+  startSequenceTableState(environment) {
+    // Each sequence has its own table state, so that a table in a note inside
+    // a table cell is rendered as a nested table rather than as rows of the
+    // enclosing table. Returns the enclosing state, to restore at the end of
+    // the sequence.
+    const workspace = environment.workspace;
+    const enclosingTableState = {
+      inTable: workspace.inTable,
+      tableHasContent: workspace.tableHasContent,
+      skipEndRow: workspace.skipEndRow,
+      tableSequenceId: workspace.tableSequenceId,
+    };
+    workspace.inTable = false;
+    workspace.tableHasContent = false;
+    workspace.skipEndRow = false;
+    workspace.tableSequenceId = null;
+    return enclosingTableState;
+  }
+
   renderContent(items, environment) {
     for (let i = 0; i < items.length; i++) {
       this.renderItem(items[i], environment);

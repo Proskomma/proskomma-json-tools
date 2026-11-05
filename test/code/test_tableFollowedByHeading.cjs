@@ -162,12 +162,7 @@ test(`Table in a footnote is started and ended in the footnote (${testGroup})`, 
     t.same(tablesOrError(usfm), ['footnote:2'], 'one table in the footnote, with 2 rows');
 });
 
-// TODO: table state is shared across sequences, so when the footnote's rows start,
-// the renderer thinks a table is already open and never starts one in the footnote.
-// Fails the same way before the #69 fix. Likely fix: renderSequence saves the table
-// state on entry, starts each sequence with no open table, and restores it on exit.
-// Skipped rather than todo, because tap-summary (used by npm test) counts TODO as a failure.
-test(`Table in a footnote in a table cell does not end the enclosing table (${testGroup})`, { skip: true }, t => {
+test(`Table in a footnote in a table cell does not end the enclosing table (${testGroup})`, t => {
     t.plan(1);
     const usfm = `\\id GEN
 \\c 1
